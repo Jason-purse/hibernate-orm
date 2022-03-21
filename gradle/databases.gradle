@@ -9,6 +9,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 // build a map of the database settings to use.
 ext {
+        // 扩展属性db 没有设置使用h2
         db = project.hasProperty('db') ? project.getProperty('db') : 'h2'
         def dbHost = System.getProperty( 'dbHost', 'localhost' )
         dbBundle = [
@@ -349,9 +350,10 @@ ext {
         ]
 }
 
-
+// 获取处理 测试资源任务
 def processTestResourcesTask = project.tasks.findByName( 'processTestResources' )
 if ( processTestResourcesTask != null ) {
-        processTestResourcesTask.inputs.property( 'db', db )
-        processTestResourcesTask.filter( ReplaceTokens, tokens: dbBundle[db] )
+        processTestResourcesTask.inputs.property( 'db', db ) // 给这个任务注册这个db 属性
+        // 过滤替换指定的标记
+        processTestResourcesTask.filter( ReplaceTokens, tokens: dbBundle[db] ) // 根据给定的条件进行过滤并处理...
 }

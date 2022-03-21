@@ -11,9 +11,15 @@ import org.hibernate.Internal;
 /**
  * Support for XSD handling related to Hibernate's `cfg.xml` and
  * JPA's `persistence.xml`.
+ *
+ * 对XSD处理 的支持 - Hibernate的 cfg.xml 以及 JPA的 persistence.xml处理
+ *
+ *
  * The implementation attempts to not load XsdDescriptor instances which are not
  * necessary and favours memory efficiency over CPU efficiency, as this is expected
  * to be used only during bootstrap.
+ * 这个实现不会 尝试加载XsdDescriptor 实例 - 这在CPU效率上没有必要并优化内存效率 ..
+ * 因为这个仅仅在引导阶段才使用 ;
  *
  * @author Steve Ebersole
  * @author Sanne Grinovero
@@ -23,10 +29,12 @@ import org.hibernate.Internal;
 public class ConfigXsdSupport {
 
 	/**
+	 * 任何访问都需要同步
 	 * Needs synchronization on any access.
+	 * // 支持 以下的Key
 	 * Custom keys:
-	 * 0: cfgXml
-	 * 1: JPA 1.0
+	 * 0: cfgXml // cfgXml (cfg 解析)
+	 * 1: JPA 1.0 // JPA...
 	 * 2: JPA 2.0
 	 * 3: JPA 2.1
 	 * 4: JPA 2.2 (default)
@@ -42,7 +50,7 @@ public class ConfigXsdSupport {
 		// JPA 1.0 and 2.0 share the same namespace URI
 		return getJPA10().getNamespaceUri().matches( uri );
 	}
-
+	 //决定一个版本用来 解析XSD
 	public XsdDescriptor jpaXsd(String version) {
 		switch ( version ) {
 			case "1.0": {
@@ -87,6 +95,7 @@ public class ConfigXsdSupport {
 		synchronized ( xsdCache ) {
 			XsdDescriptor jpa10 = xsdCache[index];
 			if ( jpa10 == null ) {
+				// 本地 XSD解析器 构建
 				jpa10 = LocalXsdResolver.buildXsdDescriptor(
 						"org/hibernate/jpa/persistence_1_0.xsd",
 						"1.0",

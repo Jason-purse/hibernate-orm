@@ -5,8 +5,10 @@
  * License: GNU Lesser General Public License (LGPL), version 2.1 or later
  * See the lgpl.txt file in the root directory or http://www.gnu.org/licenses/lgpl-2.1.html
  */
+// jakarata相关的一些
 apply from: rootProject.file( 'gradle/jakarta-java-module.gradle' )
 apply from: rootProject.file( 'gradle/publishing-pom.gradle' )
+// 这里应用的插件 都是hibernate-orm-build的 发布插件
 apply plugin: 'org.hibernate.orm.jakarta-publish'
 
 publishing {

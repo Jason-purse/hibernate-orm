@@ -55,11 +55,11 @@
 	
 	<sql-query name="propertyResultDiscriminator">
 		<return alias="a" class="org.hibernate.orm.test.legacy.A">
-  			<return-discriminator column="clazz"/>
+  			<return-discriminator column="clazz_discriminata"/>
 			<return-property name="id" column="identifier_column"/>
 			<return-property name="name" column="name"/>
 			<return-property name="count" column="count_"/>
 		</return>
-		select identifier_column, clazz_discriminata as clazz, name, count_ from TA s
+		select identifier_column, clazz_discriminata as xml.xml, name, count_ from TA s
 	</sql-query>
 </hibernate-mapping>

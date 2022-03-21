@@ -23,7 +23,7 @@ public class Circular {
 	}
 
 	/**
-	 * Returns the clazz.
+	 * Returns the clazz.clazz.
 	 * @return Class
 	 */
 	public Class getClazz() {
@@ -39,8 +39,8 @@ public class Circular {
 	}
 
 	/**
-	 * Sets the clazz.
-	 * @param clazz The clazz to set
+	 * Sets the clazz.clazz.
+	 * @param clazz The clazz.clazz to set
 	 */
 	public void setClazz(Class clazz) {
 		this.clazz = clazz;

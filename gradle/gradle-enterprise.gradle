@@ -9,22 +9,22 @@
 // Applies details for `https://ge.hibernate.org`
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-apply from: file( 'system-information.gradle' )
-
-gradleEnterprise {
-    server = 'https://ge.hibernate.org'
-
-    buildScan {
-        captureTaskInputFiles = true
-        publishAlways()
-        publishIfAuthenticated()
-
-        uploadInBackground = !settings.ext.isCiEnvironment
-
-        if ( settings.ext.isCiEnvironment ) {
-            tag "JOB ${System.getenv('JOB_NAME')}"
-        }
-        tag "JDK ${JavaVersion.current().toString()}"
-        value 'database', rootProject.hasProperty( 'db' ) ? rootProject.properties.db : 'h2'
-    }
-}
+//apply from: file( 'system-information.gradle' )
+//
+//gradleEnterprise {
+//    server = 'https://ge.hibernate.org'
+//
+//    buildScan {
+//        captureTaskInputFiles = true
+//        publishAlways()
+//        publishIfAuthenticated()
+//
+//        uploadInBackground = !settings.ext.isCiEnvironment
+//
+//        if ( settings.ext.isCiEnvironment ) {
+//            tag "JOB ${System.getenv('JOB_NAME')}"
+//        }
+//        tag "JDK ${JavaVersion.current().toString()}"
+//        value 'database', rootProject.hasProperty( 'db' ) ? rootProject.properties.db : 'h2'
+//    }
+//}

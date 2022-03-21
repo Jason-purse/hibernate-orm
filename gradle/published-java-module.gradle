@@ -16,6 +16,7 @@ configurations {
 }
 
 dependencies {
+	// doc 的依赖  资源集的所有java文件..
 	javadocSources sourceSets.main.allJava
 }
 
@@ -36,6 +37,7 @@ publishing {
 		}
 
 		// relocation for the published artifacts based on the old groupId
+		// 重定向发布的归档 - 根据旧的groupId
 		relocationPom( MavenPublication ) {
 			pom {
 				name = project.name + ' - relocation'
@@ -92,10 +94,13 @@ publishing {
 	}
 }
 
+// 签名插件 ..
 signing {
+	// 不是快照 / 且 有publish 任务  ...
 	required { !rootProject.ormVersion.isSnapshot && gradle.taskGraph.hasTask("publish") }
-
+	// 签名Key
 	def signingKey = findProperty('signingKey')
+	// 签名Password
 	def signingPassword = findProperty('signingPassword')
 
 	useInMemoryPgpKeys(signingKey, signingPassword)
@@ -115,9 +120,11 @@ publishToSonatype.mustRunAfter test
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Ancillary tasks
+// 辅助方法 /
 
 task showPublications {
 	doFirst {
+		// publishing 插件的所有publications 每一个打印发布 / 每一个发布的所有artifacts 打印出归档文件 ...
 		project.publishing.publications.each { publication ->
 			println "Publication (${publication.name}): ${publication.groupId}:${publication.artifactId}:${publication.version}"
 			publication.artifacts.each { artifact ->

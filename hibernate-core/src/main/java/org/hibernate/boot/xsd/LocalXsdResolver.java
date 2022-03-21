@@ -25,11 +25,13 @@ import org.xml.sax.SAXException;
  * jar file via ClassLoader resource look-up.  This class simplifies
  * the steps needed to achieve those goals explicitly using its own
  * ClassLoader for the look-ups.
+ * 当Hibernate 加载了一个XSD - 我们完全期待它能够从我们的jar文件中解析 - 通过类加载器资源查询 ..
+ * 这个类简化了这些步骤 - 需要实现这些 目的  - 显式的使用 我们自己 的类加载器来 进行查询 ...
  *
  * @author Steve Ebersole
  */
 public class LocalXsdResolver {
-
+	// 默认最新的JPA版本 2.2
 	public static String latestJpaVerison() {
 		return "2.2";
 	}
@@ -40,6 +42,7 @@ public class LocalXsdResolver {
 			case "2.0":
 			case "2.1":
 			case "2.2":
+				// Jakarta 3.0
 			case "3.0":
 				return true;
 			default:
@@ -49,6 +52,7 @@ public class LocalXsdResolver {
 
 	public static URL resolveLocalXsdUrl(String resourceName) {
 		try {
+			// 用这个类的类加载器获取 资源
 			final URL url = LocalXsdResolver.class.getClassLoader().getResource( resourceName );
 			if ( url != null ) {
 				return url;
@@ -56,8 +60,9 @@ public class LocalXsdResolver {
 		}
 		catch (Exception ignore) {
 		}
-
+		// 是否是资源名多了一个 /
 		if ( resourceName.startsWith( "/" ) ) {
+			// 把它去掉 ..
 			resourceName = resourceName.substring( 1 );
 
 			try {
@@ -69,7 +74,7 @@ public class LocalXsdResolver {
 			catch (Exception ignore) {
 			}
 		}
-
+		// 将它作为一个URL
 		// Last: we try name as a URL
 		try {
 			return new URL( resourceName );
@@ -80,8 +85,9 @@ public class LocalXsdResolver {
 		return null;
 	}
 
-
+	// 解析本地的Xsd Schema
 	public static Schema resolveLocalXsdSchema(String schemaResourceName) {
+
 		final URL url = resolveLocalXsdUrl( schemaResourceName );
 		if ( url == null ) {
 			throw new XsdException( "Unable to locate schema [" + schemaResourceName + "] via classpath", schemaResourceName );

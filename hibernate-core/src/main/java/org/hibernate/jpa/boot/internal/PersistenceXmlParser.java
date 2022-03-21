@@ -48,6 +48,8 @@ import static org.hibernate.internal.HEMLogging.messageLogger;
 /**
  * Used by Hibernate to parse {@code persistence.xml} files in SE environments.
  *
+ * Hibernate 自己用来解析persistence.xml 文件(在SE环境中)
+ *
  * @author Steve Ebersole
  */
 public class PersistenceXmlParser {
@@ -56,16 +58,20 @@ public class PersistenceXmlParser {
 
 	/**
 	 * Find all persistence-units from all accessible {@code META-INF/persistence.xml} resources
+	 * 从META-INF/persistence.xml 资源中发现所有持久化单元..
 	 *
 	 * @param integration The Map of integration settings
 	 *
 	 * @return List of descriptors for all discovered persistence-units.
 	 */
 	public static List<ParsedPersistenceXmlDescriptor> locatePersistenceUnits(Map integration) {
+
+		// SE 环境下
 		final PersistenceXmlParser parser = new PersistenceXmlParser(
-				ClassLoaderServiceImpl.fromConfigSettings( integration ),
-				PersistenceUnitTransactionType.RESOURCE_LOCAL
+				ClassLoaderServiceImpl.fromConfigSettings( integration ), // 类加载器 服务
+				PersistenceUnitTransactionType.RESOURCE_LOCAL  // 本地资源 ...
 		);
+		// 解析
 		parser.doResolve( integration );
 		return new ArrayList<>( parser.persistenceUnits.values() );
 	}
@@ -210,6 +216,7 @@ public class PersistenceXmlParser {
 
 	private final ClassLoaderService classLoaderService;
 	private final PersistenceUnitTransactionType defaultTransactionType;
+	// 持久化单元 in-memory 缓存 ...
 	private final Map<String, ParsedPersistenceXmlDescriptor> persistenceUnits;
 
 	protected PersistenceXmlParser(ClassLoaderService classLoaderService, PersistenceUnitTransactionType defaultTransactionType) {
@@ -223,8 +230,11 @@ public class PersistenceXmlParser {
 	}
 
 	private void doResolve(Map integration) {
+		// 通过类加载器 定位 /META-INF/persistence.xml
 		final List<URL> xmlUrls = classLoaderService.locateResources( "META-INF/persistence.xml" );
+		// 如果为空
 		if ( xmlUrls.isEmpty() ) {
+			// 纪录一下  不能够发现持久化xml - 在classPath上...
 			LOG.unableToFindPersistenceXmlInClasspath();
 		}
 		else {
@@ -234,6 +244,7 @@ public class PersistenceXmlParser {
 
 	private void parsePersistenceXml(List<URL> xmlUrls, Map integration) {
 		for ( URL xmlUrl : xmlUrls ) {
+			// 解析
 			parsePersistenceXml( xmlUrl, integration );
 		}
 	}
@@ -244,16 +255,19 @@ public class PersistenceXmlParser {
 		}
 
 		final Document doc = loadUrl( xmlUrl );
-		final Element top = doc.getDocumentElement();
+		final Element top = doc.getDocumentElement(); // document 元素
 
 		final NodeList children = top.getChildNodes();
 		for ( int i = 0; i < children.getLength() ; i++ ) {
-			if ( children.item( i ).getNodeType() == Node.ELEMENT_NODE ) {
-				final Element element = (Element) children.item( i );
+			if ( children.item( i ).getNodeType() == Node.ELEMENT_NODE ) { // 判断是不是Element_NODE
+				final Element element = (Element) children.item( i ); // 根据item 拿取
 				final String tag = element.getTagName();
-				if ( tag.equals( "persistence-unit" ) ) {
+				if ( tag.equals( "persistence-unit" ) ) { // 持久化单元
+					//
 					final URL puRootUrl = ArchiveHelper.getJarURLFromURLEntry( xmlUrl, "/META-INF/persistence.xml" );
+					// 解析完毕的PersistenceXmlDescriptor...
 					ParsedPersistenceXmlDescriptor persistenceUnit = new ParsedPersistenceXmlDescriptor( puRootUrl );
+					// 绑定
 					bindPersistenceUnit( persistenceUnit, element );
 
 					if ( persistenceUnits.containsKey( persistenceUnit.getName() ) ) {
@@ -263,6 +277,7 @@ public class PersistenceXmlParser {
 
 					// per JPA spec, any settings passed in to PersistenceProvider bootstrap methods should override
 					// values found in persistence.xml
+					// 传递给引导方法的value 应该 覆盖在persistence.xml中发现的值
 					if ( integration.containsKey( AvailableSettings.JAKARTA_PERSISTENCE_PROVIDER ) ) {
 						persistenceUnit.setProviderClassName( (String) integration.get( AvailableSettings.JAKARTA_PERSISTENCE_PROVIDER ) );
 					}
@@ -309,9 +324,13 @@ public class PersistenceXmlParser {
 						persistenceUnit.setNonJtaDataSource( integration.get( AvailableSettings.JAKARTA_NON_JTA_DATASOURCE ) );
 					}
 
+					// 解码事务类型
 					decodeTransactionType( persistenceUnit );
 
+					// 获取所有的属性 ...
 					Properties properties = persistenceUnit.getProperties();
+					// 然后覆盖 ....
+					// 用传递给  PersistenceProvider bootstrap methods  覆盖persistence.xml中的属性 ..
 					ConfigurationHelper.overrideProperties( properties, integration );
 
 					persistenceUnits.put( persistenceUnit.getName(), persistenceUnit );
@@ -460,17 +479,23 @@ public class PersistenceXmlParser {
 		}
 	}
 
+	// 加载一个文档
 	private Document loadUrl(URL xmlUrl) {
+		// 拿到外部形式(编码过)
 		final String resourceName = xmlUrl.toExternalForm();
 		try {
+			// 打开一个连接 ...
 			URLConnection conn = xmlUrl.openConnection();
+			// 由于你使用缓存,将导致文件打开,那么可能会导致Jar被锁住 ..
 			conn.setUseCaches( false ); //avoid JAR locking on Windows and Tomcat
 			try {
+				// 根据输入流 读取
 				try (InputStream inputStream = conn.getInputStream()) {
 					final InputSource inputSource = new InputSource( inputStream );
 					try {
 						DocumentBuilder documentBuilder = documentBuilderFactory().newDocumentBuilder();
 						try {
+							// 通过这个文档构建器  解析 输入流生成一个Dom 对象树
 							Document document = documentBuilder.parse( inputSource );
 							validate( document );
 							return document;
@@ -498,15 +523,21 @@ public class PersistenceXmlParser {
 
 	/**
 	 * Validate the document using the
+	 *
+	 * 验证这个文档
 	 */
 	private void validate(Document document) {
 		// todo : add ability to disable validation...
-
+		// 获取版本
 		final String version = document.getDocumentElement().getAttribute( "version" );
+		// cfg
 		final Validator validator = new ConfigXsdSupport().jpaXsd( version ).getSchema().newValidator();
 
+		// 错误 ...
 		List<SAXException> errors = new ArrayList<>();
+		// 设置错误处理器
 		validator.setErrorHandler( new ErrorHandlerImpl( errors ) );
+
 		try {
 			validator.validate( new DOMSource( document ) );
 		}
@@ -529,20 +560,24 @@ public class PersistenceXmlParser {
 
 	private DocumentBuilderFactory documentBuilderFactory;
 
+	// 文档构建工厂
 	private DocumentBuilderFactory documentBuilderFactory() {
 		if ( documentBuilderFactory == null ) {
 			documentBuilderFactory = buildDocumentBuilderFactory();
 		}
 		return documentBuilderFactory;
 	}
-
+	// 构建一个文档构建器工厂
 	private DocumentBuilderFactory buildDocumentBuilderFactory() {
+		// 能够包含一个解析器 -> 能够根据xml 文档 生成Dom 对象树
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		// 指定此代码产生的解析器将提供对XML名称空间的支持。默认的值被设置为{@code假}
 		documentBuilderFactory.setNamespaceAware( true );
 		return documentBuilderFactory;
 	}
-
+	// 实现错误处理器
 	public static class ErrorHandlerImpl implements ErrorHandler {
+		// 错误 list
 		private List<SAXException> errors;
 
 		ErrorHandlerImpl(List<SAXException> errors) {

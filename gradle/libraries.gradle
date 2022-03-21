@@ -7,6 +7,8 @@
 
 // build a map of the dependency artifacts to use.  Allows centralized definition of the version of artifacts to
 // use.  In that respect it serves a role similar to <dependencyManagement> in Maven
+// 作为一个类似于<dependencyManagement>的一个角色   集中化定义工件的版本定义 ...
+// 定义需要使用的工件的依赖map
 ext {
 
     junitVersion = '4.13.2'
@@ -52,7 +54,7 @@ ext {
     antlrVersion = '4.9.1'
 
     micrometerVersion = '1.6.1'
-
+    // 库 Map
     libraries = [
             // Ant
             ant:            'org.apache.ant:ant:1.8.2',
@@ -215,8 +217,10 @@ ext {
 }
 
 configurations.all {
+    // 解决策略(每一个依赖 ..)
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         //Force the "byte buddy agent" version to match the Byte Buddy version we use, as Mockito might pull in a mismatched version transitively:
+        // 依赖解析策略  让 byte buddy agent  使用这里指定的版本
         if (details.requested.group + ":" + details.requested.name == 'net.bytebuddy:byte-buddy-agent') {
             details.useVersion byteBuddyVersion
         }

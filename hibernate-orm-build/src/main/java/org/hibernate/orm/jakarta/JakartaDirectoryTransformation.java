@@ -23,6 +23,8 @@ import static org.hibernate.orm.jakarta.JakartaPlugin.JAKARTA;
 
 /**
  * @author Steve Ebersole
+ *
+ * jakarta 目录转移 任务
  */
 @CacheableTask
 public abstract class JakartaDirectoryTransformation extends DefaultTask {
@@ -65,7 +67,7 @@ public abstract class JakartaDirectoryTransformation extends DefaultTask {
 		// have no effect on the incremental build
 
 		targetDirAsFile.delete();
-
+		// java 执行
 		getProject().javaexec(
 				(javaExecSpec) -> {
 					javaExecSpec.classpath( getProject().getConfigurations().getByName( "jakartaeeTransformTool" ) );

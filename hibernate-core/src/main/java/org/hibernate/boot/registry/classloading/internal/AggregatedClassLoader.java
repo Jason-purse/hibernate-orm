@@ -12,6 +12,9 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
+/**
+ * 这是一个类加载器
+ */
 public class AggregatedClassLoader extends ClassLoader {
 	private final ClassLoader[] individualClassLoaders;
 	private final TcclLookupPrecedence tcclLookupPrecedence;
@@ -121,7 +124,9 @@ public class AggregatedClassLoader extends ClassLoader {
 	}
 
 	private Iterator<ClassLoader> newTcclNeverIterator() {
+		// 定位系统类加载器
 		final ClassLoader systemClassLoader = locateSystemClassLoader();
+
 		return new Iterator<ClassLoader>() {
 			private int currentIndex = 0;
 			private boolean sysCLReturned = false;
@@ -144,6 +149,7 @@ public class AggregatedClassLoader extends ClassLoader {
 					currentIndex += 1;
 					return individualClassLoaders[ currentIndex - 1 ];
 				}
+				// 先使用提供的类加载器 然后使用系统类加载器
 				else if ( !sysCLReturned && systemClassLoader != null ) {
 					sysCLReturned = true;
 					return systemClassLoader;
@@ -219,6 +225,7 @@ public class AggregatedClassLoader extends ClassLoader {
 		}
 	}
 
+	// 定位TCCL /Thread Current  Thread Class  Loader
 	private static ClassLoader locateTCCL() {
 		try {
 			return Thread.currentThread().getContextClassLoader();

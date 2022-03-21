@@ -7,7 +7,7 @@
 repositories {
 	mavenCentral()
 }
-
+// java-gradle-plugin  主要是用来编写插件的 ...
 apply plugin: 'java-gradle-plugin'
 
 group = 'org.hibernate.build'
@@ -15,34 +15,47 @@ version = '1.0.0-SNAPSHOT'
 buildDir = "target"
 
 dependencies {
+	// 依赖gradle Api
+	// 官方建议 只使用public gradle api / 未来会分离公共api  / 私有api
 	implementation gradleApi()
+	// Java annotation indexer
 	implementation 'org.jboss:jandex:2.4.2.Final'
 }
-
+// 由于java-gradle-plugin 自动依赖了java插件 ...
+// 这就是为什么项目需要至少使用jdk11编译
 tasks.compileJava {
+	// 设置编码
 	options.encoding = 'UTF-8'
+	// 源码兼容能力
 	sourceCompatibility = 11
+	// 目标兼容能力
 	targetCompatibility = 11
 }
 
+// 这里需要发布的插件有 ...
 gradlePlugin {
 	plugins {
+		// database-service-plugin
 		databaseServicePlugin {
 			id = 'org.hibernate.orm.database-service'
 			implementationClass = 'org.hibernate.orm.db.DatabaseServicePlugin'
 		}
+		// antlr-plugin
 		antlrPlugin {
 			id = 'org.hibernate.orm.antlr'
 			implementationClass = 'org.hibernate.orm.antlr.AntlrPlugin'
 		}
+		// jakarta-plugin
 		jakartaPlugin {
 			id = 'org.hibernate.orm.jakarta'
 			implementationClass = 'org.hibernate.orm.jakarta.JakartaPlugin'
 		}
+		// jakarta-publish-plugin
 		jakartaPublishPlugin {
 			id = 'org.hibernate.orm.jakarta-publish'
 			implementationClass = 'org.hibernate.orm.jakarta.JakartaPublishingPlugin'
 		}
+		// reports-plugin
 		reportsPlugin {
 			id = 'org.hibernate.orm.build.reports'
 			implementationClass = 'org.hibernate.orm.post.ReportGenerationPlugin'

@@ -21,9 +21,11 @@ import org.hibernate.bytecode.enhance.spi.EnhancementContext;
  * Describes the information gleaned from a {@code <persistence-unit/>} element in a {@code persistence.xml} file
  * whether parsed directly by Hibernate or passed to us by an EE container as a
  * {@link jakarta.persistence.spi.PersistenceUnitInfo}.
+ * 描述在persistence.xml文件中的一个persistence-unit元素的描述信息
+ *	无论是通过Hibernate 直接解析还是通过一个Java EE 容器作为一个PersistenceUnitInfo传递给我们 ...
+ *  Easier to consolidate both views into a single contract and extract information through that shared contract.
  *
- * Easier to consolidate both views into a single contract and extract information through that shared contract.
- *
+ *  更轻松地将两个视图合并到单个合同中，并通过该共享合同提取信息。
  * @author Steve Ebersole
  */
 public class ParsedPersistenceXmlDescriptor implements org.hibernate.jpa.boot.spi.PersistenceUnitDescriptor {

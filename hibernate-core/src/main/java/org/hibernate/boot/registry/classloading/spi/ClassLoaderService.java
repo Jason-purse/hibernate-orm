@@ -17,6 +17,7 @@ import org.hibernate.service.spi.Stoppable;
 
 /**
  * A service for interacting with class loaders.
+ * 与类加载器交互的一个Service
  *
  * @author Steve Ebersole
  */
@@ -35,6 +36,7 @@ public interface ClassLoaderService extends Service, Stoppable {
 
 	@SuppressWarnings("unchecked")
 	default <T> Class<T> classForTypeName(String className) {
+		// 普通类 和
 		switch ( className ) {
 			case "boolean":
 				return (Class<T>) boolean.class;
@@ -85,10 +87,13 @@ public interface ClassLoaderService extends Service, Stoppable {
 	List<URL> locateResources(String name);
 
 	/**
+	 * 核心方法
 	 * Discovers and instantiates implementations of the named service contract.
+	 * 发现并实例化命名服务约束的实现...
 	 * <p/>
 	 * NOTE : the terms service here is used differently than {@link Service}.  Instead here we are talking about
 	 * services as defined by {@link java.util.ServiceLoader}.
+	 *	这里的服务不同于Service, 相反这里谈论的是通过java.util.ServiceLoader 定义的服务 ...
 	 *
 	 * @param serviceContract The java type defining the service contract
 	 * @param <S> The type of the service contract

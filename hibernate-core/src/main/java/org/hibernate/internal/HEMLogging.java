@@ -10,6 +10,7 @@ import org.jboss.logging.Logger;
 
 /**
  * Sad when you need helpers for generating loggers...
+ * 当你需要去生成logger时 使用
  *
  * @author Steve Ebersole
  */

@@ -20,6 +20,8 @@ import org.hibernate.bytecode.enhance.spi.EnhancementContext;
  * an EE container in the form of {@link jakarta.persistence.spi.PersistenceUnitInfo} or in an SE environment
  * where Hibernate has parsed the {@code persistence.xml} file itself.
  *
+ * 一个抽象  用来处理是否来自一个EE 容器的PersistenceUnitInfo 或是 SE环境中通过Hibernate 自己解析persistence.xml的Persistence-unit的信息
+ *
  * @author Steve Ebersole
  */
 public interface PersistenceUnitDescriptor {

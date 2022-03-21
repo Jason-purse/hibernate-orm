@@ -7,12 +7,14 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
+    // 用来构建 XJC generation (JAXB binding model generation)
     id 'org.hibernate.build.xjc-jakarta'
 }
 
 description = 'Hibernate\'s core ORM functionality'
 
 apply from: rootProject.file( 'gradle/published-java-module.gradle' )
+//
 apply plugin: 'org.hibernate.orm.antlr'
 apply plugin: 'org.hibernate.matrix-test'
 
@@ -131,7 +133,7 @@ xjc {
     }
 }
 
-
+// 默认命名参数 Copy
 task copyBundleResources (type: Copy) {
     inputs.property( "db", db )
     ext {
@@ -144,6 +146,7 @@ task copyBundleResources (type: Copy) {
     into ext.bundlesTargetDir
     filter( ReplaceTokens, tokens: ext.bundleTokens)
 
+    // 首先需要创建任务
     doFirst {
         ext.bundlesTargetDir.mkdirs()
     }
@@ -155,16 +158,18 @@ processTestResources {
 }
 
 sourcesJar {
+    // 重复之后排除 ...
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
 }
-
+// 测试Jar 打包测试Jar???
 task testJar(type: Jar, dependsOn: testClasses) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    // 设置classifier 为test
     archiveClassifier.set( 'test' )
+    // 应用到目标...
     from sourceSets.test.output
 }
-
+// 工件 ...
 artifacts {
     tests testJar
 }

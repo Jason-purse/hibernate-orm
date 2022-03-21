@@ -28,10 +28,12 @@ import org.gradle.api.tasks.testing.Test;
 
 /**
  * Models a publishable Jakartafied project
+ * 用来发布jakarta 项目的一个模型
  *
  * @author Steve Ebersole
  */
 public class JakartaPublishingPlugin implements Plugin<Project> {
+
 	public static final String MAIN_CONFIG_NAME = "jakartaElements";
 	public static final String MAIN_JAR_TASK_NAME = "jakartafyJar";
 
@@ -43,6 +45,10 @@ public class JakartaPublishingPlugin implements Plugin<Project> {
 
 	private final SoftwareComponentFactory softwareComponentFactory;
 
+	/**
+	 * 依赖注入一个 软件组件工厂  共享服务
+	 * @param softwareComponentFactory
+	 */
 	@Inject
 	public JakartaPublishingPlugin(SoftwareComponentFactory softwareComponentFactory) {
 		this.softwareComponentFactory = softwareComponentFactory;
@@ -50,6 +56,7 @@ public class JakartaPublishingPlugin implements Plugin<Project> {
 
 	@Override
 	public void apply(Project project) {
+		// 应用一个这样的插件
 		project.getPlugins().apply( JakartaPlugin.class );
 
 		final AdhocComponentWithVariants jakartaComponent = softwareComponentFactory.adhoc( "jakarta" );

@@ -31,6 +31,7 @@ import org.hibernate.internal.CoreMessageLogger;
 
 /**
  * Standard implementation of the service for interacting with class loaders
+ * 标准的和类加载器交互的服务实现...
  *
  * @author Steve Ebersole
  * @author Sanne Grinovero
@@ -69,6 +70,7 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
 	public ClassLoaderServiceImpl(Collection<ClassLoader> providedClassLoaders, TcclLookupPrecedence lookupPrecedence) {
 		final LinkedHashSet<ClassLoader> orderedClassLoaderSet = new LinkedHashSet<>();
 
+		// 增加所有提供的class loaders
 		// first, add all provided class loaders, if any
 		if ( providedClassLoaders != null ) {
 			for ( ClassLoader classLoader : providedClassLoaders ) {
@@ -77,12 +79,18 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
 				}
 			}
 		}
-
+		// 正常增加已知的类加载器
 		// normalize adding known class-loaders...
 		// then the Hibernate class loader
+		// 类加载器实现
+		// 增加Hibernate 类加载器 ...
+		// 这里 使用了Set ..
 		orderedClassLoaderSet.add( ClassLoaderServiceImpl.class.getClassLoader() );
 
+		// 现在构建一个聚合型的类加载器 ...
 		// now build the aggregated class loader...
+		// 遍历所有的堆栈,判断是否有权限 ..
+		// 判断是否有能力获取classLoader
 		this.aggregatedClassLoader = AccessController.doPrivileged( new PrivilegedAction<AggregatedClassLoader>() {
 			public AggregatedClassLoader run() {
 				return new AggregatedClassLoader( orderedClassLoaderSet, lookupPrecedence );

@@ -8,6 +8,9 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
+
+
+        // 本地插件仓库 ..
         maven {
             name = 'localPluginRepository'
             url = uri( "${gradle.gradleUserHomeDir}/tmp/plugins" )
@@ -17,79 +20,122 @@ pluginManagement {
 
 plugins {
     id 'com.gradle.enterprise' version '3.8'
+    // gradle 的官方插件
+//    A Gradle Plugin to capture common custom user data used for Gradle Build Scans in Gradle Enterprise
+    // 暂不需要了解
     id 'com.gradle.common-custom-user-data-gradle-plugin' version '1.4.2'
 }
 
 rootProject.name = 'hibernate-orm'
 
+// 一个include build
 includeBuild('hibernate-orm-build')
 
+// settings 脚本本身使用插件 ...
 apply from: file( 'gradle/gradle-enterprise.gradle' )
 
+// 条件判断, 构建必须在Java11 版本之上 ..
 if ( !JavaVersion.current().java11Compatible ) {
     throw new GradleException( "Gradle must be run with Java 11 or later" )
 }
 
-buildCache {
-    local {
-        // do not use local build cache for CI jobs, period!
-        enabled = !settings.ext.isCiEnvironment
-    }
-    remote(HttpBuildCache) {
-        enabled = true
-        push = settings.ext.populateRemoteBuildCache
-        url = 'https://ge.hibernate.org/cache/'
-    }
-}
 
+
+// 构建缓存 ...
+//buildCache {
+////    local {
+////        // do not use local build cache for CI jobs, period!
+////        enabled = !settings.ext.isCiEnvironment
+////    }
+////    remote(HttpBuildCache) {
+////        enabled = true
+////        push = settings.ext.populateRemoteBuildCache
+////        url = 'https://ge.hibernate.org/cache/'
+////    }
+//    // 这里无法使用  hibernate 的缓存 ....  无法验证 ...
+//    local {
+//        enabled = false
+//    }
+//}
+
+// 基准线 java版本为 11
 gradle.ext.baselineJavaVersion = JavaLanguageVersion.of( 11 )
 
 // Gradle does bytecode transformation on tests.
 // You can't use bytecode higher than what Gradle supports, even with toolchains.
+// gradle 在测试中会进行字节码转义
+// 最高支持 17
 def GRADLE_MAX_SUPPORTED_BYTECODE_VERSION = 17
 
 // If either 'main.jdk.version' or 'test.jdk.version' is set, enable the toolchain and use the selected jdk.
+// 如果main.jdk.version / test.jdk.version 设置 将启用工具链  并使用选择的jdk
 // If only one property is set, the other defaults to the baseline Java version (8).
+// 如果没有设置默认选择 基准线Java版本 Jdk8
 // Note that when toolchain is enabled, you also need to specify
+// 注意当工具链启动的时候,你也需要指明选择的jdks的位置
 // the location of the selected jdks
+// 默认自动下载和选择是在gradle.properties 中禁用了 ...
 // (auto-download and auto-detect are disabled in gradle.properties).
 //
 // Example (with SDKMAN):
+//  例如这里使用测试 jdk版本 15 / 安装路径指定为 ...  那么将启用工具链并使用选择的jdk
 // ./gradlew build -Ptest.jdk.version=15 \
 // -Porg.gradle.java.installations.paths=$SDKMAN_CANDIDATES_DIR/java/15.0.1-open,$SDKMAN_CANDIDATES_DIR/java/8
 if ( hasProperty( 'main.jdk.version' ) || hasProperty( 'test.jdk.version' ) ) {
     // Testing a particular JDK version
     // Gradle doesn't support all JDK versions unless we use toolchains
+    // gradle 不支持所有的JDK版本 / 除非使用工具链
+    // 进行测试 JDK version
+    // 默认设置启用工具链
     gradle.ext.javaToolchainEnabled = true
+    // 设置一个map
     gradle.ext.javaVersions = [
+            // main source set 的版本为
             main: [
+                    // 编译器 为选择的jdk版本  否则使用jdk8
                     compiler: JavaLanguageVersion.of( hasProperty( 'main.jdk.version' )
                             ? getProperty( 'main.jdk.version' ) : gradle.ext.baselineJavaVersion.asInt() ),
+                    // 设置发行版的Jdk版本
                     release: gradle.ext.baselineJavaVersion
             ],
+            // test source set 的版本为
             test: [
+                    // 编译器 为选择的jdk版本 否则使用jdk8
                     compiler: JavaLanguageVersion.of( hasProperty( 'test.jdk.version' )
                             ? getProperty( 'test.jdk.version' ) : gradle.ext.baselineJavaVersion.asInt() )
             ]
     ]
+    // 然后直接拿取测试编译器版本 ..
     def testCompilerVersion = gradle.ext.javaVersions.test.compiler
+    // 判断是否大于最大支持字节码版本
     if ( testCompilerVersion.asInt() > GRADLE_MAX_SUPPORTED_BYTECODE_VERSION ) {
+        // 抛出警告,然后强制使用测试字节码到最大支持的字节码版本 ...
         logger.warn( "[WARN] Gradle does not support bytecode version '${testCompilerVersion}'." +
                  " Forcing test bytecode to version ${GRADLE_MAX_SUPPORTED_BYTECODE_VERSION}." )
+        // 设置发行版jdk版本
         gradle.ext.javaVersions.test.release = JavaLanguageVersion.of( GRADLE_MAX_SUPPORTED_BYTECODE_VERSION )
     }
     else {
+        // 否则使用测试编译器Jdk选择版本 ...
         gradle.ext.javaVersions.test.release = testCompilerVersion
     }
+    // 最后设置test中的launcher 版本为测试编译器JDK 选择版本..
     gradle.ext.javaVersions.test.launcher = testCompilerVersion
 }
 else {
+    // 这里表示不使用工具链 ...
+
     // Not testing a particular JDK version: we will use the same JDK used to run Gradle.
     // We disable toolchains for convenience, so that anyone can just run the build with their own JDK
     // without any additional options and without downloading the whole JDK.
+    // 使用自己的JDK进行编译  且没有任何额外的选项 也不需要下载JDK...
     gradle.ext.javaToolchainEnabled = false
+    // 设置当前JDK的版本为gradle 使用的JDK版本
     def gradleJdkVersion = JavaLanguageVersion.of( JavaVersion.current().getMajorVersion() )
+    // 是否大于最大支持字节码JDK版本 ....
     if ( gradleJdkVersion.asInt() > GRADLE_MAX_SUPPORTED_BYTECODE_VERSION ) {
+        // 表示要么使用工具链  要么使用一个合适的JDK版本  ...
+        // 例如工具链  例如指定使用对应的JDK版本 用来运行测试  并指定JDK版本的路径 ..
         logger.warn( "[WARN] Gradle does not support this JDK, because it is too recent; build is likely to fail." +
                 " To avoid failures, you should use an older Java version when running Gradle, and rely on toolchains." +
                 " To that end, specify the version of Java you want to run tests with using property 'test.jdk.version'," +
@@ -98,21 +144,27 @@ else {
                 "./gradlew build -Ptest.jdk.version=15 -Porg.gradle.java.installations.paths=\$SDKMAN_CANDIDATES_DIR/java/15.0.1-open,\$SDKMAN_CANDIDATES_DIR/java/8" )
     }
 
+    // gradle java版本信息
     gradle.ext.javaVersions = [
+            // 设置 main source set的JDK信息 ...
             main: [
                     compiler: gradleJdkVersion,
+                    // 发行版使用JDK8
                     release: gradle.ext.baselineJavaVersion
             ],
             test: [
                     compiler: gradleJdkVersion,
+                    // 发行版使用最小版本...(用户选择的JDK和最大支持JDK版本的最小值)
                     release: JavaLanguageVersion.of(
                             Math.min( GRADLE_MAX_SUPPORTED_BYTECODE_VERSION, gradleJdkVersion.asInt() ) ),
+                    // junit引擎也需要使用gradle JDK 版本 ...
                     launcher: gradleJdkVersion
             ]
     ]
 }
-
+// 纪录两个日志  main source set 的jdk版本为...
 logger.lifecycle "Java versions for main code: " + gradle.ext.javaVersions.main
+// test source set 的jdk版本为 ...
 logger.lifecycle "Java versions for tests: " + gradle.ext.javaVersions.test
 
 include 'hibernate-core'
@@ -139,7 +191,9 @@ include 'documentation'
 include 'release'
 
 include 'metamodel-generator'
+// 设置这个项目的项目目录为 指定目录
 project(':metamodel-generator').projectDir = new File(rootProject.projectDir, "tooling/metamodel-generator")
+// 设置它的名称为  ....
 project(':metamodel-generator').name = 'hibernate-jpamodelgen'
 
 //include 'hibernate-gradle-plugin'
@@ -149,17 +203,22 @@ project(':metamodel-generator').name = 'hibernate-jpamodelgen'
 //project(':project-template').projectDir = new File(rootProject.projectDir, "tooling/project-template")
 
 include 'hibernate-enhance-maven-plugin'
+// 同样指定 这个项目的目录为指定目录
 project(':hibernate-enhance-maven-plugin').projectDir = new File(rootProject.projectDir, "tooling/hibernate-enhance-maven-plugin")
 
+// hibernate-ant 相关的 配置 ..
 include 'hibernate-ant'
 project(':hibernate-ant').projectDir = new File(rootProject.projectDir, "tooling/hibernate-ant")
-
+// 社区方言 ...
 include 'hibernate-community-dialects'
 
 rootProject.children.each { project ->
-    project.buildFileName = "${project.name}.gradle"
-    assert project.projectDir.isDirectory()
-    assert project.buildFile.exists()
-    assert project.buildFile.isFile()
+    project.buildFileName = "${project.name}.gradle" // 指定每一个项目的构建文件..
+    // 执行之前进行断言 ..
+    assert project.projectDir.isDirectory() // 断言项目目录是一个目录
+    assert project.buildFile.exists() // 存在
+    assert project.buildFile.isFile() // 是文件..
 }
+include 'hibernate-custom-test'
+include 'hibernate-custom-test-2'
 

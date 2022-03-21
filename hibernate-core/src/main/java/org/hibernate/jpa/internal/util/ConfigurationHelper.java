@@ -20,6 +20,8 @@ import org.hibernate.FlushMode;
  * @author Emmanuel Bernard
  */
 public abstract class ConfigurationHelper {
+
+
 	public static void overrideProperties(Properties properties, Map<?,?> overrides) {
 		for ( Map.Entry entry : overrides.entrySet() ) {
 			if ( entry.getKey() != null && entry.getValue() != null ) {

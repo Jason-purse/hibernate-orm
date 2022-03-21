@@ -26,12 +26,17 @@ import jakarta.persistence.criteria.CriteriaUpdate;
 /**
  * Enumerates the configuration properties supported by Hibernate, including
  * properties defined by the JPA specification.
+ * 由Hibernate 支持的枚举出的配置属性, 包括由JPA规范定义的属性 ...
  * <p>
+ *     // 这里所有的setting 能在配置时 指定 ...
  * The settings defined here may be specified at configuration time:
  * <ul>
+ *     // 例如persistence.xml / hibernate.cfg.xml
  *     <li>in a configuration file, for example, in {@code persistence.xml} or
  *         {@code hibernate.cfg.xml},
+ *         // configuration.setProperty
  *     <li>via {@link Configuration#setProperty(String, String)}, or
+ *     // 标准服务注册机构建器应用配置 ...
  *     <li>via {@link org.hibernate.boot.registry.StandardServiceRegistryBuilder#applySetting(String, Object)}.
  * </ul>
  *

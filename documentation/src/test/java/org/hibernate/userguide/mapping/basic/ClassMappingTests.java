@@ -40,7 +40,7 @@ public class ClassMappingTests {
 		final JdbcTypeRegistry jdbcRegistry = mappingMetamodel.getTypeConfiguration().getJdbcTypeRegistry();
 		final EntityPersister entityDescriptor = mappingMetamodel.findEntityDescriptor(EntityWithClass.class);
 
-		final BasicAttributeMapping duration = (BasicAttributeMapping) entityDescriptor.findAttributeMapping("clazz");
+		final BasicAttributeMapping duration = (BasicAttributeMapping) entityDescriptor.findAttributeMapping("xml");
 		final JdbcMapping jdbcMapping = duration.getJdbcMapping();
 		assertThat(jdbcMapping.getJavaTypeDescriptor().getJavaTypeClass(), equalTo(Class.class));
 		assertThat( jdbcMapping.getJdbcType(), equalTo( jdbcRegistry.getDescriptor( Types.VARCHAR)));

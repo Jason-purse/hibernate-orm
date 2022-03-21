@@ -10,6 +10,8 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
 //tag::osgi-discover-EntityManagerFactory[]
+
+// HibernateUtil的工具类 ...
 public class HibernateUtil {
 
     private EntityManagerFactory emf;

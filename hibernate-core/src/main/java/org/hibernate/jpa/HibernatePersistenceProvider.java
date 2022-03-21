@@ -30,6 +30,9 @@ import org.jboss.logging.Logger;
 /**
  * The Hibernate {@link PersistenceProvider} implementation
  *
+ * Hibernate 的 持久化提供器 它提供了一种如何与数据库交互的实现
+ * 主要是通过Persistence 调用 ...
+ *
  * @author Gavin King
  * @author Steve Ebersole
  * @author Brett Meyer
@@ -43,10 +46,12 @@ public class HibernatePersistenceProvider implements PersistenceProvider {
 	 * {@inheritDoc}
 	 *
 	 * @implSpec Per the specification, the values passed as {@code properties} override values found in {@code persistence.xml}
+	 *  persistence.xml中发现的值  会覆盖 这里传入的properties..
 	 */
 	@Override
 	public EntityManagerFactory createEntityManagerFactory(String persistenceUnitName, Map properties) {
 		log.tracef( "Starting createEntityManagerFactory for persistenceUnitName %s", persistenceUnitName );
+		// 获取实体管理器工厂构建器或者Null
 		final EntityManagerFactoryBuilder builder = getEntityManagerFactoryBuilderOrNull( persistenceUnitName, properties );
 		if ( builder == null ) {
 			log.trace( "Could not obtain matching EntityManagerFactoryBuilder, returning null" );
@@ -125,6 +130,7 @@ public class HibernatePersistenceProvider implements PersistenceProvider {
 	}
 
 	protected static Map<?,?> wrap(Map<?,?> properties) {
+
 		return properties == null ? Collections.emptyMap() : Collections.unmodifiableMap( properties );
 	}
 

@@ -9,6 +9,7 @@ package org.hibernate.boot.registry.classloading.internal;
 /**
  * Defines when the lookup in the current thread context {@link ClassLoader} should be
  * done according to the other ones.
+ * 定义 - 当在当前线程上下文类加载器中寻找时应该 根据其他某一个完成 ...
  * 
  * @author Cédric Tabin
  */
@@ -20,12 +21,14 @@ public enum TcclLookupPrecedence {
 	NEVER,
 
 	/**
+	 * 此类将在线程上下文中 查询  先于其他 ClassLoader 查询 ...
 	 * The class lookup will be done in the thread context {@link ClassLoader} prior
 	 * to the other {@code ClassLoader}s.
 	 */
 	BEFORE,
 
 	/**
+	 * 其他类加载器没有发现 才进行当前线程上下文  类查询 ...
 	 * The class lookup will be done in the thread context {@link ClassLoader} if
 	 * the former hasn't been found in the other {@code ClassLoader}s.
 	 * This is the default value.

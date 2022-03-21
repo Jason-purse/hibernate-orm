@@ -20,6 +20,7 @@ import org.jboss.logging.Logger;
 
 /**
  * Helper for dealing with archives
+ * 处理归档的一个帮助器
  *
  * @author Emmanuel Bernard
  * @author Steve Ebersole
@@ -30,36 +31,46 @@ public class ArchiveHelper {
 	/**
 	 * Get the JAR URL of the JAR containing the given entry
 	 * Method used in a non managed environment
+	 * 获取一个Jar URL (这个Jar包含给定使用在非管理环境中的entry method)
 	 *
 	 * @param url URL pointing to the known file in the JAR
-	 * @param entry file known to be in the JAR
+	 * @param entry file known to be in the JAR   jar中已知的entry file
 	 * @return the JAR URL
 	 * @throws IllegalArgumentException if none URL is found
 	 */
 	public static URL getJarURLFromURLEntry(URL url, String entry) throws IllegalArgumentException {
 		URL jarUrl;
-		String file = url.getFile();
-		if ( ! entry.startsWith( "/" ) ) {
+		String file = url.getFile(); // 拿到文件路径
+		if ( ! entry.startsWith( "/" ) ) { // 没有 / , 加上 /
 			entry = "/" + entry;
 		}
+		// 减去 这个entry... 拿到文件名称
 		file = file.substring( 0, file.length() - entry.length() );
+		// 如果以!结尾 ...
 		if ( file.endsWith( "!" ) ) {
 			file = file.substring( 0, file.length() - 1 );
 		}
 		try {
+			// 拿到协议
 			final String protocol = url.getProtocol();
 
+			// 如果是Jar  / wsJar
 			if ( "jar".equals( protocol ) || "wsjar".equals( protocol ) ) {
 				//Original URL is like jar:protocol
 				//WebSphere has it's own way
+				// 那么协议类似于jar:protocol
 				jarUrl = new URL( file );
+				// 如果是file
 				if ( "file".equals( jarUrl.getProtocol() ) ) {
+					// 有空格,但是不需要转义,仅仅通过URI 就可以转义咯..
 					if ( file.indexOf( ' ' ) != -1 ) {
 						//not escaped, need to voodoo; goes by toURI to escape the path
+						//
 						jarUrl = new File( jarUrl.getFile() ).toURI().toURL();
 					}
 				}
 			}
+			// 如果是zip
 			else if ( "zip".equals( protocol )
 					//OC4J prevent ejb.jar access (ie everything without path)
 					|| "code-source".equals( url.getProtocol() )
@@ -76,6 +87,7 @@ public class ArchiveHelper {
 			}
 			else {
 				try {
+					// 这种方式下 重新组织URL 它可能在 某些特定的环境下工作 - 忘记具体细节(例如Git 历史没有帮助)
 					//We reconstruct the URL probably to make it work in some specific environments
 					//Forgot the exact details, sorry (and the Git history does not help)
 					jarUrl = new URL( protocol, url.getHost(), url.getPort(), file );

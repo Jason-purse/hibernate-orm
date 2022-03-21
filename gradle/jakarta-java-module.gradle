@@ -5,26 +5,38 @@
  * License: GNU Lesser General Public License (LGPL), version 2.1 or later
  * See the lgpl.txt file in the root directory or http://www.gnu.org/licenses/lgpl-2.1.html
  */
+// 应用了jakarta的插件 构建一些任务
 apply plugin: 'org.hibernate.orm.jakarta'
 
+// 库版本定义
 apply from: rootProject.file( 'gradle/libraries.gradle' )
+// 数据库定义
 apply from: rootProject.file( 'gradle/databases.gradle' )
+// 应用数据库插件
+// 仅仅是为了 测试的时候防止并发执行 影响数据库 catalog
 apply plugin: 'org.hibernate.orm.database-service'
+// 构建 Adds a task, "buildDashboard", that aggregates the output of all tasks that produce reports.
 apply plugin: 'build-dashboard'
+// 项目报告
+//A {@link Plugin} which adds some project visualization report tasks to a project.
 apply plugin: 'project-report'
 
+// 配置集设置
 configurations {
+    // 设置描述 ...
     jakartaeeTransformTool {
         description = 'JakartaTransformer tool dependencies'
     }
 }
 
 dependencies {
+    // 解析这个依赖..
     jakartaeeTransformTool 'org.eclipse.transformer:org.eclipse.transformer:0.2.0'
     jakartaeeTransformTool 'org.eclipse.transformer:org.eclipse.transformer.cli:0.2.0'
 }
 
 tasks.withType( Test ) { test ->
+    // 让任务  注入一个databaseService
     test.usesService( project.gradle.sharedServices.registrations.getByName( 'databaseService' ).service )
 }
 

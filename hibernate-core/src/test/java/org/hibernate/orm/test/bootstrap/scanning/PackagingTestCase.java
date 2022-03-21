@@ -79,20 +79,26 @@ public abstract class PackagingTestCase extends BaseSessionFactoryFunctionalTest
 		}
 
 		int index = -1;
+		// 路径中是否包含Target
 		if ( myUrl.getFile().contains( "target" ) ) {
 			// assume there's normally a /target
+			// 假设它在Target中
 			index = myUrl.getFile().lastIndexOf( "target" );
 		}
+		// 假设/bin
 		else if ( myUrl.getFile().contains( "bin" ) ) {
 			// if running in some IDEs, may be in /bin instead
+			// 运行在某些IDE中它可能是/bin
 			index = myUrl.getFile().lastIndexOf( "bin" );
 		}
+		// out/test
+		// idea
 		else if ( myUrl.getFile().contains( "out/test" ) ) {
 			// intellij... intellij sets up project outputs little different
 			int outIndex = myUrl.getFile().lastIndexOf( "out/test" );
 			index = myUrl.getFile().lastIndexOf( '/', outIndex+1 );
 		}
-
+		// 如果index < 0
 		if ( index < 0 ) {
 			fail( "Unable to setup packaging test : could not interpret url" );
 		}

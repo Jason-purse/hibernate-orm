@@ -8,6 +8,7 @@ package org.hibernate.service.spi;
 
 /**
  * Lifecycle contract for services which wish to be notified when it is time to stop.
+ * 对于服务的生命周期约定 - 当它们停止的时候希望得到通知 ..
  *
  * @author Steve Ebersole
  */

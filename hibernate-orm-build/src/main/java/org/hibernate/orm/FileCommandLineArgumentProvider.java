@@ -29,12 +29,12 @@ public class FileCommandLineArgumentProvider implements CommandLineArgumentProvi
 
 	public FileCommandLineArgumentProvider(String argumentName, Project project) {
 		this.argumentName = argumentName;
-		path = project.getObjects().fileProperty();
+		path = project.getObjects().fileProperty(); // 创建一个Property(RegularFileProperty)
 	}
 
 	public FileCommandLineArgumentProvider(String argumentName, RegularFile path, Project project) {
 		this( argumentName, project );
-		this.path.set( path );
+		this.path.set( path ); // 设置File
 	}
 
 	@Override

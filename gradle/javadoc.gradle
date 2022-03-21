@@ -20,6 +20,7 @@ configurations {
 
 artifacts {
     sourceSets.main.allJava.srcDirs.each { srcDir ->
+        // 方法调用  ..
         javadocSources srcDir
     }
 }

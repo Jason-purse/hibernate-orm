@@ -1,0 +1,50 @@
+/*
+ * Hibernate, Relational Persistence for Idiomatic Java
+ *
+ * License: GNU Lesser General Public License (LGPL), version 2.1 or later.
+ * See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
+ */
+
+description = 'Support for testing Hibernate ORM functionality'
+
+apply from: rootProject.file( 'gradle/published-java-module.gradle' )
+
+dependencies {
+    api project( ':hibernate-core' )
+
+    implementation libraries.commons_annotations
+    implementation libraries.jandex
+
+    api libraries.junit
+    api libraries.junit5_api
+    api libraries.junit5_params
+
+    api 'org.hamcrest:hamcrest-all:1.3'
+    api libraries.assertj
+
+    api libraries.mockito
+    api libraries.mockito_inline
+
+    api libraries.byteman
+    api libraries.byteman_install
+    api libraries.byteman_bmunit
+
+    api libraries.xapool
+    api( libraries.jboss_tx_spi_jakarta ) {
+        transitive=false;
+    }
+    api( libraries.jboss_jta_jakarta ) {
+        transitive=false;
+    }
+
+    api 'javax.money:money-api:1.0.1'
+    api 'org.javamoney:moneta:1.1'
+
+    api libraries.log4j2
+
+    implementation libraries.wildfly_transaction_client
+}
+
+tasks.checkstyleMain {
+    exclude '**/org/hibernate/orm/test/legacy/**'
+}

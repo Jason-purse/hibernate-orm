@@ -6,29 +6,43 @@
  */
 
 buildscript {
+	// 构建脚本  仓库
 	repositories {
 		mavenCentral()
 	}
 
 	dependencies {
+		// 获取一个版本 Gradle plugin for dynamic injection of the project version into classes (bytecode manipulation)
 		classpath 'org.hibernate.build.gradle:version-injection-plugin:1.0.0'
+		// asciidoctor
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.7'
+		// 用于发布到 Bintray 的 Gradle 插件，具有 Bintray 特定的扩展；支持新旧 Gradle 发布模型。
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+		// 允许解析 Java 字节码以查找方法/类/字段签名的调用并导致构建失败。
+		// https://github.com/policeman-tools/forbidden-apis
 		classpath 'de.thetaphi:forbiddenapis:3.2'
+		// junit-platform-gradle-plugin
+		// JUnit 5
 		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.1'
 	}
 }
 
 
 plugins {
+	// Integrates Jakarta XML binding into Gradle build
 	id 'org.hibernate.build.xjc-jakarta' version '1.0.2' apply false
+	// Gradle plugin for running tests against multiple databases
 	id 'org.hibernate.matrix-test' version '3.1.1' apply false
+	// 从 includeBuild中进行依赖获取 ...
 	id 'org.hibernate.orm.database-service' version '1.0.0-SNAPSHOT' apply false
 
+	// nexus 仓库发布
 	id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
+	// 一个插件  报关凭证 ...
 	id 'nu.studer.credentials' version '2.1'
 
 	id 'idea'
+	// 构建触发  ...
 	id 'org.jetbrains.gradle.plugin.idea-ext' version '1.0'
 	id 'eclipse'
 }
@@ -81,6 +95,7 @@ task publish {
 }
 
 ext {
+	// 设置发布 用户凭证信息配置 ...
 	// look for command-line overrides of the username/password pairs for publishing
 	if ( project.hasProperty( 'hibernatePublishUsername' ) ) {
 		if ( ! project.hasProperty( 'hibernatePublishPassword' ) ) {
@@ -89,6 +104,7 @@ ext {
 		credentials.hibernatePublishUsername = project.property( 'hibernatePublishUsername' )
 		credentials.hibernatePublishPassword = project.property( 'hibernatePublishPassword' )
 	}
+		// 或者系统属性 ...
 	else if ( System.properties.hibernatePublishUsername != null ) {
 		if ( System.properties.hibernatePublishPassword == null ) {
 			throw new GradleException( "Should specify both `hibernatePublishUsername` and `hibernatePublishPassword` as system properties" );
@@ -97,7 +113,7 @@ ext {
 		credentials.hibernatePublishPassword = System.properties.hibernatePublishPassword
 	}
 }
-
+// nexus 发布
 nexusPublishing {
 	repositories {
 		sonatype {
@@ -106,7 +122,7 @@ nexusPublishing {
 		}
 	}
 }
-
+// 任务图 增加一个任务执行图监听器
 gradle.taskGraph.addTaskExecutionGraphListener(
 		new TaskExecutionGraphListener() {
 			@Override
@@ -119,6 +135,7 @@ gradle.taskGraph.addTaskExecutionGraphListener(
 						'publishRelocationArtifactsPublicationToSonatypeRepository',
 				]
 
+				// 这些任务发布的时候需要设置 凭证信息 ..
 				for ( String taskToLookFor : tasksToLookFor ) {
 					if ( graph.hasTask( taskToLookFor ) ) {
 						// trying to publish - make sure the needed credentials are available
@@ -156,7 +173,7 @@ task ciBuild {
 wrapper {
 	// To upgrade the version of gradle used in the wrapper, run:
 	//     ./gradlew wrapper --gradle-version NEW_VERSION
-	distributionType = Wrapper.DistributionType.ALL
+	distributionType = Wrapper.DistributionType.ALL // wrapper 脚本配置  脚本的类型必须是ALL
 }
 
 
@@ -173,6 +190,7 @@ idea {
 //			}
 //		}
 //    }
+	// 指定模块为 hibernate-orm
 	module {
 		name = "hibernate-orm"
 	}

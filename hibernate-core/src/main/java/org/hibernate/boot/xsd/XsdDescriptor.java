@@ -10,6 +10,7 @@ import javax.xml.validation.Schema;
 
 /**
  * Representation of a locally resolved XSD
+ * 本地已经解析的XSD 的 呈现
  *
  * @author Steve Ebersole
  */
@@ -17,6 +18,7 @@ public final class XsdDescriptor {
 	private final String localResourceName;
 	private final String namespaceUri;
 	private final String version;
+	// 表示了一些语法内容 , 可以被多个解析器共享使用
 	private final Schema schema;
 
 	XsdDescriptor(String localResourceName, Schema schema, String version, String namespaceUri) {

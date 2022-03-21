@@ -11,8 +11,10 @@
 
 buildscript {
 	repositories {
+		mavenLocal()
 		mavenCentral()
 	}
+	// 构建脚本 需要此依赖 ...
 	dependencies {
 		classpath 'de.thetaphi:forbiddenapis:3.1'
 	}
@@ -24,15 +26,21 @@ import org.apache.tools.ant.filters.ReplaceTokens
 apply from: rootProject.file( 'gradle/libraries.gradle' )
 apply from: rootProject.file( 'gradle/databases.gradle' )
 
+// 引用java -library
 apply plugin: 'java-library'
+// 应用 database-service .... 主要是防止并发测试影响catalog 日志文件... / schema
 apply plugin: 'org.hibernate.orm.database-service'
-
+// 检查风格
 apply plugin: 'checkstyle'
+// 构建 Adds a task, "buildDashboard", that aggregates the output of all tasks that produce reports.
 apply plugin: 'build-dashboard'
+// 项目报告
+//A {@link Plugin} which adds some project visualization report tasks to a project.
 apply plugin: 'project-report'
 
-
-// Attempt to leverage JetBrain's Gradle extension to automatically define
+// 尝试  利用JetBrains的gradle 扩展去自动定义一个 'copyResourcesToIntelliJOutFolder'
+//作为导入的构建 触发器 .
+// Attempt to leverage JetBrain's Gradle extension to automatically define a
 // `copyResourcesToIntelliJOutFolder` as a "build trigger" on import.
 //
 // However, see https://github.com/JetBrains/gradle-idea-ext-plugin/issues/8
@@ -56,6 +64,8 @@ if ( !project.description ) {
 
 configurations.all {
 	resolutionStrategy {
+		// 依赖替换
+		// 显式的声明依赖替换
 		dependencySubstitution {
 			// will handle dependencies pulled in transitively
 			substitute module( 'javax.persistence:javax.persistence-api' ) with module( libraries.jakarta_jpa )
@@ -143,14 +153,16 @@ dependencies {
 // Compilation
 
 tasks.withType( JavaCompile ) {
-	options.encoding = 'UTF-8'
+	options.encoding = 'UTF-8' // 编码
 }
-
+// 没有配置工具链 ...
 if ( !gradle.ext.javaToolchainEnabled ) {
+	// 配置编译兼容性...
 	tasks.compileJava.configure {
 		sourceCompatibility = JavaVersion.toVersion( gradle.ext.javaVersions.main.release )
 		targetCompatibility = JavaVersion.toVersion( gradle.ext.javaVersions.main.release )
 	}
+	// test
 	tasks.compileTestJava.configure {
 		sourceCompatibility = JavaVersion.toVersion( gradle.ext.javaVersions.test.release )
 		targetCompatibility = JavaVersion.toVersion( gradle.ext.javaVersions.test.release )
@@ -178,12 +190,14 @@ else {
 	}
 	tasks.compileTestJava {
 		javaCompiler = javaToolchains.compilerFor {
+			// 来源于 settings 文件中 所指定的 编译器版本 ...
 			languageVersion = gradle.ext.javaVersions.test.compiler
 		}
 	}
 
 	// Configure JVM Options
 	tasks.withType( JavaCompile ).configureEach {
+		// gradle.properties中可以找到  ...
 		options.forkOptions.jvmArgs.addAll( getProperty( 'toolchain.compiler.jvmargs' ).toString().split( ' ' ) )
 	}
 	tasks.withType( Javadoc ).configureEach {
@@ -192,6 +206,7 @@ else {
 
 	// Display version of Java tools
 	tasks.withType( JavaCompile ).configureEach {
+		// 任务钩子  构造 任务图的时候 ...
 		doFirst {
 			logger.lifecycle "Compiling with '${javaCompiler.get().metadata.installationPath}'"
 		}
@@ -259,7 +274,7 @@ class HeapDumpPathProvider implements CommandLineArgumentProvider {
 		["-XX:HeapDumpPath=${path.get().asFile.absolutePath}"]
 	}
 }
-
+// 测试
 tasks.withType( Test.class ).each { test ->
 	test.useJUnitPlatform()
 
@@ -284,6 +299,7 @@ tasks.withType( Test.class ).each { test ->
 
 	test.enableAssertions = true
 
+	// 如果项目不等于hibernate-testing 依赖于它执行
 	if ( project.name != 'hibernate-testing' ) {
 		test.dependsOn ':hibernate-testing:test'
 	}
@@ -317,21 +333,23 @@ processTestResources {
 	inputs.property( "db", db )
 	doLast {
 		copy {
+			// 复制任务
 			from( sourceSets.test.java.srcDirs ) {
 				include '**/*.properties'
 				include '**/*.xml'
 			}
+			// 复制到clssessDirectory 类路径目录 中 ..
 			into sourceSets.test.java.classesDirectory
 		}
 		copy {
 			from file( 'src/test/resources' )
-			into file( "${buildDir}/resources/test" )
-			exclude 'src/test/resources/hibernate.properties'
+			into file( "${buildDir}/resources/test" ) // 放入 buildDir/ resources/test下
+			exclude 'src/test/resources/hibernate.properties' // 排除这个 文件 ..
 		}
 		copy {
 			from file( 'src/test/resources/hibernate.properties' )
 			into file( "${buildDir}/resources/test" )
-			filter( ReplaceTokens, tokens: dbBundle[db] )
+			filter( ReplaceTokens, tokens: dbBundle[db] ) // 替换这个文件中的$tokens$ 内容
 		}
 	}
 }
@@ -546,9 +564,10 @@ project.tasks.withType( CheckForbiddenApis ).each { task ->
 	task.targetCompatibility = project.forbiddenAPITargetJDKCompatibility
 	// This slows down the checks a little, but is necessary to avoid the gradle deamon holding on
 	// to class definitions loaded previously - even possibly in a previous build.
+	// 禁用缓存 ...
 	task.disableClassloadingCache = true
 
 	tasks.forbiddenApis.finalizedBy task
 }
-
+// check任务的析构任务为  forbiddenApis -> 也是析构  CheckForbiddenApis任务 ...
 project.tasks.check.finalizedBy tasks.forbiddenApis

@@ -22,11 +22,14 @@ import static org.hibernate.orm.jakarta.JakartaPlugin.JAKARTA;
 
 /**
  * @author Steve Ebersole
+ *
+ * Jar 转移
  */
 @CacheableTask
 public abstract class JakartaJarTransformation extends DefaultTask {
 	private final RegularFileProperty sourceJar;
 	private final RegularFileProperty targetJar;
+
 
 	@Inject
 	public JakartaJarTransformation(ObjectFactory objectFactory) {
