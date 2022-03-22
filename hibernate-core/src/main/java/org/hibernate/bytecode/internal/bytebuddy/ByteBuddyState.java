@@ -50,13 +50,16 @@ import net.bytebuddy.pool.TypePool;
  * A utility to hold all ByteBuddy related state, as in the current version of
  * Hibernate the Bytecode Provider state is held in a static field, yet ByteBuddy
  * is able to benefit from some caching and general state reuse.
+ *
+ * 一个工具类用来持有所有ByteBuddy相关的状态, 当前版本的Hibernate 的ByteCode 提供器状态是作为一个静态字段 持有的, 可能
+ * ByteBuddy 是能够从某些缓存中收益 以及 通用状态重用 ..
  */
 public final class ByteBuddyState {
 
 	private static final CoreMessageLogger LOG = messageLogger( ByteBuddyState.class );
 
 	private static final boolean DEBUG = false;
-
+	// 一个ByteBuddy 可以用来修改字节码 ...
 	private final ByteBuddy byteBuddy;
 
 	private static final ProxyDefinitionHelpers proxyDefinitionHelpers = new ProxyDefinitionHelpers();
@@ -179,6 +182,7 @@ public final class ByteBuddyState {
 		return cache.findOrInsert(
 				referenceClass.getClassLoader(),
 				cacheKey,
+				// 配置代理 并make (构建)
 				() -> make( makeProxyFunction.apply( byteBuddy ) )
 						.load( referenceClass.getClassLoader(), resolveClassLoadingStrategy( referenceClass ) )
 						.getLoaded(),
@@ -197,7 +201,9 @@ public final class ByteBuddyState {
 		return make( null, builder );
 	}
 
+	// 通过名称抓取TypeDescription的类型池...
 	private Unloaded<?> make(TypePool typePool, DynamicType.Builder<?> builder) {
+
 		classRewriter.installReflectionMethodVisitors( builder );
 
 		Unloaded<?> unloadedClass;
@@ -317,8 +323,11 @@ public final class ByteBuddyState {
 	}
 
 	private interface ClassRewriter {
+
+		// 安装反射方法查看器 ...
 		void installReflectionMethodVisitors(DynamicType.Builder<?> builder);
 
+		// 注册认证过的类
 		void registerAuthorizedClass(Unloaded<?> unloadedClass);
 	}
 

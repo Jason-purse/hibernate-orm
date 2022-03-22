@@ -9,14 +9,18 @@ package org.hibernate.service;
 /**
  * A registry of {@linkplain Service services}. This interface abstracts
  * the operations of:
+ *
+ * 服务的注册机  这个接口抽象 BootstrapServiceRegistry 以及  StandardServiceRegistry的抽象
  * <ul>
  * <li>{@linkplain org.hibernate.boot.registry.BootstrapServiceRegistry
  * bootstrap service registries}, which may be obtained from a
  * {@link org.hibernate.boot.registry.BootstrapServiceRegistryBuilder},
+ * 一个通过BootStrapServiceRegistryBuilder
  * and
  * <li>{@linkplain org.hibernate.boot.registry.StandardServiceRegistry
  * standard service registries}, which may be obtained from a
  * {@link org.hibernate.boot.registry.StandardServiceRegistryBuilder}.
+ * 一个通过标准的服务注册, 通过StandardServiceRegistryBuilder ...
  * </ul>
  *
  * @author Steve Ebersole

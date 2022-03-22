@@ -18,8 +18,10 @@ import org.jboss.logging.Logger;
 
 /**
  * Helper for resolving XML Schema references locally.
+ * 本地解析XML schema 引用的一个帮助器
  * <p/>
  * Note that *by design* we always use our ClassLoader to perform the lookups here.
+ * 注意: 通过设计  我们总是使用我们自己的类加载器在这里执行 查询
  *
  * @author Steve Ebersole
  */
@@ -54,8 +56,11 @@ public class LocalSchemaLocator {
 		try {
 			InputStream schemaStream = schemaUrl.openStream();
 			try {
+				// Acts as an holder for a transformation Source in the form of a stream of XML markup.
 				StreamSource source = new StreamSource(schemaUrl.openStream());
+				// 寻找支持给定语言规范的SchemaFactory
 				SchemaFactory schemaFactory = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
+			   //解析并返回Schema
 				return schemaFactory.newSchema(source);
 			}
 			catch ( Exception e ) {

@@ -14,10 +14,10 @@ import org.hibernate.service.spi.SessionFactoryServiceRegistry;
 
 /**
  * Defines the context needed to call the {@link TypeSafeActivator}
- *
+ *TypeSafeActivator 调用的上下文
  * @author Steve Ebersole
  */
-public interface ActivationContext {
+public interface  ActivationContext {
 	/**
 	 * Access the requested validation mode(s).
 	 * <p/>

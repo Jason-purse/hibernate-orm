@@ -12,6 +12,8 @@ import java.net.URL;
  * During the process of building this metamodel, accessing the ClassLoader
  * is very discouraged.  However, sometimes it is needed.  This contract helps
  * mitigate accessing the ClassLoader in these cases.
+ * 构建元数据模型期间处理, 访问类加载器是非常不鼓励的, 然而有些时候是需要的
+ * // 这个约定帮助替代在某些情况下的类加载器访问 ...
  *
  * @author Steve Ebersole
  *

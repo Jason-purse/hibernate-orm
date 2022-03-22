@@ -32,7 +32,9 @@ import org.hibernate.service.ServiceRegistry;
  * It should be later destroyed by calling {@link #destroy(ServiceRegistry)}.
  * Alternatively, {@linkplain #enableAutoClose() auto-close} may be enabled.
  * <p>
+ *     为许多操作提供服务注册 ..
  * Provides a registry of services needed for most operations.
+ * 管理一个ClassLoaderService, Integrator集合 以及StrategySelectorBuilder 有责任管理并创建StrategySelector;
  * Manages a {@link ClassLoaderService}, a set of {@link Integrator}s, and a
  * {@link StrategySelectorBuilder} responsible for creation and management
  * of {@link org.hibernate.boot.registry.selector.spi.StrategySelector}s.

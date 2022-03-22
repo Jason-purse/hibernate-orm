@@ -11,6 +11,7 @@ import org.hibernate.query.sqm.StrictJpaComplianceViolation;
 
 /**
  * Options for semantic analysis
+ * 语义分析选项
  *
  * @author Steve Ebersole
  */

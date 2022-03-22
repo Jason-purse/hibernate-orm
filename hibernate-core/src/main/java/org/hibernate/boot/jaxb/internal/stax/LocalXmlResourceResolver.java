@@ -21,6 +21,7 @@ import static org.hibernate.internal.log.DeprecationLogger.DEPRECATION_LOGGER;
 
 /**
  * @author Steve Ebersole
+ * 本地 Xml 资源解析器
  */
 public class LocalXmlResourceResolver implements javax.xml.stream.XMLResolver {
 	private static final Logger log = Logger.getLogger( LocalXmlResourceResolver.class );
@@ -39,6 +40,7 @@ public class LocalXmlResourceResolver implements javax.xml.stream.XMLResolver {
 
 		if ( namespace != null ) {
 			log.debugf( "Interpreting namespace : %s", namespace );
+			// JPA orm 处理
 			if ( MappingXsdSupport.jpa10.getNamespaceUri().matches( namespace ) ) {
 				// JPA 1.0 and 2.0 share the same namespace URI
 				return openUrlStream( LocalSchemaLocator.resolveLocalSchemaUrl( MappingXsdSupport.jpa10.getLocalResourceName() ) );
@@ -50,6 +52,8 @@ public class LocalXmlResourceResolver implements javax.xml.stream.XMLResolver {
 			else if ( MappingXsdSupport.jpa30.getNamespaceUri().matches( namespace ) ) {
 				return openUrlStream( LocalSchemaLocator.resolveLocalSchemaUrl( MappingXsdSupport.jpa30.getLocalResourceName() ) );
 			}
+
+			// JPA persistence 处理
 			else if ( ConfigXsdSupport.getJPA10().getNamespaceUri().matches( namespace ) ) {
 				// JPA 1.0 and 2.0 share the same namespace URI
 				return openUrlStream( LocalSchemaLocator.resolveLocalSchemaUrl( ConfigXsdSupport.getJPA10().getLocalResourceName() ) );
@@ -61,12 +65,15 @@ public class LocalXmlResourceResolver implements javax.xml.stream.XMLResolver {
 			else if ( ConfigXsdSupport.getJPA30().getNamespaceUri().matches( namespace ) ) {
 				return openUrlStream( LocalSchemaLocator.resolveLocalSchemaUrl( ConfigXsdSupport.getJPA30().getLocalResourceName() ) );
 			}
+
+			// Hibernate相关的hbm.xml / JPA的orm.xml的XSD 支持处理 ...
 			else if ( MappingXsdSupport.hibernateMappingXml.getNamespaceUri().matches( namespace ) ) {
 				return openUrlStream( LocalSchemaLocator.resolveLocalSchemaUrl( MappingXsdSupport.hibernateMappingXml.getLocalResourceName() ) );
 			}
 			else if ( MappingXsdSupport.hbmXml.getNamespaceUri().matches( namespace ) ) {
 				return openUrlStream( LocalSchemaLocator.resolveLocalSchemaUrl( MappingXsdSupport.hbmXml.getLocalResourceName() ) );
 			}
+			// 对XSD处理 的支持 - Hibernate的 cfg.xml 以及 JPA的 persistence.xml处理
 			else if ( ConfigXsdSupport.cfgXsd().getNamespaceUri().matches( namespace ) ) {
 				return openUrlStream( LocalSchemaLocator.resolveLocalSchemaUrl( ConfigXsdSupport.cfgXsd().getLocalResourceName() ) );
 			}
@@ -124,7 +131,7 @@ public class LocalXmlResourceResolver implements javax.xml.stream.XMLResolver {
 
 	private InputStream openUrlStream(URL url) {
 		try {
-			return url.openStream();
+			return url.openStream(); // 开流..
 		}
 		catch (IOException e) {
 			throw new XmlInfrastructureException( "Could not open url stream : " + url.toExternalForm(), e );
@@ -164,7 +171,7 @@ public class LocalXmlResourceResolver implements javax.xml.stream.XMLResolver {
 			"hibernate.org/dtd/hibernate-configuration",
 			"org/hibernate/hibernate-configuration-3.0.dtd"
 	);
-
+	// sourceforge.net 应该算是遗留的..
 	public static final DtdDescriptor LEGACY_CFG_DTD = new DtdDescriptor(
 			"hibernate.sourceforge.net/hibernate-configuration",
 			"org/hibernate/hibernate-configuration-3.0.dtd"
@@ -186,6 +193,7 @@ public class LocalXmlResourceResolver implements javax.xml.stream.XMLResolver {
 			return httpBase;
 		}
 
+		// 匹配 publicId / systemId
 		public boolean matches(String publicId, String systemId) {
 			if ( publicId != null ) {
 				if ( publicId.startsWith( httpBase )

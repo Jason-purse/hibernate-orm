@@ -70,6 +70,7 @@ public interface ClassLoaderService extends Service, Stoppable {
 
 	/**
 	 * Locate a resource by name (classpath lookup) and gets its stream.
+	 * 定位一个资源 - 通过名称  并获取它的流 ..
 	 *
 	 * @param name The resource name.
 	 *

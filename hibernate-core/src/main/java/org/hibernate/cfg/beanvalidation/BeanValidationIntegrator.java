@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import jakarta.validation.ConstraintViolation;
 import org.hibernate.HibernateException;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.registry.classloading.spi.ClassLoaderService;
@@ -25,6 +26,8 @@ import org.jboss.logging.Logger;
 
 /**
  * @author Steve Ebersole
+ *
+ * 相当于一种插件,和Hibernate的集成,来做更多的事情...
  */
 public class BeanValidationIntegrator implements Integrator {
 	private static final CoreMessageLogger LOG = Logger.getMessageLogger(
@@ -46,14 +49,19 @@ public class BeanValidationIntegrator implements Integrator {
 
 	/**
 	 * Used to validate the type of an explicitly passed ValidatorFactory instance
+	 * 显式的验证ValidatorFactory工厂的类型...
 	 *
 	 * @param object The supposed ValidatorFactory instance
 	 */
 	public static void validateFactory(Object object) {
 		try {
 			// this direct usage of ClassLoader should be fine since the classes exist in the same jar
+			// 直接使用相同类加载器加载
+			// 这里通过反射加载的原因是 另外一个类包含了可能无法使用的API
+			// 这里并没有初始化静态代码块
 			final Class<?> activatorClass = BeanValidationIntegrator.class.getClassLoader().loadClass( ACTIVATOR_CLASS_NAME );
 			try {
+				// 获取方法 ...
 				final Method validateMethod = activatorClass.getMethod( VALIDATE_SUPPLIED_FACTORY_METHOD_NAME, Object.class );
 				try {
 					validateMethod.invoke( null, object );

@@ -36,6 +36,7 @@ import org.jboss.logging.Logger;
 /**
  * Event listener used to enable Bean Validation for insert/update/delete events.
  *
+ * 用来启用对insert / update / delete 事件的bean 校验的监听器
  * @author Emmanuel Bernard
  * @author Hardy Ferentschik
  */

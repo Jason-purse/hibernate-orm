@@ -12,6 +12,8 @@ import org.hibernate.Internal;
  * Support for XSD handling related to Hibernate's `hbm.xml` and
  * JPA's `orm.xml`.
  *
+ * Hibernate相关的hbm.xml / JPA的orm.xml的XSD 支持处理 ...
+ *
  * @author Steve Ebersole
  */
 @SuppressWarnings("unused")

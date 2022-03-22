@@ -12,12 +12,14 @@ import org.hibernate.service.ServiceRegistry;
 /**
  * Additional integration contracts for a service registry.
  *
+ * 一个服务注册机的额外的集成约定 ..
+ *
  * @author Steve Ebersole
  */
 public interface ServiceRegistryImplementor extends ServiceRegistry {
 	/**
 	 * Locate the binding for the given role.  Should, generally speaking, look into parent registry if one.
-	 *
+	 * 针对给定的role 分配 （定位）一个binding ,应该通常来说,如果有的话，查询父注册表。
 	 * @param serviceRole The service role for which to locate a binding.
 	 * @param <R> generic return type.
 	 *
@@ -38,6 +40,8 @@ public interface ServiceRegistryImplementor extends ServiceRegistry {
 	/**
 	 * When a registry is created with a parent, the parent is notified of the child
 	 * via this callback.
+	 *
+	 * 当一个注册机通过父亲创建,父亲通知孩子通过此回调。。。
 	 */
 	void registerChild(ServiceRegistryImplementor child);
 

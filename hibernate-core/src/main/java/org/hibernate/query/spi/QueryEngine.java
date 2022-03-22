@@ -52,6 +52,8 @@ import org.jboss.logging.Logger;
  * Aggregation and encapsulation of the components Hibernate uses
  * to execute queries (HQL, Criteria and native)
  *
+ * 组件的聚合和封装 - hibernate 用来执行查询(HQL ,Criteria and native)
+ *
  * @author Steve Ebersole
  */
 @Incubating

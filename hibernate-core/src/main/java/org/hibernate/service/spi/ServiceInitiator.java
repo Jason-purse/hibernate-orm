@@ -10,12 +10,14 @@ import org.hibernate.service.Service;
 
 /**
  * Base contract for an initiator of a service.
+ * 服务初始化器的基本约定 ...
  *
  * @author Steve Ebersole
  */
 public interface ServiceInitiator<R extends Service> {
 	/**
 	 * Obtains the service role initiated by this initiator.  Should be unique within a registry
+	 * 在注册机中应该是唯一的,通过此Initiator 获取一个初始化的服务角色 ...
 	 *
 	 * @return The service role.
 	 */

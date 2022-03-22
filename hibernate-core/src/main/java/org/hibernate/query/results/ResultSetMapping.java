@@ -19,12 +19,15 @@ import org.hibernate.sql.results.jdbc.spi.JdbcValuesMappingProducer;
  * Acts as the {@link JdbcValuesMappingProducer} for {@link NativeQuery}
  * or {@link org.hibernate.procedure.ProcedureCall} / {@link jakarta.persistence.StoredProcedureQuery}
  * instances.
+ * 表现为 JdbcValuesMappingProducer 对NativeQuery 或者ProcedureCall 或者StoredProcedureQuery的 JdbcValuesMapping的生产者
  *
  * Can be defined<ul>
  *     <li>
  *         statically via {@link jakarta.persistence.SqlResultSetMapping} or `hbm.xml` mapping
+ *         // 静态的通过SqlResultSetMapping 或者hbm.xml映射
  *     </li>
  *     <li>
+ *         / 动态通过Hibernate-specific API 定义
  *         dynamically via Hibernate-specific APIs:<ul>
  *             <li>{@link NativeQuery#addScalar}</li>
  *             <li>{@link NativeQuery#addEntity}</li>

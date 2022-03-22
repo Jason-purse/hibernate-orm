@@ -27,6 +27,9 @@ public class IntegratorServiceImpl implements IntegratorService {
 	public IntegratorServiceImpl(LinkedHashSet<Integrator> providedIntegrators, ClassLoaderService classLoaderService) {
 		// register standard integrators.  Envers and JPA, for example, need to be handled by discovery because in
 		// separate project/jars.
+		// 注册标准的integrators
+		// Envers and JPA
+		// 它们需要通过发现处理-因为位于不同的项目 /jars;
 		addIntegrator( new BeanValidationIntegrator() );
 		addIntegrator( new CollectionCacheInvalidator() );
 

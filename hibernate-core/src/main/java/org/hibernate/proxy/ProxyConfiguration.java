@@ -20,7 +20,10 @@ import net.bytebuddy.implementation.bind.annotation.This;
  * This interface is meant for internal use but is in a public package in order to provide code generation.
  * <p>
  * While this interface depends on Byte Buddy types, this is only true for annotation types which are silently
- * suppressed by the runtime if they are not available on a class loader. This allows using this interceptor
+ * suppressed by the runtime if they are not available on a class loader.
+ *
+ * 虽然这个接口依赖于这个Byte Buddy 类型, 但是仅仅只有注解类型 在类加载器上不可用的时候被静默的压制的时候才必要..
+ * This allows using this interceptor
  * and configuration with for example OSGi without any export of Byte Buddy when using Hibernate.
  */
 public interface ProxyConfiguration {
@@ -75,6 +78,8 @@ public interface ProxyConfiguration {
 		 *
 		 * @throws Throwable If the intercepted method raises an exception.
 		 */
+
+		// 这里虽然是Object ,但是在返回具体值之前,会将它转换为对应返回类型 ...
 		@RuntimeType
 		public static Object intercept(
 				@This final Object instance,

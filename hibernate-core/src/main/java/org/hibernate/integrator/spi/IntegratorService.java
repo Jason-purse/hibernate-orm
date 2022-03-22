@@ -9,6 +9,7 @@ package org.hibernate.integrator.spi;
 import org.hibernate.service.Service;
 
 /**
+ * 一种集成器服务
  * @author Steve Ebersole
  */
 public interface IntegratorService extends Service {

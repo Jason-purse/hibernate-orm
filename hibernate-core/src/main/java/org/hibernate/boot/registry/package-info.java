@@ -22,5 +22,8 @@
  * by the {@link org.hibernate.boot.registry.StandardServiceRegistryBuilder} if you need customization.  The builder optionally takes the
  * {@link org.hibernate.boot.registry.BootstrapServiceRegistry} to use as a base; if none is provided a default one is generated assuming sensible
  * defaults in Java SE and EE environments, particularly in respect to Class loading.
+ *
+ * 通常在标准注册配置中的下一个级别是 StandardServiceRegistry, 它能够调用调用一个BootstrapServiceRegistry 作为基础, 如果没有提供,那么默认生成一个合理的(在JavaSe / JAVAEE环境)
+ * 特别是在类加载方面。
  */
 package org.hibernate.boot.registry;

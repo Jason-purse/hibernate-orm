@@ -10,6 +10,7 @@ import org.hibernate.boot.registry.classloading.internal.ClassLoaderServiceImpl;
 
 /**
  * @author Steve Ebersole
+ * 基于测试的类加载器服务实现 ...
  */
 public class ClassLoaderServiceTestingImpl extends ClassLoaderServiceImpl {
 	/**

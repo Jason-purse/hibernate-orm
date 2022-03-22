@@ -18,10 +18,14 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 
 /**
  * Test the resolution of known XML schemas/DTDs to local resources.
+ * 测试已知的XML schemas / DTDs 到本地资源的解析 ...
  * <p>
+ *   当它遇见XML schemas LocalXmlResourceResolver 看起来似乎并不会实际执行...
  * Note that when it comes to XML schemas,
  * LocalXmlResourceResolver doesn't seem to be actually invoked;
+ *  这有一定的好处,因为当配置解析器的时候  我们自己设置了XML schema;
  * which makes sense since we set the XML schema ourselves when configuring the parser.
+ * 因此这个测试 可能仅仅与DTDs相关,但是我们保持关注对于XML schema 的测试 - 仅仅为了以防万一...
  * So this test is probably only relevant for DTDs, but we keep tests about XML schemas too just in case.
  */
 public class LocalXmlResourceResolverTest {
@@ -33,6 +37,8 @@ public class LocalXmlResourceResolverTest {
 	}
 
 	@ParameterizedTest
+	// 这个属性注解的值 将会作为@ParameterizedTest的参数注入
+	// xsd hibernate 只是为了以防万一
 	@CsvSource({
 			// JPA 1.0 and 2.0 share the same namespace URI
 			// NOTE: Behavior differs from Hibernate ORM 5, which resolves to org/hibernate/jpa/orm_2_0.xsd
@@ -49,16 +55,21 @@ public class LocalXmlResourceResolverTest {
 			"http://xmlns.jcp.org/xml/ns/persistence,org/hibernate/jpa/persistence_2_1.xsd",
 			"https://jakarta.ee/xml/ns/persistence,org/hibernate/jpa/persistence_3_0.xsd",
 
+			// 遗留的xsd
 			"http://www.hibernate.org/xsd/orm/hbm,org/hibernate/xsd/mapping/legacy-mapping-4.0.xsd",
+			// mapping ??
 			"http://www.hibernate.org/xsd/hibernate-mapping,org/hibernate/hibernate-mapping-4.0.xsd",
+			// cfg 配置 / 遗留的配置 4.0
 			"http://www.hibernate.org/xsd/orm/cfg,org/hibernate/xsd/cfg/legacy-configuration-4.0.xsd",
 	})
 	void resolve_namespace_localResource(String namespace, String expectedLocalResource) throws XMLStreamException {
 		assertThat( resolver.resolveEntity( null, null, null, namespace ) )
+				// 断言是一个输入流实例
 				.asInstanceOf( InstanceOfAssertFactories.INPUT_STREAM )
+				// 和这个类加载器获取的InputStream 具有相同的内容
 				.hasSameContentAs( getClass().getClassLoader().getResourceAsStream( expectedLocalResource ) );
 	}
-
+	// 解析本地dtd 资源..
 	@ParameterizedTest
 	@CsvSource({
 			"http://www.hibernate.org/dtd/hibernate-mapping,org/hibernate/hibernate-mapping-3.0.dtd",

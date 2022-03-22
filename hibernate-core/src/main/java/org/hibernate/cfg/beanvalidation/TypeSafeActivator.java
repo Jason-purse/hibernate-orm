@@ -92,9 +92,10 @@ class TypeSafeActivator {
 			LOG.debug( "Unable to acquire Bean Validation ValidatorFactory, skipping activation" );
 			return;
 		}
-
+		// 应用相关的约束 ...
 		applyRelationalConstraints( factory, activationContext );
 
+		// 应用回调监听器
 		applyCallbackListeners( factory, activationContext );
 	}
 
@@ -454,7 +455,7 @@ class TypeSafeActivator {
 		}
 		return property;
 	}
-
+	// 获取验证器工厂 ...
 	private static ValidatorFactory getValidatorFactory(ActivationContext activationContext) {
 		// IMPL NOTE : We can either be provided a ValidatorFactory or make one.  We can be provided
 		// a ValidatorFactory in 2 different ways.  So here we "get" a ValidatorFactory in the following order:
@@ -476,6 +477,7 @@ class TypeSafeActivator {
 
 		// 3 - build our own
 		try {
+			// 使用Jakarta validation api 构建一个默认的验证器工厂
 			return Validation.buildDefaultValidatorFactory();
 		}
 		catch ( Exception e ) {
@@ -487,7 +489,7 @@ class TypeSafeActivator {
 			throw new IntegrationException( "Unable to build the default ValidatorFactory", e );
 		}
 	}
-
+	// 查看 SessionFactoryOptions 中是否配置了验证器工厂 ..
 	private static ValidatorFactory resolveProvidedFactory(SessionFactoryOptions options) {
 		final Object validatorFactoryReference = options.getValidatorFactoryReference();
 

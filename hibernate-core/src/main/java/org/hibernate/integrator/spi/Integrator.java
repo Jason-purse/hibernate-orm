@@ -14,9 +14,12 @@ import org.hibernate.service.spi.SessionFactoryServiceRegistry;
 
 /**
  * Contract for stuff that integrates with Hibernate.
+ * 与Hibernate 集成的填充约定 ...
  * <p/>
  * IMPL NOTE: called during session factory initialization (constructor), so not all parts of the passed session factory
  * will be available.
+ *
+ * 实现注意: 在会话工厂初始化期间调用(构造器), 因此并非传递的会话工厂的所有部分都可用。
  *
  * @author Steve Ebersole
  * @since 4.0
