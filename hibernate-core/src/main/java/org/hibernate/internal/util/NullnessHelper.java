@@ -58,6 +58,8 @@ public class NullnessHelper {
 	/**
 	 * Operates like SQL coalesce expression, returning the first non-empty value
 	 *
+	 * 合并提供的数据
+	 * 操作类似于SQL 合并表达式  返回第一个非空value ...
 	 * @implNote This impl treats empty strings (`""`) as null.
 	 *
 	 * @param valueSuppliers List of value Suppliers
@@ -77,7 +79,7 @@ public class NullnessHelper {
 	/**
 	 * Operates like SQL coalesce expression, returning the first non-empty value
 	 *
-	 * @implNote This impl treats empty strings (`""`) as null.
+	 * @implNote This impl treats empty strings (`""`) as null.  此实现相信 "" 也是空
 	 *
 	 * @param valueSuppliers List of value Suppliers
 	 * @param <T> Generic type of values to coalesce
@@ -93,6 +95,7 @@ public class NullnessHelper {
 		for ( Supplier<T> valueSupplier : valueSuppliers ) {
 			if ( valueSupplier != null ) {
 				final T value = valueSupplier.get();
+				// 检查器   是否是 可用的 ... 返回
 				if ( checker.apply( value ) ) {
 					return value;
 				}

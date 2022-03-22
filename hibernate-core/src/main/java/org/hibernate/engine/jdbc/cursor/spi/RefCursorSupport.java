@@ -13,6 +13,7 @@ import org.hibernate.service.Service;
 
 /**
  * Contract for JDBC REF_CURSOR support.
+ * JDBC  REF_CURSOR支持的约定
  *
  * @author Steve Ebersole
  *

@@ -46,11 +46,17 @@ public class StrategySelectorImpl implements StrategySelector {
 	};
 
 	//Map based approach: most suited for explicit registrations from integrators
+	// 通过策略命名的命名策略实现器
+	// 对于从integrators中显式提供的是比较 合适的...
+	// 注册的服务都会放在这里...
 	private final Map<Class,Map<String,Class>> namedStrategyImplementorByStrategyMap = new ConcurrentHashMap<>();
 
 	//"Lazy" approach: more efficient as we aim to not initialize all implementation classes;
 	//this is preferable for internal services such as Dialect, as we have a significant amount of them, making
 	//it worthwhile to try be a bit more efficient about them.
+
+	// 惰性初始化,更高效的方式 - 因为我们不在初始化所有的实例化类
+	// 这是一个内部服务的首选方式 ,例如方言, 因为它们的大量  存在 使得这种方式 很有效...
 	private final Map<Class, LazyServiceResolver> lazyStrategyImplementorByStrategyMap = new ConcurrentHashMap<>();
 
 	private final ClassLoaderService classLoaderService;
@@ -77,7 +83,7 @@ public class StrategySelectorImpl implements StrategySelector {
 				strategy,
 				aClass -> new ConcurrentHashMap<>()
 		);
-
+		// 不允许重复添加
 		final Class old = namedStrategyImplementorMap.put( name, implementation );
 		if ( old == null ) {
 			if ( log.isTraceEnabled() ) {
@@ -123,6 +129,7 @@ public class StrategySelectorImpl implements StrategySelector {
 		}
 
 		// try to clean up after ourselves...
+		// 如果这个策略为空了,也就没必要存在了 ...
 		if ( namedStrategyImplementorMap.isEmpty() ) {
 			namedStrategyImplementorByStrategyMap.remove( strategy );
 		}
@@ -131,6 +138,7 @@ public class StrategySelectorImpl implements StrategySelector {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> Class<? extends T> selectStrategyImplementor(Class<T> strategy, String name) {
+
 		final Map<String,Class> namedStrategyImplementorMap = namedStrategyImplementorByStrategyMap.get( strategy );
 		if ( namedStrategyImplementorMap != null ) {
 			final Class registered = namedStrategyImplementorMap.get( name );
@@ -139,8 +147,10 @@ public class StrategySelectorImpl implements StrategySelector {
 			}
 		}
 
+		// 当服务不存在时 查看 懒服务解析器 中是否包含,如果包含  解析...
 		LazyServiceResolver lazyServiceResolver = lazyStrategyImplementorByStrategyMap.get( strategy );
 		if ( lazyServiceResolver != null ) {
+
 			Class resolve = lazyServiceResolver.resolve( name );
 			if ( resolve != null ) {
 				return resolve;
@@ -148,6 +158,7 @@ public class StrategySelectorImpl implements StrategySelector {
 		}
 
 		try {
+			// 没办法了  只能尝试类加载器 加载它 ...
 			return classLoaderService.classForName( name );
 		}
 		catch (ClassLoadingException e) {
@@ -225,19 +236,24 @@ public class StrategySelectorImpl implements StrategySelector {
 			}
 		}
 
+		// 判断是否本就是 这种实例
 		if ( strategy.isInstance( strategyReference ) ) {
+			// 直接cast
 			return strategy.cast( strategyReference );
 		}
-
+		// 根据这个引用判断 是Class 还是  reference
 		final Class<? extends T> implementationClass;
 		if ( strategyReference instanceof Class ) {
+			// 如果是
 			implementationClass = (Class<T>) strategyReference;
 		}
 		else {
+			// 否则根据FQN / reference 选择
 			implementationClass = selectStrategyImplementor( strategy, strategyReference.toString() );
 		}
 
 		try {
+			// 最后通过creator 创建
 			return creator.create( implementationClass );
 		}
 		catch (Exception e) {

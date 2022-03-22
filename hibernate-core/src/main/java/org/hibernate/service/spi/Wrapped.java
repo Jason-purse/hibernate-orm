@@ -11,6 +11,8 @@ package org.hibernate.service.spi;
  * that maintains a {@link javax.sql.DataSource} might want to expose access to the {@link javax.sql.DataSource} or
  * its {@link java.sql.Connection} instances.
  *
+ * 可选的约定  - 为了包装服务填充 - 有时候访问这种东西是必要的, 例如 一个服务 包含了一个javax.sql.DataSource 可能想要暴露访问javax.sql.DataSource 或者 它的java.sql.Connection 实例 ...
+ *
  * @author Steve Ebersole
  */
 public interface Wrapped {

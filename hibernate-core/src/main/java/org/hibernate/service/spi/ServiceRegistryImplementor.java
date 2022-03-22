@@ -14,6 +14,8 @@ import org.hibernate.service.ServiceRegistry;
  *
  * 一个服务注册机的额外的集成约定 ..
  *
+ * 它可以包含一些额外的集成约定
+ *
  * @author Steve Ebersole
  */
 public interface ServiceRegistryImplementor extends ServiceRegistry {

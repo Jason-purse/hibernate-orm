@@ -11,7 +11,12 @@ import java.util.Map;
 import org.hibernate.service.Service;
 
 /**
- * Provides access to the initial user-provided configuration values.  Generally speaking
+ * Provides access to the initial user-provided configuration values.
+ * 提供对用户提供的 初始配置数据进行访问 ...
+ *
+ * Generally speaking
+ *
+ * 通常来说  这些值 来自于  loadProperties / applySettings / applySetting / configure
  * these values come from:<ul>
  *     <li>Calls to {@link org.hibernate.boot.registry.StandardServiceRegistryBuilder#loadProperties}</li>
  *     <li>Calls to {@link org.hibernate.boot.registry.StandardServiceRegistryBuilder#applySetting}</li>

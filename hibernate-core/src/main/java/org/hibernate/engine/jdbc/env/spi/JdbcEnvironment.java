@@ -16,6 +16,8 @@ import org.hibernate.sql.ast.SqlAstTranslatorFactory;
  * Initial look at this concept we keep talking about with merging information from {@link java.sql.DatabaseMetaData}
  * and {@link Dialect}
  *
+ * 初次看到这个概念,我们继续谈论  来自DatabaseMetaData 以及 Dialect的合并信息 ..
+ *
  * @author Steve Ebersole
  */
 public interface JdbcEnvironment extends Service {

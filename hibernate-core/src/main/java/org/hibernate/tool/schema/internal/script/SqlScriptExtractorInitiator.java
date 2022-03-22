@@ -40,6 +40,7 @@ public class SqlScriptExtractorInitiator implements StandardServiceInitiator<Sql
 
 		final String explicitSettingName = explicitSettingValue.toString().trim();
 
+		// 有可能是 实现了脚本命令抓取器接口的FQN
 		if ( explicitSettingName.isEmpty() || SingleLineSqlScriptExtractor.SHORT_NAME.equals( explicitSettingName ) ) {
 			return SingleLineSqlScriptExtractor.INSTANCE;
 		}
@@ -48,6 +49,8 @@ public class SqlScriptExtractorInitiator implements StandardServiceInitiator<Sql
 		}
 
 		final ClassLoaderService classLoaderService = registry.getService( ClassLoaderService.class );
+
+		//   实例化
 		return instantiateExplicitCommandExtractor( explicitSettingName, classLoaderService );
 	}
 

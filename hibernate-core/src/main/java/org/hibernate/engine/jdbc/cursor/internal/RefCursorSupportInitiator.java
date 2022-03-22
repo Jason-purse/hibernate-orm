@@ -14,6 +14,7 @@ import org.hibernate.service.spi.ServiceRegistryImplementor;
 
 /**
  * Service initiator for RefCursorSupport service
+ * 引用游标 支持服务的服务初始化器 ...
  *
  * @author Steve Ebersole
  */

@@ -97,28 +97,47 @@ public class StrategySelectorBuilder {
 	 * @return The selector.
 	 */
 	public StrategySelector buildSelector(ClassLoaderService classLoaderService) {
+		// 构建选择器
+		// 类加载器服务 用来解析任何一个未注册的策略实现 ....
 		final StrategySelectorImpl strategySelector = new StrategySelectorImpl( classLoaderService );
 
 		// build the baseline...
+		// 懒惰的注册策略服务
+		// 将Dialect selector 注册进来,作为选择方言的策略
 		strategySelector.registerStrategyLazily(
 				Dialect.class,
 				new AggregatedDialectSelector( classLoaderService.loadJavaServices( DialectSelector.class ) )
 		);
+		// JTA平台 策略检测
 		strategySelector.registerStrategyLazily( JtaPlatform.class, new DefaultJtaPlatformSelector() );
+
+		// 增加事务协调器构建器
 		addTransactionCoordinatorBuilders( strategySelector );
+
+		// 多表 映射策略
 		addSqmMultiTableMutationStrategies( strategySelector );
+
+		// 隐式命名策略
 		addImplicitNamingStrategies( strategySelector );
+
+		// 缓存Key 工厂
 		addCacheKeysFactories( strategySelector );
+
+		// json 格式化Mapper
 		addJsonFormatMappers( strategySelector );
 
+		// 应用自动发现的 注册集 ..
 		// apply auto-discovered registrations
+		// spi 加载的
 		for ( StrategyRegistrationProvider provider : classLoaderService.loadJavaServices( StrategyRegistrationProvider.class ) ) {
+			// 拿到这个提供器所提供的所有登记表 然后注册 ...
 			for ( StrategyRegistration<?> discoveredStrategyRegistration : provider.getStrategyRegistrations() ) {
 				applyFromStrategyRegistration( strategySelector, discoveredStrategyRegistration );
 			}
 		}
 
 		// apply customizations
+		// 应用自定义的  显式添加的 ...
 		for ( StrategyRegistration<?> explicitStrategyRegistration : explicitStrategyRegistrations ) {
 			applyFromStrategyRegistration( strategySelector, explicitStrategyRegistration );
 		}
@@ -127,6 +146,7 @@ public class StrategySelectorBuilder {
 	}
 
 	private <T> void applyFromStrategyRegistration(StrategySelectorImpl strategySelector, StrategyRegistration<T> strategyRegistration) {
+		// 根据这个注册表上的选择器名称 ,, 然后注册策略实现器(本质上完全可以说是 一个selector 或者协调器)
 		for ( String name : strategyRegistration.getSelectorNames() ) {
 			strategySelector.registerStrategyImplementor(
 					strategyRegistration.getStrategyRole(),
@@ -137,28 +157,33 @@ public class StrategySelectorBuilder {
 	}
 
 	private void addTransactionCoordinatorBuilders(StrategySelectorImpl strategySelector) {
+		// JDBC ..
 		strategySelector.registerStrategyImplementor(
 				TransactionCoordinatorBuilder.class,
 				JdbcResourceLocalTransactionCoordinatorBuilderImpl.SHORT_NAME,
 				JdbcResourceLocalTransactionCoordinatorBuilderImpl.class
 		);
+		// JTA
 		strategySelector.registerStrategyImplementor(
 				TransactionCoordinatorBuilder.class,
 				JtaTransactionCoordinatorBuilderImpl.SHORT_NAME,
 				JtaTransactionCoordinatorBuilderImpl.class
 		);
 
+		// legacy JDBC
 		// add the legacy TransactionFactory impl names...
 		strategySelector.registerStrategyImplementor(
 				TransactionCoordinatorBuilder.class,
 				"org.hibernate.transaction.JDBCTransactionFactory",
 				JdbcResourceLocalTransactionCoordinatorBuilderImpl.class
 		);
+		// jta legacy 遗留 .
 		strategySelector.registerStrategyImplementor(
 				TransactionCoordinatorBuilder.class,
 				"org.hibernate.transaction.JTATransactionFactory",
 				JtaTransactionCoordinatorBuilderImpl.class
 		);
+		// cmt ???
 		strategySelector.registerStrategyImplementor(
 				TransactionCoordinatorBuilder.class,
 				"org.hibernate.transaction.CMTTransactionFactory",
@@ -167,21 +192,25 @@ public class StrategySelectorBuilder {
 	}
 
 	private void addSqmMultiTableMutationStrategies(StrategySelectorImpl strategySelector) {
+		// 条件 修改策略
 		strategySelector.registerStrategyImplementor(
 				SqmMultiTableMutationStrategy.class,
 				CteMutationStrategy.SHORT_NAME,
 				CteMutationStrategy.class
 		);
+		// 全局临时表 策略
 		strategySelector.registerStrategyImplementor(
 				SqmMultiTableMutationStrategy.class,
 				GlobalTemporaryTableMutationStrategy.SHORT_NAME,
 				GlobalTemporaryTableMutationStrategy.class
 		);
+		// 策略  本地临时表策略
 		strategySelector.registerStrategyImplementor(
 				SqmMultiTableMutationStrategy.class,
 				LocalTemporaryTableMutationStrategy.SHORT_NAME,
 				LocalTemporaryTableMutationStrategy.class
 		);
+		//  持久化表策略
 		strategySelector.registerStrategyImplementor(
 				SqmMultiTableMutationStrategy.class,
 				PersistentTableMutationStrategy.SHORT_NAME,
@@ -190,26 +219,33 @@ public class StrategySelectorBuilder {
 	}
 
 	private void addImplicitNamingStrategies(StrategySelectorImpl strategySelector) {
+
+		// prefer jpa
+		// 默认
 		strategySelector.registerStrategyImplementor(
 				ImplicitNamingStrategy.class,
 				"default",
 				ImplicitNamingStrategyJpaCompliantImpl.class
 		);
+		// jpa
 		strategySelector.registerStrategyImplementor(
 				ImplicitNamingStrategy.class,
 				"jpa",
 				ImplicitNamingStrategyJpaCompliantImpl.class
 		);
+		//  legacy-jpa
 		strategySelector.registerStrategyImplementor(
 				ImplicitNamingStrategy.class,
 				"legacy-jpa",
 				ImplicitNamingStrategyLegacyJpaImpl.class
 		);
+		//  遗留的 hbm  hibernate-table-mapping 映射
 		strategySelector.registerStrategyImplementor(
 				ImplicitNamingStrategy.class,
 				"legacy-hbm",
 				ImplicitNamingStrategyLegacyHbmImpl.class
 		);
+		// 组件路径
 		strategySelector.registerStrategyImplementor(
 				ImplicitNamingStrategy.class,
 				"component-path",
@@ -218,11 +254,13 @@ public class StrategySelectorBuilder {
 	}
 
 	private void addCacheKeysFactories(StrategySelectorImpl strategySelector) {
+			// 默认
 		strategySelector.registerStrategyImplementor(
 			CacheKeysFactory.class,
 			DefaultCacheKeysFactory.SHORT_NAME,
 			DefaultCacheKeysFactory.class
 		);
+		// 简单Key
 		strategySelector.registerStrategyImplementor(
 			CacheKeysFactory.class,
 			SimpleCacheKeysFactory.SHORT_NAME,
@@ -231,11 +269,15 @@ public class StrategySelectorBuilder {
 	}
 
 	private void addJsonFormatMappers(StrategySelectorImpl strategySelector) {
+
+		// 默认jackson
 		strategySelector.registerStrategyImplementor(
 				FormatMapper.class,
 				JacksonJsonFormatMapper.SHORT_NAME,
 				JacksonJsonFormatMapper.class
 		);
+
+		// jsonb
 		strategySelector.registerStrategyImplementor(
 				FormatMapper.class,
 				JsonBJsonFormatMapper.SHORT_NAME,

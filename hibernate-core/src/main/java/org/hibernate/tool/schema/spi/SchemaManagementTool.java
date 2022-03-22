@@ -14,11 +14,13 @@ import org.hibernate.tool.schema.internal.exec.GenerationTarget;
 
 /**
  * Contract for schema management tool integration.
+ * schema  管理 工具集成的约定
  *
  * @author Steve Ebersole
  */
 @Incubating
 public interface SchemaManagementTool extends Service {
+
 	SchemaCreator getSchemaCreator(Map<String,Object> options);
 	SchemaDropper getSchemaDropper(Map<String,Object> options);
 	SchemaMigrator getSchemaMigrator(Map<String,Object> options);
@@ -29,6 +31,8 @@ public interface SchemaManagementTool extends Service {
 	 * generation target.
 	 * Used by Hibernate Reactive so that it can use the reactive database
 	 * access rather than needing a JDBC connection.
+	 *
+	 * 能够自定义数据库生成目标替换   这里 提供了一个选择  使用响应式  而不是JDBC 连接 ..
 	 * @param generationTarget the custom instance to use.
 	 */
 	void setCustomDatabaseGenerationTarget(GenerationTarget generationTarget);

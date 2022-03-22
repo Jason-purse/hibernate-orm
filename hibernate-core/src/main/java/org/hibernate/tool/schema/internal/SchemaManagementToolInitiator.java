@@ -24,6 +24,7 @@ public class SchemaManagementToolInitiator implements StandardServiceInitiator<S
 		final Object setting = configurationValues.get( AvailableSettings.SCHEMA_MANAGEMENT_TOOL );
 		SchemaManagementTool tool = registry.getService( StrategySelector.class ).resolveStrategy( SchemaManagementTool.class, setting );
 		if ( tool == null ) {
+			// 默认使用提供的
 			tool = new HibernateSchemaManagementTool();
 		}
 

@@ -34,8 +34,8 @@ import static org.hibernate.internal.log.DeprecationLogger.DEPRECATION_LOGGER;
 public class DialectFactoryImpl implements DialectFactory, ServiceRegistryAwareService {
 	private static final CoreMessageLogger LOG = CoreLogging.messageLogger( "SQL dialect" );
 
-	private StrategySelector strategySelector;
-	private DialectResolver dialectResolver;
+	private StrategySelector strategySelector; // 策略选择器
+	private DialectResolver dialectResolver; // 方言解析器
 
 	@Override
 	public void injectServices(ServiceRegistryImplementor serviceRegistry) {
@@ -54,10 +54,14 @@ public class DialectFactoryImpl implements DialectFactory, ServiceRegistryAwareS
 
 	@Override
 	public Dialect buildDialect(Map<String,Object> configValues, DialectResolutionInfoSource resolutionInfoSource) throws HibernateException {
+		// 获取有没有 方言reference
 		final Object dialectReference = configValues.get( AvailableSettings.DIALECT );
+		// 如果不为空,直接构造
 		Dialect dialect = !isEmpty( dialectReference ) ?
 				constructDialect( dialectReference, resolutionInfoSource ) :
+				// 否则判断
 				determineDialect( resolutionInfoSource );
+		// 日志纪录
 		logSelectedDialect( dialect );
 		return dialect;
 	}
@@ -93,25 +97,32 @@ public class DialectFactoryImpl implements DialectFactory, ServiceRegistryAwareS
 
 	private Dialect constructDialect(Object dialectReference, DialectResolutionInfoSource resolutionInfoSource) {
 		try {
+			// 通过策略解析器  解析一种策略  以及一个唯一的名称  确定一种信息
 			Dialect dialect = strategySelector.resolveStrategy(
 					Dialect.class,
 					dialectReference,
-					(Dialect) null,
+					(Dialect) null, // 默认值
+					// 策略创建器
 					(dialectClass) -> {
 						try {
 							try {
+								// 如果不为空
 								if (resolutionInfoSource != null) {
+									// 获取构建器(这是一种约定)
 									return dialectClass.getConstructor( DialectResolutionInfo.class ).newInstance(
 											resolutionInfoSource.getDialectResolutionInfo()
 									);
 								}
 							}
 							catch (NoSuchMethodException nsme) {
-
+								// pass
+								// 没有这种约定
 							}
+							// 直接new 一个实例
 							return dialectClass.newInstance();
 						}
 						catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+							// 否则表示这方言无法实例化
 							throw new StrategySelectionException(
 									String.format( "Could not instantiate named dialect class [%s]", dialectClass.getName() ),
 									e
@@ -143,6 +154,7 @@ public class DialectFactoryImpl implements DialectFactory, ServiceRegistryAwareS
 	 * the determination from the given connection.
 	 */
 	private Dialect determineDialect(DialectResolutionInfoSource resolutionInfoSource) {
+		// 如果要解析 必须要提供JDBC metadata,否则必须 提供
 		if ( resolutionInfoSource == null ) {
 			throw new HibernateException(
 					"Unable to determine Dialect without JDBC metadata "
@@ -151,6 +163,7 @@ public class DialectFactoryImpl implements DialectFactory, ServiceRegistryAwareS
 		}
 
 		final DialectResolutionInfo info = resolutionInfoSource.getDialectResolutionInfo();
+		// 解析方言
 		final Dialect dialect = dialectResolver.resolveDialect( info );
 
 		if ( dialect == null ) {

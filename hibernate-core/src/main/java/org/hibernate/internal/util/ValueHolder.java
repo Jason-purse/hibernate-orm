@@ -9,8 +9,12 @@ package org.hibernate.internal.util;
 /**
  * Represents a "final" value that is initialized either {@link #ValueHolder(Object) up front} or once at some point
  * {@linkplain #ValueHolder(DeferredInitializer) after} declaration.
+ *
+ * 呈现一个final 的数据  要么 通过ValueHolder (Ojbect)  初始化 / 或者在某一个点 初始化 ...ValueHolder(DeferredInitializer)
  * 
  * Note: If a Serializable class has a {@link ValueHolder} property, that property should be declared transient!
+ *
+ * 如果一个序列化类有 ValueHolder 属性,那么 这个属性应该 声明为 transient;
  *
  * @author Steve Ebersole
  */

@@ -10,6 +10,8 @@ import java.util.Map;
 /**
  * Allows the service to request access to the configuration properties for configuring itself.
  *
+ * 允许服务请求访问 configuration properties 来配置 自己
+ *
  * @author Steve Ebersole
  */
 public interface Configurable {

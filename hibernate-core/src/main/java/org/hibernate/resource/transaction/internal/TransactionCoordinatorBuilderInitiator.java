@@ -32,21 +32,24 @@ public class TransactionCoordinatorBuilderInitiator implements StandardServiceIn
 
 	@Override
 	public TransactionCoordinatorBuilder initiateService(Map<String, Object> configurationValues, ServiceRegistryImplementor registry) {
+		// 选择事务协调策略 ...
 		return registry.getService( StrategySelector.class ).resolveDefaultableStrategy(
-				TransactionCoordinatorBuilder.class,
-				determineStrategySelection( configurationValues ),
-				JdbcResourceLocalTransactionCoordinatorBuilderImpl.INSTANCE
+				TransactionCoordinatorBuilder.class, // 一种事务协调器构建器策略 ...
+				determineStrategySelection( configurationValues ), // 根据 策略 然后获取对应的Builder ..
+				JdbcResourceLocalTransactionCoordinatorBuilderImpl.INSTANCE // 默认值
 		);
 	}
 
 	private static Object determineStrategySelection(Map configurationValues) {
+		// 根据策略属性设置获取
 		final Object coordinatorStrategy = configurationValues.get( AvailableSettings.TRANSACTION_COORDINATOR_STRATEGY );
 		if ( coordinatorStrategy != null ) {
 			return coordinatorStrategy;
 		}
-
+		//  遗留
 		final Object legacySetting = configurationValues.get( LEGACY_SETTING_NAME );
 		if ( legacySetting != null ) {
+			// 日志纪录
 			DeprecationLogger.DEPRECATION_LOGGER.logDeprecatedTransactionFactorySetting(
 					LEGACY_SETTING_NAME,
 					AvailableSettings.TRANSACTION_COORDINATOR_STRATEGY

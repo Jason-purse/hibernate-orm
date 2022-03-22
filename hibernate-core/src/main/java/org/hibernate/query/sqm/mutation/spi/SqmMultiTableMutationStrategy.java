@@ -19,12 +19,21 @@ import org.hibernate.query.sqm.tree.update.SqmUpdateStatement;
  * Pluggable strategy for defining how mutation (`UPDATE` or `DELETE`) queries should be handled when the target
  * entity is mapped to multiple tables via secondary tables or certain inheritance strategies.
  *
+ * 增强策略 - 用于定义怎样改变 'update' or 'delete' 查询 应该如何处理
+ * 当这个目标实体映射到多个表 - 通过辅助表 或者某些继承的策略 ...
+ *
  * The main contracts here are {@link #executeUpdate} and {@link #executeDelete}.
+ *
+ * 这里主要是约束  executeUpdate / executeDelete
  *
  * {@link #prepare} and {@link #release} allow the strategy to perform any one time preparation and cleanup.
  *
+ * 预准备 / 释放 允许这些策略执行任意一次的准备以及清理 ...
+ *
  * @apiNote See {@link SqmMutationStrategyHelper#resolveStrategy} for standard resolution of the strategy to use
  * for each hierarchy
+ *
+ * 查看这个方法   了解对于使用在每一个体系中的策略的标准解析 ...
  *
  * @author Steve Ebersole
  */

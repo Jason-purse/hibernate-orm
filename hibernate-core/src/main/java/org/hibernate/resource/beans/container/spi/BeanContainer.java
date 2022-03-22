@@ -12,13 +12,18 @@ import org.hibernate.service.spi.Stoppable;
 /**
  * Represents a backend "bean container" - CDI, Spring, etc
  *
+ * IOC 性质的容器 ...
+ *
+ * // 通过这个属性 和Spring IOC  容器集成
  * @see org.hibernate.cfg.AvailableSettings#BEAN_CONTAINER
  *
  * @author Steve Ebersole
  */
 public interface BeanContainer extends Stoppable {
 	interface LifecycleOptions {
+		// 能够使用  缓存的引用 ??
 		boolean canUseCachedReferences();
+		// 使用jpa 编译创建 ??
 		boolean useJpaCompliantCreation();
 	}
 

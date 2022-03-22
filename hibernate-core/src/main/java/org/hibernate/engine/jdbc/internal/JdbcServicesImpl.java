@@ -27,6 +27,7 @@ import org.hibernate.service.spi.ServiceRegistryImplementor;
 
 /**
  * Standard implementation of the {@link JdbcServices} contract
+ * hibernate 的内置实现 ...
  *
  * @author Steve Ebersole
  */
@@ -49,10 +50,13 @@ public class JdbcServicesImpl implements JdbcServices, ServiceRegistryAwareServi
 		assert jdbcEnvironment != null : "JdbcEnvironment was not found!";
 
 		this.multiTenancyEnabled = serviceRegistry.getService(MultiTenantConnectionProvider.class)!=null;
-
+		// 是否展示 SQL
 		final boolean showSQL = ConfigurationHelper.getBoolean( Environment.SHOW_SQL, configValues, false );
+		//  格式化SQL
 		final boolean formatSQL = ConfigurationHelper.getBoolean( Environment.FORMAT_SQL, configValues, false );
+		// 高亮SQL
 		final boolean highlightSQL = ConfigurationHelper.getBoolean( Environment.HIGHLIGHT_SQL, configValues, false );
+		// 纪录慢查询日志
 		final long logSlowQuery = ConfigurationHelper.getLong( Environment.LOG_SLOW_QUERY, configValues, 0 );
 
 		this.sqlStatementLogger = new SqlStatementLogger( showSQL, formatSQL, highlightSQL, logSlowQuery );

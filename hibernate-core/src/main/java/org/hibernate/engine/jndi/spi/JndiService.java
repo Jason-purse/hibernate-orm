@@ -13,6 +13,8 @@ import org.hibernate.service.Service;
 /**
  * Service providing simplified access to {@literal JNDI} related features needed by Hibernate.
  *
+ * Hibernate 提供此服务对JNDI相关的特性提供简单访问的能力
+ *
  * @author Steve Ebersole
  */
 public interface JndiService extends Service {

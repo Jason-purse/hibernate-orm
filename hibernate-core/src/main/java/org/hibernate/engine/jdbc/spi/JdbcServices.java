@@ -21,6 +21,8 @@ import org.hibernate.sql.exec.spi.JdbcSelectExecutor;
 /**
  * Contract for services around JDBC operations.  These represent shared resources, aka not varied by session/use.
  *
+ * 执行JDBC操作的服务约定, 这里呈现 了一些共享的资源,  会话使用的没有任何差异 ...
+ *
  * @author Steve Ebersole
  */
 public interface JdbcServices extends Service {

@@ -125,6 +125,7 @@ public class ClassLoaderServiceImpl implements ClassLoaderService {
 	@SuppressWarnings("unchecked")
 	public <T> Class<T> classForName(String className) {
 		try {
+			// 提供所有的类加载器  尽一切可能寻找它 ..
 			return (Class<T>) Class.forName( className, true, getAggregatedClassLoader() );
 		}
 		catch (Exception e) {

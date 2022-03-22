@@ -29,13 +29,18 @@ import org.jboss.logging.Logger;
 
 /**
  * Models the information gleaned from parsing a {@code cfg.xml} file.
+ *  解析cfg.xml文件的模型信息
  * <p/>
  * A LoadedConfig is built via {@link #consume}.  An aggregated representation
  * can be maintained through calls to {@link #merge}
+ *
+ * 一个LoadedConfig 是通过consume 构建的,一个聚合的呈现能够通过merge 维护 / 操作 ...
+ *
+ *
  */
 public class LoadedConfig {
 	private static final Logger log = Logger.getLogger( LoadedConfig.class );
-
+	// 会话工厂名称
 	private String sessionFactoryName;
 
 	private final Map<String,Object> configurationValues = new ConcurrentHashMap<>( 16, 0.75f, 1 );

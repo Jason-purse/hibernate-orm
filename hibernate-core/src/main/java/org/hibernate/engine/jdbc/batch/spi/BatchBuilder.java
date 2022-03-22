@@ -11,7 +11,11 @@ import org.hibernate.service.Service;
 
 /**
  * A builder for {@link Batch} instances.
+ *
+ * Batch 实例 的 一个构建者
  * <p>
+ *
+ *     能够选择一个自定义的BatchBuilder 使用(通过 特定的配置属性)
  * A custom {@code BatchBuilder} may be selected using the configuration property
  * {@value org.hibernate.cfg.AvailableSettings#BATCH_STRATEGY}.
  *

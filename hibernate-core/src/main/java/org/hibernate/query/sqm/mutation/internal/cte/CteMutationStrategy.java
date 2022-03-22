@@ -28,6 +28,8 @@ import org.hibernate.query.sqm.tree.update.SqmUpdateStatement;
  * {@link SqmMultiTableMutationStrategy} implementation using SQL's modifiable CTE (Common Table Expression)
  * approach to perform the update/delete.  E.g. (using delete):
  *
+ * 使用CTE 普通表的表达式方式去执行update / delete(例如delete)
+ *
  * ````
  * with cte_id (id) as (
  *     select

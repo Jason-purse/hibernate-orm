@@ -12,6 +12,8 @@ import org.hibernate.type.descriptor.java.JavaType;
 /**
  * A mapper for mapping objects to and from a format.
  *
+ * 一个映射对象的mapper 根据格式   映射 ...
+ *
  * @see org.hibernate.cfg.AvailableSettings#JSON_FORMAT_MAPPER
  *
  * @author Christian Beikov

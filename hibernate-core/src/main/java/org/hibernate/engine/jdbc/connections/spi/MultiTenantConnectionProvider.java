@@ -64,6 +64,8 @@ public interface MultiTenantConnectionProvider extends Service, Wrapped {
 	/**
 	 * Does this connection provider support aggressive release of JDBC connections and later
 	 * re-acquisition of those connections if needed?
+	 *
+	 * 这种联系供应商是否支持积极的JDBC连接的释放和后来re-acquisition这些联系如果需要吗?
 	 * <p/>
 	 * This is used in conjunction with {@link org.hibernate.ConnectionReleaseMode#AFTER_STATEMENT}
 	 * to aggressively release JDBC connections.  However, the configured ConnectionProvider

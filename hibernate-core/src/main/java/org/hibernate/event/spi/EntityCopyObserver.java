@@ -9,6 +9,7 @@ package org.hibernate.event.spi;
 /**
  * An observer for detection of multiple entity representations for a persistent entity being merged.
  *
+ * 一个观察者检测多个实体表示一个持久化实体合并。
  * @see MergeContext
  *
  * @author Gail Badner

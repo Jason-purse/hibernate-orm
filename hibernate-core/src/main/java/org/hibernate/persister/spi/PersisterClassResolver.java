@@ -21,6 +21,13 @@ import org.hibernate.service.Service;
  *     <li>the default provider as chosen by Hibernate Core (best choice most of the time)</li>
  * </ol>
  *
+ * 给定一个Entity 或者集合映射, 解析合适的持久化 类 来 使用
+ *
+ * 持久化的类   是根据以下规则进行选择
+ * 1. 显式的通过注解或者xml 定义
+ * 2. 通过PersisterClassResolver 提供的persister class
+ * 3. 由Hibernate core 所选择的默认provider(大多数 情况的最佳选择 )
+ *
  * @author <a href="mailto:emmanuel@hibernate.org">Emmanuel Bernard</a>
  * @author Steve Ebersole
  */

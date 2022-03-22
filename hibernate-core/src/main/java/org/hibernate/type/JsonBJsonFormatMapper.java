@@ -21,6 +21,7 @@ public class JsonBJsonFormatMapper implements FormatMapper {
 	public static final String SHORT_NAME = "jsonb";
 	public static final JsonBJsonFormatMapper INSTANCE = new JsonBJsonFormatMapper();
 
+	// jakarta 的json binding
 	private final Jsonb jsonb;
 
 	public JsonBJsonFormatMapper() {

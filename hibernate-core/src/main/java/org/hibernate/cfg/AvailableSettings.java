@@ -1353,7 +1353,9 @@ public interface AvailableSettings {
 
 	/**
 	 * Selects a bytecode enhancment library.
+	 * 选择一个字节码增强库
 	 * <p>
+	 *     最初仅仅支持byteBuddy ,bytebuddy 在5.3之后作为默认选项 ..
 	 * At present only bytebuddy is supported, bytebuddy being the default since version 5.3.
 	 */
 	String BYTECODE_PROVIDER = "hibernate.bytecode.provider";
@@ -1638,10 +1640,14 @@ public interface AvailableSettings {
 	 * Specifies the name of the database vendor (as would be reported by
 	 * {@link java.sql.DatabaseMetaData#getDatabaseProductName}) for the purpose of
 	 * determining the {@link org.hibernate.dialect.Dialect} to use.
+	 *
+	 * 指定数据库厂商的名称(它可能通过DatabaseMetaData#getDatabaseProductName)   -为了判断数据库方言 ..
 	 * <p>
 	 * For cases when the name of the database vendor is not enough alone, a combination
 	 * of {@value JAKARTA_HBM2DDL_DB_VERSION}, {@value #JAKARTA_HBM2DDL_DB_MAJOR_VERSION}
 	 * {@value #JAKARTA_HBM2DDL_DB_MINOR_VERSION} can be used instead
+	 *
+	 * 当然数据库的厂商不是足够的, 例如数据库版本  // 主要版本  / minor 版本也可以提供 ...
 	 *
 	 * @see #JAKARTA_HBM2DDL_DB_VERSION
 	 * @see #JAKARTA_HBM2DDL_DB_MAJOR_VERSION
@@ -1871,6 +1877,8 @@ public interface AvailableSettings {
 	String USE_ENTITY_WHERE_CLAUSE_FOR_COLLECTIONS = "hibernate.use_entity_where_clause_for_collections";
 
 	/**
+	 * 指定一个多租户连接提供器, 因为   MultiTenantConnectionProvider 是一个服务,它可以通过 StandardServiceRegistryBuilder 直接配置 ...
+	 *
 	 * Specifies a {@link org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider}
 	 * to use. Since {@code MultiTenantConnectionProvider} is also a service, it may be configured
 	 * directly via the {@link org.hibernate.boot.registry.StandardServiceRegistryBuilder}.

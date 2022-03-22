@@ -31,6 +31,10 @@ import org.hibernate.service.Service;
  * which accept implementation references rather than implementation names, allowing for a multitude of interpretations
  * of said "implementation reference".  See the docs for {@link #resolveDefaultableStrategy} for details.
  *
+ *
+ * 完全可以说 此类就是一个策略注册机  是一个策略中心,掌管了所有的策略的注册 或者取消  以及发现 / 实例化
+ * // 是一个小型的 Map
+ *
  * @author Steve Ebersole
  */
 public interface StrategySelector extends Service {
@@ -58,6 +62,8 @@ public interface StrategySelector extends Service {
 
 	/**
 	 * Locate the named strategy implementation.
+	 *
+	 * 获取命名的策略实现
 	 *
 	 * @param strategy The type of strategy to be resolved.
 	 * @param name The name of the strategy to locate; might be either a registered name or the implementation FQN.

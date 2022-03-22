@@ -20,8 +20,10 @@ import org.hibernate.service.spi.Stoppable;
 /**
  * Abstract support (template pattern) for ManagedBeanRegistry implementations
  *
+ * ManagedBeanRegistry 注册表的抽象实现(模板 模式)
  * @author Steve Ebersole
  */
+// 具有一种IOC 性质的容器
 public class ManagedBeanRegistryImpl implements ManagedBeanRegistry, BeanContainer.LifecycleOptions, Stoppable {
 	private final Map<String,ManagedBean<?>> registrations = new HashMap<>();
 

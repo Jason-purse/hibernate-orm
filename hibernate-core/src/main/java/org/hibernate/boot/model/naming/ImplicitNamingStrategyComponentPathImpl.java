@@ -14,8 +14,12 @@ import org.hibernate.loader.PropertyPath;
  * An ImplicitNamingStrategy implementation which uses full composite paths
  * extracted from AttributePath, as opposed to just the terminal property part.
  *
+ * 基于组合路径 - 根据属性路径抓取 - 对比仅仅 抓取的末尾属性 ...
+ *
  * Mainly a port of the older DefaultComponentSafeNamingStrategy class implementing
  * the no longer supported NamingStrategy contract
+ *
+ * 主要是旧的DefaultComponentSafeNamingStrategy 实现的一个兼容版本  - 因为老的 DefaultComponentSafeNamingStrategy  不再支持命名 策略约定 ....
  *
  * @author Steve Ebersole
  * @author Emmanuel Bernard

@@ -10,6 +10,8 @@ package org.hibernate.boot.registry.selector;
  * Responsible for providing the registrations of strategy selector(s).  Can be registered directly with the
  * {@link org.hibernate.boot.registry.BootstrapServiceRegistry} or located via discovery.
  *
+ * 提供对策略选择器的注册能力, 能够直接使用BootstrapServiceRegistry 注册 或者通过发现分配...
+ *
  * @author Steve Ebersole
  */
 public interface StrategyRegistrationProvider {

@@ -39,9 +39,13 @@ import org.jboss.logging.Logger;
 /**
  * Allows the collection cache to be automatically evicted if an element is inserted/removed/updated *without* properly
  * managing both sides of the association (ie, the ManyToOne collection is changed w/o properly managing the OneToMany).
+ *
+ * 允许集合缓存能够自动的抛弃  (如果一个元素插入  / 删除 / 更新 而无需两边同时关联管理 ) - 例如 ManyToOne  集合 相比于 OneToMany 更加方便 ...
  * 
  * For this functionality to be used, {@value org.hibernate.cfg.AvailableSettings#AUTO_EVICT_COLLECTION_CACHE} must be
  * enabled.  For performance reasons, it's disabled by default.
+ *
+ * 为了此功能能够被使用 ... 配置 自动抛弃集合缓存必须被启用,由于性能原因默认禁止了 ...
  * 
  * @author Andreas Berger
  */
@@ -84,17 +88,23 @@ public class CollectionCacheInvalidator
 		evictCache( event.getEntity(), event.getPersister(), event.getSession(), event.getOldState() );
 	}
 
+	// 集成
 	private void integrate(SessionFactoryServiceRegistry serviceRegistry, SessionFactoryImplementor sessionFactory) {
+		// 拿到会话工厂配置
 		final SessionFactoryOptions sessionFactoryOptions = sessionFactory.getSessionFactoryOptions();
+		// 禁止?
 		if ( !sessionFactoryOptions.isAutoEvictCollectionCache() ) {
 			// feature is disabled
 			return;
 		}
+		// 二级缓存 没有启用 .. 还是禁止
 		if ( !sessionFactoryOptions.isSecondLevelCacheEnabled() ) {
 			// Nothing to do, if caching is disabled
 			return;
 		}
+		// 否则从服务注册表 中获取一个事件监听器注册表的服务
 		EventListenerRegistry eventListenerRegistry = serviceRegistry.getService( EventListenerRegistry.class );
+		// 然后注册事件处理器 ....
 		eventListenerRegistry.appendListeners( EventType.POST_INSERT, this );
 		eventListenerRegistry.appendListeners( EventType.POST_DELETE, this );
 		eventListenerRegistry.appendListeners( EventType.POST_UPDATE, this );

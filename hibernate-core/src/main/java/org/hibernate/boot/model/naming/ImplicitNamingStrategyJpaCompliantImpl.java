@@ -16,10 +16,11 @@ import org.hibernate.internal.util.StringHelper;
 /**
  * Implementation of the ImplicitNamingStrategy contract, generally preferring to conform
  * to JPA standards.
+ * 通常执行JPA 规范
  * <p/>
  * For the legacy JPA-based naming standards initially implemented by Hibernate,
  * see/use {@link ImplicitNamingStrategyLegacyJpaImpl}
- *
+ * 遗留的基于JPA 命名 标准初始化 实现  -   ImplicitNamingStrategyLegacyJpaImpl
  * @author Steve Ebersole
  */
 public class ImplicitNamingStrategyJpaCompliantImpl implements ImplicitNamingStrategy, Serializable {

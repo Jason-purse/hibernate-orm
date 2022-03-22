@@ -44,7 +44,7 @@ public abstract class AbstractServiceRegistryImpl
 		implements ServiceRegistryImplementor, ServiceBinding.ServiceLifecycleOwner {
 
 	private static final CoreMessageLogger log = CoreLogging.messageLogger( AbstractServiceRegistryImpl.class );
-
+	//Crawl all available service bindings for an alternate registration of a given Hibernate `Service`.
 	public static final String ALLOW_CRAWLING = "hibernate.service.allow_crawling";
 
 	private volatile ServiceRegistryImplementor parent;

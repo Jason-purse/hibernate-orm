@@ -17,6 +17,9 @@ import org.hibernate.engine.jdbc.dialect.spi.DialectResolutionInfo;
 /**
  * A list of relational database systems for which Hibernate can resolve a {@link Dialect}.
  *
+ * Hibernate 能够解析出方言的关系型数据库系统列表
+ *
+ *  然而,Hibernate 能够和其他数据库系统工作 - 并没有在这里列出的, 只要Dialect 实现类 通过hibernate.dialect 配置属性提供 ...
  * However, Hibernate can work with other database systems that are not listed by the {@link Database}
  * enumeration, as long as a {@link Dialect} implementation class is provided via the {@code hibernate.dialect}
  * configuration property.

@@ -8,7 +8,7 @@ package org.hibernate.boot.registry.selector.internal;
 
 @FunctionalInterface
 public interface LazyServiceResolver<T> {
-
+	// 根据名字解析服务
 	Class<? extends T> resolve(String name);
 
 }

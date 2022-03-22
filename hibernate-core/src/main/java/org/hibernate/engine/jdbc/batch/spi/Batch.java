@@ -9,7 +9,11 @@ import java.sql.PreparedStatement;
 
 /**
  * Conceptually models a batch.
+ * 一个batch 的 概念模型
  * <p/>
+ *
+ * 不像直接在JDBC中,这里 我们增加了一种能力能够 一次批量集中多个语句 ...
+ * 底层的JDBC 关联的多个PreparedStatement 对象(或者每一个DML 字符串) 将维护在这个batch对象中 ...
  * Unlike directly in JDBC, here we add the ability to batch together multiple statements at a time.  In the underlying
  * JDBC this correlates to multiple {@link PreparedStatement} objects (one for each DML string) maintained within the
  * batch.

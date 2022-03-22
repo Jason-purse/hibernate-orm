@@ -113,6 +113,7 @@ public final class ConfigHelper {
 	}
 
 	public static InputStream getResourceAsStream(String resource) {
+		// 如果需要加载资源   不能以  / 开头
 		String stripped = resource.startsWith( "/" )
 				? resource.substring( 1 )
 				: resource;

@@ -9,6 +9,10 @@ package org.hibernate.internal.util;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * 属性帮助器 ...
+ *
+ */
 public class PropertiesHelper {
 
 	/**

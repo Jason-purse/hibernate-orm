@@ -27,6 +27,7 @@ import org.hibernate.engine.transaction.jta.platform.internal.WebSphereLibertyJt
 import org.hibernate.engine.transaction.jta.platform.internal.WeblogicJtaPlatform;
 import org.hibernate.engine.transaction.jta.platform.spi.JtaPlatform;
 
+// 有这么多JTA 平台 ???/
 public class DefaultJtaPlatformSelector implements LazyServiceResolver<JtaPlatform> {
 
 	@Override

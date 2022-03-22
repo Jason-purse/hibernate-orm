@@ -439,7 +439,7 @@ public final class ConfigurationHelper {
 
 	/**
 	 * Handles interpolation processing for all entries in a properties object.
-	 *
+	 *	解析  属性对象中的占位符  ...
 	 * @param configurationValues The configuration map.
 	 */
 	public static void resolvePlaceHolders(Map<?,?> configurationValues) {

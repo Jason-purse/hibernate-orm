@@ -40,6 +40,8 @@ import org.hibernate.tool.schema.internal.script.SqlScriptExtractorInitiator;
 
 /**
  * Central definition of the standard set of service initiators defined by Hibernate.
+ *
+ * 由Hibernate 定义的服务初始化器的标准集合 - 核心定义 ..
  * 
  * @author Steve Ebersole
  */
@@ -50,7 +52,10 @@ public final class StandardServiceInitiators {
 	public static final List<StandardServiceInitiator<?>> LIST = buildStandardServiceInitiatorList();
 
 	private static List<StandardServiceInitiator<?>> buildStandardServiceInitiatorList() {
+
 		final ArrayList<StandardServiceInitiator<?>> serviceInitiators = new ArrayList<>();
+
+		// 这些服务都是惰性加载 的
 
 		serviceInitiators.add( DefaultSessionFactoryBuilderInitiator.INSTANCE );
 
@@ -73,7 +78,9 @@ public final class StandardServiceInitiators {
 		serviceInitiators.add( ConnectionProviderInitiator.INSTANCE );
 		serviceInitiators.add( MultiTenantConnectionProviderInitiator.INSTANCE );
 		serviceInitiators.add( DialectResolverInitiator.INSTANCE );
+		// 可以使用自定义工厂或者 标准hibernate  核心选择的工厂 ...
 		serviceInitiators.add( DialectFactoryInitiator.INSTANCE );
+
 		serviceInitiators.add( BatchBuilderInitiator.INSTANCE );
 		serviceInitiators.add( JdbcServicesInitiator.INSTANCE );
 		serviceInitiators.add( RefCursorSupportInitiator.INSTANCE );
@@ -81,15 +88,21 @@ public final class StandardServiceInitiators {
 		serviceInitiators.add( JtaPlatformResolverInitiator.INSTANCE );
 		serviceInitiators.add( JtaPlatformInitiator.INSTANCE );
 
+		// 会话工厂  服务注册表
 		serviceInitiators.add( SessionFactoryServiceRegistryFactoryInitiator.INSTANCE );
 
+		// 缓存
 		serviceInitiators.add( RegionFactoryInitiator.INSTANCE );
 
+		//  事务协调器
 		serviceInitiators.add( TransactionCoordinatorBuilderInitiator.INSTANCE );
 
+		// CDI
 		serviceInitiators.add( ManagedBeanRegistryInitiator.INSTANCE );
+		//
 		serviceInitiators.add( EntityCopyObserverFactoryInitiator.INSTANCE );
 
+		// 调整尺寸(调节)
 		serviceInitiators.trimToSize();
 
 		return Collections.unmodifiableList( serviceInitiators );

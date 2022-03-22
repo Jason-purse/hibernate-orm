@@ -8,6 +8,8 @@ package org.hibernate.engine.jdbc.dialect.spi;
 
 /**
  * Contract for the source of DialectResolutionInfo.
+ *
+ * DialectResolutionInfo的来源的 约定
  */
 @FunctionalInterface
 public interface DialectResolutionInfoSource {

@@ -19,6 +19,8 @@ import org.hibernate.service.spi.ServiceRegistryImplementor;
 /**
  * Initiator for the {@link BatchBuilder} service
  *
+ *
+ *
  * @author Steve Ebersole
  */
 public class BatchBuilderInitiator implements StandardServiceInitiator<BatchBuilder> {

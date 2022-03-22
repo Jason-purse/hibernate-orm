@@ -22,8 +22,10 @@ import org.hibernate.resource.beans.internal.ManagedBeanRegistryImpl;
 import org.hibernate.service.spi.ServiceRegistryImplementor;
 
 /**
+ * 一个ManagedBeanRegistry 服务的   Hibernate 的标准初始化器 ...
  * Hibernate's standard initializer for the {@link ManagedBeanRegistry} service.
  *
+ * // 产生了一个 ManagedBeanRegistryImpl
  * Produces a {@link ManagedBeanRegistryImpl}
  *
  * @author Steve Ebersole

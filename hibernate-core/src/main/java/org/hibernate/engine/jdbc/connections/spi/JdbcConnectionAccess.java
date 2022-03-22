@@ -14,6 +14,10 @@ import java.sql.SQLException;
  * Provides centralized access to JDBC connections.  Centralized to hide the complexity of accounting for contextual
  * (multi-tenant) versus non-contextual access.
  *
+ * 提供对JDBC连接的集中访问, 集中隐藏的复杂性占上下文(多租户)和上下文访问。
+ *
+ * 主要是通过连接提供器工作
+ *
  * @author Steve Ebersole
  */
 public interface JdbcConnectionAccess extends Serializable {

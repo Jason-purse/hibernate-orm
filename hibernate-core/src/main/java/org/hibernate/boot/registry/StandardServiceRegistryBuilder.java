@@ -76,11 +76,13 @@ public class StandardServiceRegistryBuilder {
 
 	/**
 	 * The default resource name for a Hibernate configuration XML file.
+	 * 默认的hibernate.cfg.xml xml 配置文件
 	 */
 	public static final String DEFAULT_CFG_RESOURCE_NAME = "hibernate.cfg.xml";
 
 	private final Map<String,Object> settings;
 	private final List<StandardServiceInitiator<?>> initiators;
+
 	private final List<ProvidedService<?>> providedServices = new ArrayList<>();
 
 	private boolean autoCloseRegistry = true;
@@ -118,9 +120,15 @@ public class StandardServiceRegistryBuilder {
 			Map<String,Object> settings,
 			LoadedConfig loadedConfig) {
 		this.bootstrapServiceRegistry = bootstrapServiceRegistry;
+		// 配置加载器
 		this.configLoader = new ConfigLoader( bootstrapServiceRegistry );
+		// 配置
 		this.settings = settings;
+
+		// 合并的cfgXml 设置一下 (后面用来消费cfg 解析)
 		this.aggregatedCfgXml = loadedConfig;
+
+		// 标准的初始化器
 		this.initiators = standardInitiatorList();
 	}
 
@@ -151,8 +159,11 @@ public class StandardServiceRegistryBuilder {
 	public StandardServiceRegistryBuilder(
 			BootstrapServiceRegistry bootstrapServiceRegistry,
 			LoadedConfig loadedConfigBaseline) {
+		// 环境信息获取完毕 ...
 		this.settings = PropertiesHelper.map( Environment.getProperties() );
+		// 顶级服务注册机 实例化(框架的许多服务依赖于它)
 		this.bootstrapServiceRegistry = bootstrapServiceRegistry;
+
 		this.configLoader = new ConfigLoader( bootstrapServiceRegistry );
 		this.aggregatedCfgXml = loadedConfigBaseline;
 		this.initiators = standardInitiatorList();
@@ -223,6 +234,8 @@ public class StandardServiceRegistryBuilder {
 	/**
 	 * Read setting information from an XML file using the standard resource location.
 	 *
+	 * 读取 配置 xml文件 - 根据 标准的资源 位置
+	 *
 	 * @return this, for method chaining
 	 *
 	 * @see #DEFAULT_CFG_RESOURCE_NAME
@@ -253,7 +266,9 @@ public class StandardServiceRegistryBuilder {
 	}
 
 	public StandardServiceRegistryBuilder configure(LoadedConfig loadedConfig) {
+		//  合并此 配置
 		aggregatedCfgXml.merge( loadedConfig );
+		// 设置这些值 ...
 		settings.putAll( loadedConfig.getConfigurationValues() );
 
 		return this;
@@ -359,12 +374,13 @@ public class StandardServiceRegistryBuilder {
 	 * @return A newly-instantiated {@link StandardServiceRegistry}
 	 */
 	public StandardServiceRegistry build() {
+		// 引用服务贡献者
 		applyServiceContributors();
 
 		final Map<String,Object> settingsCopy = new HashMap<>( settings );
 		settingsCopy.put( LOADED_CONFIG_KEY, aggregatedCfgXml );
 		ConfigurationHelper.resolvePlaceHolders( settingsCopy );
-
+		//  new 出一个
 		return new StandardServiceRegistryImpl(
 				autoCloseRegistry,
 				bootstrapServiceRegistry,

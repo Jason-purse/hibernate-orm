@@ -48,26 +48,35 @@ public class JdbcEnvironmentInitiator implements StandardServiceInitiator<JdbcEn
 
 	@Override
 	public JdbcEnvironment initiateService(Map<String, Object> configurationValues, ServiceRegistryImplementor registry) {
+		// 获取 方言工厂
 		final DialectFactory dialectFactory = registry.getService( DialectFactory.class );
 
+		// JDBC 环境  到底是哪一个环境 ..
+		//  hibernate.temp.use_jdbc_metadata_defaults  是一个临时的魔术值
 		// 'hibernate.temp.use_jdbc_metadata_defaults' is a temporary magic value.
+		// 这打算有意缓解未来发展, 因此它是不会定义为一个环境常量的 ...
 		// The need for it is intended to be alleviated with future development, thus it is
 		// not defined as an Environment constant...
 		//
+		// 它被用来控制 我们是否应该考虑JDBC元数据来决定某些默认的values   它是有用的如果数据库不可用...  然后以此来 决定 ..
 		// it is used to control whether we should consult the JDBC metadata to determine
 		// certain default values; it is useful to *not* do this when the database
 		// may not be available (mainly in tools usage).
+		// 通过ConfigurationHelper 获取用户初始配置数据 ...
 		final boolean useJdbcMetadata = ConfigurationHelper.getBoolean(
 				"hibernate.temp.use_jdbc_metadata_defaults",
 				configurationValues,
 				true
 		);
-
+		// 非空判断帮助器
 		final Object dbName = NullnessHelper.coalesceSuppliedValues(
+				//
 				() -> configurationValues.get( AvailableSettings.JAKARTA_HBM2DDL_DB_NAME ),
 				() -> {
+					// 老的... 返回第一个非空
 					final Object value = configurationValues.get( AvailableSettings.DIALECT_DB_NAME );
 					if ( value != null ) {
+						// 发出警告,下次别再使用这个了 ... 提示作用
 						DeprecationLogger.DEPRECATION_LOGGER.deprecatedSetting(
 								AvailableSettings.DIALECT_DB_NAME,
 								AvailableSettings.JAKARTA_HBM2DDL_DB_NAME
@@ -76,8 +85,9 @@ public class JdbcEnvironmentInitiator implements StandardServiceInitiator<JdbcEn
 					return value;
 				}
 		);
-
+		// 名称不为空
 		if ( dbName != null ) {
+			// 版本
 			final String dbVersion = NullnessHelper.coalesceSuppliedValues(
 					() -> (String) configurationValues.get( AvailableSettings.JAKARTA_HBM2DDL_DB_VERSION ),
 					() -> {
@@ -92,6 +102,7 @@ public class JdbcEnvironmentInitiator implements StandardServiceInitiator<JdbcEn
 					},
 					() -> "0"
 			);
+			// 主要版本
 			final int dbMajorVersion = NullnessHelper.coalesceSuppliedValues(
 					() -> ConfigurationHelper.getInteger( AvailableSettings.JAKARTA_HBM2DDL_DB_MAJOR_VERSION, configurationValues ),
 					() -> {
@@ -109,6 +120,8 @@ public class JdbcEnvironmentInitiator implements StandardServiceInitiator<JdbcEn
 					},
 					() -> 0
 			);
+
+			// minor 版本
 			final int dbMinorVersion = NullnessHelper.coalesceSuppliedValues(
 					() -> ConfigurationHelper.getInteger( AvailableSettings.JAKARTA_HBM2DDL_DB_MINOR_VERSION, configurationValues ),
 					() -> {
@@ -126,8 +139,11 @@ public class JdbcEnvironmentInitiator implements StandardServiceInitiator<JdbcEn
 					},
 					() -> 0
 			);
+			// 返回一个JDBC环境
+			// 通过方言工厂构建 方言
 			return new JdbcEnvironmentImpl( registry, dialectFactory.buildDialect(
-					configurationValues,
+					configurationValues, // 配置的值放入 ...
+					// 给出方言解析结果 ....
 					() -> new DialectResolutionInfo() {
 						@Override
 						public String getDatabaseName() {
@@ -171,11 +187,15 @@ public class JdbcEnvironmentInitiator implements StandardServiceInitiator<JdbcEn
 					}
 			) );
 		}
+		// 是否使用jdbcMetadata
 		else if ( useJdbcMetadata ) {
+			// 仅当使用JDBC 元数据的时候 才构建一个连接访问  进行检测
 			final JdbcConnectionAccess jdbcConnectionAccess = buildJdbcConnectionAccess( configurationValues, registry );
 			try {
+				// 获取一个连接 ...
 				final Connection connection = jdbcConnectionAccess.obtainConnection();
 				try {
+					// 获取数据库元数据
 					final DatabaseMetaData dbmd = connection.getMetaData();
 					if ( log.isDebugEnabled() ) {
 						log.debugf(
@@ -202,7 +222,7 @@ public class JdbcEnvironmentInitiator implements StandardServiceInitiator<JdbcEn
 						);
 						log.debugf( "JDBC version : %s.%s", dbmd.getJDBCMajorVersion(), dbmd.getJDBCMinorVersion() );
 					}
-
+					// 构建 方言
 					final Dialect dialect = dialectFactory.buildDialect(
 							configurationValues,
 							() -> {
@@ -245,16 +265,21 @@ public class JdbcEnvironmentInitiator implements StandardServiceInitiator<JdbcEn
 	}
 
 	private JdbcConnectionAccess buildJdbcConnectionAccess(Map<?,?> configValues, ServiceRegistryImplementor registry) {
+		//
 		if ( !configValues.containsKey( AvailableSettings.MULTI_TENANT_CONNECTION_PROVIDER ) ) {
+			// 没有 就只有从服务中获取 ....
 			ConnectionProvider connectionProvider = registry.getService( ConnectionProvider.class );
 			return new ConnectionProviderJdbcConnectionAccess( connectionProvider );
 		}
 		else {
+			// 支持多住户 ...
+			// 直接指定 ...
 			final MultiTenantConnectionProvider multiTenantConnectionProvider = registry.getService( MultiTenantConnectionProvider.class );
 			return new MultiTenantConnectionProviderJdbcConnectionAccess( multiTenantConnectionProvider );
 		}
 	}
 
+	// 构建顶级的jdbc 连接Access 通过它访问连接
 	public static JdbcConnectionAccess buildBootstrapJdbcConnectionAccess(
 			boolean multiTenancyEnabled,
 			ServiceRegistryImplementor registry) {

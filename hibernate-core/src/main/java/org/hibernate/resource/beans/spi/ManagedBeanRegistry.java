@@ -11,7 +11,12 @@ import org.hibernate.service.Service;
 
 /**
  * A registry for {@link ManagedBean} instances.  Responsible for managing the lifecycle.
+ * ManagedBean 实例的注册机(类似IOC容器), 负责管理MangedBean的生命周期 ...
+ *
+ *
  * <p/>
+ *
+ * // 访问 beans 以及 使用它们仅仅在 注册表在初始化过后以及 释放前可用(然而这些事件是可识别的)
  * Access to the beans and usage of them are only valid between the time
  * the registry is initialized and released (however those events are recognized).
  *

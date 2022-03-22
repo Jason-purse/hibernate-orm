@@ -20,6 +20,8 @@ import org.hibernate.service.Service;
 /**
  * Contract for creating persister instances (both {@link EntityPersister} and {@link CollectionPersister} varieties).
  *
+ * 此类是一个约定 用来创建持久化实例( 包含EntityPersister / CollectionPersister 变种)
+ *
  * @author Steve Ebersole
  */
 public interface PersisterFactory extends Service {

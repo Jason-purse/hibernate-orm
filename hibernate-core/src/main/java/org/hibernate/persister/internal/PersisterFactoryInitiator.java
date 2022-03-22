@@ -15,6 +15,8 @@ import org.hibernate.service.spi.ServiceException;
 import org.hibernate.service.spi.ServiceRegistryImplementor;
 
 /**
+ *
+ * 持久化工厂 ...
  * @author Steve Ebersole
  */
 public class PersisterFactoryInitiator implements StandardServiceInitiator<PersisterFactory> {
@@ -29,15 +31,17 @@ public class PersisterFactoryInitiator implements StandardServiceInitiator<Persi
 
 	@Override
 	public PersisterFactory initiateService(Map<String, Object> configurationValues, ServiceRegistryImplementor registry) {
+		// 获取自定义 持久化实例工厂 ??? 用于创建持久化实例
 		final Object customImpl = configurationValues.get( IMPL_NAME );
 		if ( customImpl == null ) {
 			return new PersisterFactoryImpl();
 		}
 
+		// 如果就是这个实例
 		if ( customImpl instanceof PersisterFactory ) {
 			return (PersisterFactory) customImpl;
 		}
-
+		//  否则 强转或者 通过类加载  ...
 		@SuppressWarnings("unchecked")
 		final Class<? extends PersisterFactory> customImplClass = customImpl instanceof Class
 				? ( Class<? extends PersisterFactory> ) customImpl

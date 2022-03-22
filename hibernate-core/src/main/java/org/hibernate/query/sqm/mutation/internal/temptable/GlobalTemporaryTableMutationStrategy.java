@@ -17,6 +17,8 @@ import org.hibernate.query.sqm.tree.update.SqmUpdateStatement;
 /**
  * Strategy based on ANSI SQL's definition of a "global temporary table".
  *
+ * 基于 ANSI的 SQL的 - 全局 临时表的定义的策略 ..
+ *
  * @author Steve Ebersole
  */
 public class GlobalTemporaryTableMutationStrategy extends GlobalTemporaryTableStrategy implements SqmMultiTableMutationStrategy {

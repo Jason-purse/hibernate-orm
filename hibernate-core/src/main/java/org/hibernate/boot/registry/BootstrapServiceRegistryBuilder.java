@@ -174,6 +174,8 @@ public class BootstrapServiceRegistryBuilder {
 	 * @return The built bootstrap registry
 	 */
 	public BootstrapServiceRegistry build() {
+
+		// 收集类加载器服务 ...
 		final ClassLoaderService classLoaderService;
 		if ( providedClassLoaderService == null ) {
 			// Use a set.  As an example, in JPA, OsgiClassLoader may be in both
@@ -189,7 +191,10 @@ public class BootstrapServiceRegistryBuilder {
 		else {
 			classLoaderService = providedClassLoaderService;
 		}
+		// 集成服务
+		// 和其他框架集成
 
+		// 给与了一种能力  通过回调 机制 和Hibernate进行交互 ...
 		final IntegratorServiceImpl integratorService = new IntegratorServiceImpl(
 				providedIntegrators,
 				classLoaderService
@@ -198,6 +203,7 @@ public class BootstrapServiceRegistryBuilder {
 		return new BootstrapServiceRegistryImpl(
 				autoCloseRegistry,
 				classLoaderService,
+				// 根据策略选择器构建器  构建选择器
 				strategySelectorBuilder.buildSelector( classLoaderService ),
 				integratorService
 		);

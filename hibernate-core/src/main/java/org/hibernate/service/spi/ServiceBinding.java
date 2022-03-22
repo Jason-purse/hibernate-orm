@@ -13,12 +13,15 @@ import org.jboss.logging.Logger;
 /**
  * Models a binding for a particular service
  *
+ * 对于一个特殊服务绑定的模型
+ *
  * @author Steve Ebersole
  */
 public final class ServiceBinding<R extends Service> {
 	private static final Logger log = Logger.getLogger( ServiceBinding.class );
 
 	public interface ServiceLifecycleOwner {
+
 		<R extends Service> R initiateService(ServiceInitiator<R> serviceInitiator);
 
 		<R extends Service> void configureService(ServiceBinding<R> binding);

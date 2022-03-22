@@ -42,21 +42,21 @@ if ( !JavaVersion.current().java11Compatible ) {
 
 
 // 构建缓存 ...
-//buildCache {
-////    local {
-////        // do not use local build cache for CI jobs, period!
-////        enabled = !settings.ext.isCiEnvironment
-////    }
-////    remote(HttpBuildCache) {
-////        enabled = true
-////        push = settings.ext.populateRemoteBuildCache
-////        url = 'https://ge.hibernate.org/cache/'
-////    }
-//    // 这里无法使用  hibernate 的缓存 ....  无法验证 ...
+buildCache {
 //    local {
-//        enabled = false
+//        // do not use local build cache for CI jobs, period!
+//        enabled = !settings.ext.isCiEnvironment
 //    }
-//}
+//    remote(HttpBuildCache) {
+//        enabled = true
+//        push = settings.ext.populateRemoteBuildCache
+//        url = 'https://ge.hibernate.org/cache/'
+//    }
+    // 启用构建 缓存
+    local {
+        enabled = true
+    }
+}
 
 // 基准线 java版本为 11
 gradle.ext.baselineJavaVersion = JavaLanguageVersion.of( 11 )

@@ -19,6 +19,9 @@ import org.hibernate.query.sqm.tree.update.SqmUpdateStatement;
  * temporary tables.  It follows a pattern similar to the ANSI SQL definition of global
  * temporary table using a "session id" column to segment rows from the various sessions.
  *
+ * 这是一种 模仿临时表的策略 - 主要是针对数据库不支持临时表的情况 下使用 ;
+ * 它 遵循一个模式  类似于ANSI SQL 对于全局临时表的定义 - 使用session id 字段去分割行 - 从不同的sessions中 ...
+ *
  * @author Steve Ebersole
  */
 public class PersistentTableMutationStrategy extends PersistentTableStrategy implements SqmMultiTableMutationStrategy {

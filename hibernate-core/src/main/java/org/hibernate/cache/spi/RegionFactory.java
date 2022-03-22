@@ -20,14 +20,24 @@ import org.hibernate.service.spi.Stoppable;
 
 /**
  * Contract for building second level cache regions.
+ *
+ * 构建 二级缓存源头的约定
  * <p/>
  * Implementors should define a constructor in one of two forms:<ul>
  *     <li>MyRegionFactoryImpl({@link java.util.Properties})</li>
  *     <li>MyRegionFactoryImpl()</li>
  * </ul>
+ *
+ * 实现者应该 定义一个构建器,但是形式 如下:
+ * 1.MyRegionFactoryImpl(java.util.Properties)
+ * 2.MyRegionFactoryImpl()
+ *
+ * 第一次使用 我们需要读取配置属性  在start调用之前 ...
  * Use the first when we need to read config properties prior to
  * {@link #start} being called.
  * <p>
+ *
+ *     一个RegionFactory 也许能够被选择 - 如果你配置了 这样的一个属性 ..
  * A {@code RegionFactory} may be selected using the property
  * {@value org.hibernate.cfg.AvailableSettings#CACHE_REGION_FACTORY}.
  *
@@ -43,6 +53,9 @@ public interface RegionFactory extends Service, Stoppable {
 	 * Lifecycle callback to perform any necessary initialization of the
 	 * underlying cache provider.  Called exactly once during the
 	 * construction of a {@link org.hibernate.internal.SessionFactoryImpl}.
+	 *
+	 * 生命周期回调  执行任何必要的底层缓存提供器的初始化
+	 * 仅仅在SessionFactoryImpl 的构建期间调用一次 ...
 	 *
 	 * @param settings The settings in effect.
 	 * @param configValues The available config values

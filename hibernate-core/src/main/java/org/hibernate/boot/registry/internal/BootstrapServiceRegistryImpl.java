@@ -158,22 +158,23 @@ public class BootstrapServiceRegistryImpl
 	public BootstrapServiceRegistryImpl(
 			boolean autoCloseRegistry,
 			ClassLoaderService classLoaderService,
-			StrategySelector strategySelector,
+			StrategySelector strategySelector, // 策略选择器,各种策略全靠它 驱动
 			IntegratorService integratorService) {
 		this.autoCloseRegistry = autoCloseRegistry;
 
+		// 类加载器服务 ...
 		this.classLoaderServiceBinding = new ServiceBinding<>(
 				this,
 				ClassLoaderService.class,
 				classLoaderService
 		);
-
+		//  策略 选择器服务
 		this.strategySelectorBinding = new ServiceBinding<>(
 				this,
 				StrategySelector.class,
 				strategySelector
 		);
-
+		//  集成服务
 		this.integratorServiceBinding = new ServiceBinding<>(
 				this,
 				IntegratorService.class,
@@ -226,6 +227,7 @@ public class BootstrapServiceRegistryImpl
 	}
 	
 	private synchronized void destroy(ServiceBinding serviceBinding) {
+		// 根据事件 回调的原则 通知服务 结束 ...
 		serviceBinding.getLifecycleOwner().stopService( serviceBinding );
 	}
 
@@ -289,6 +291,7 @@ public class BootstrapServiceRegistryImpl
 		if ( childRegistries == null ) {
 			throw new IllegalStateException( "No child ServiceRegistry registrations found" );
 		}
+		// 还 删除了一下 ???
 		childRegistries.remove( child );
 		if ( childRegistries.isEmpty() ) {
 			if ( autoCloseRegistry ) {

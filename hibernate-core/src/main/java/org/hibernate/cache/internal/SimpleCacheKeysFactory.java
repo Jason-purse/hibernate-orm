@@ -15,6 +15,8 @@ import org.hibernate.persister.entity.EntityPersister;
 /**
  * Factory that does not fill in the entityName or role
  *
+ * 工厂不填写实体名称或角色
+ *
  * @author Radim Vansa &lt;rvansa@redhat.com&gt;
  */
 public class SimpleCacheKeysFactory implements CacheKeysFactory {

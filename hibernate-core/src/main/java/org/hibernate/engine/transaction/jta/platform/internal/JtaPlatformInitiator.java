@@ -20,6 +20,7 @@ import org.jboss.logging.Logger;
 
 /**
  * Standard initiator for the standard {@link JtaPlatform}
+ * JtaPlatform 标准初始化器 ...
  *
  * @author Steve Ebersole
  */
@@ -36,10 +37,12 @@ public class JtaPlatformInitiator implements StandardServiceInitiator<JtaPlatfor
 	@Override
 	public JtaPlatform initiateService(Map<String, Object> configurationValues, ServiceRegistryImplementor registry) {
 		final Object setting = configurationValues.get( AvailableSettings.JTA_PLATFORM );
+		// 直接解析平台
 		JtaPlatform platform = registry.getService( StrategySelector.class ).resolveStrategy( JtaPlatform.class, setting );
 
 		if ( platform == null ) {
 			LOG.debug( "No JtaPlatform was specified, checking resolver" );
+			// 平台解析器解析平台 ...
 			platform = registry.getService( JtaPlatformResolver.class ).resolveJtaPlatform( configurationValues, registry );
 		}
 
@@ -52,6 +55,7 @@ public class JtaPlatformInitiator implements StandardServiceInitiator<JtaPlatfor
 		return platform;
 	}
 
+	// 降级 策略  也就是  null
 	protected JtaPlatform getFallbackProvider(Map<?,?> configurationValues, ServiceRegistryImplementor registry) {
 		return null;
 	}

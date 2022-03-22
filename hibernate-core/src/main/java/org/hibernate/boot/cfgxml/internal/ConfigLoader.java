@@ -27,6 +27,8 @@ import org.jboss.logging.Logger;
 /**
  * Loads {@code cfg.xml} files.
  *
+ *
+ * 加载cfg.xml 文件
  * @author Steve Ebersole
  */
 public class ConfigLoader {
