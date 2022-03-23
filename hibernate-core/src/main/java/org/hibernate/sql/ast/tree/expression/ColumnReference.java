@@ -26,6 +26,8 @@ import static org.hibernate.metamodel.relational.RuntimeRelationModelHelper.DEFA
 /**
  * Models a reference to a Column in a SQL AST
  *
+ * 在一个SQL AST 中引用一个column 的参考 ..
+ *
  * @author Steve Ebersole
  * @author Nathan Xu
  */
@@ -93,23 +95,27 @@ public class ColumnReference implements Expression, Assignable {
 		}
 		else if ( customReadExpression != null ) {
 			if ( this.qualifier == null ) {
+				// 自定义读表达式 ...替换(不需要表名)
 				this.readExpression = StringHelper.replace( customReadExpression, Template.TEMPLATE + ".", "" );
 			}
 			else {
+				// 追加表名
 				this.readExpression = StringHelper.replace( customReadExpression, Template.TEMPLATE, qualifier );
 			}
 		}
 		else {
+			// 拼接
 			this.readExpression = this.qualifier == null
 					? this.columnExpression
 					: this.qualifier + "." + this.columnExpression;
 		}
 
 		if ( isFormula ) {
-			this.writeExpression = null;
+			this.writeExpression = null; // 写表达式置为空
 		}
 		else if ( customWriteExpression != null ) {
 			if ( this.qualifier == null ) {
+				// 取掉
 				this.writeExpression = StringHelper.replace( customWriteExpression, Template.TEMPLATE + ".", "" );
 			}
 			else {
@@ -117,6 +123,7 @@ public class ColumnReference implements Expression, Assignable {
 			}
 		}
 		else {
+			// 写表达式 默认的为?
 			this.writeExpression = DEFAULT_COLUMN_WRITE_EXPRESSION;
 		}
 
@@ -124,7 +131,7 @@ public class ColumnReference implements Expression, Assignable {
 	}
 
 	public ColumnReference(
-			TableReference tableReference,
+			TableReference tableReference, // 属于那个表
 			SelectableMapping selectableMapping,
 			SessionFactoryImplementor sessionFactory) {
 		this(

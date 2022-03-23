@@ -17,6 +17,7 @@ import org.hibernate.query.Query;
 
 /**
  * Contains locking details (LockMode, Timeout and Scope).
+ * 包含锁详细 (LockModel / timeout / scope)
  * 
  * @author Scott Marlow
  */

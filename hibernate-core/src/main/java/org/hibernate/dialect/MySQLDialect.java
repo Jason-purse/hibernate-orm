@@ -79,6 +79,8 @@ import static org.hibernate.exception.spi.TemplatedViolatedConstraintNameExtract
 import static org.hibernate.type.SqlTypes.*;
 
 /**
+ * 每一个方言   都携带了一个如何翻译SQL 的 翻译器 ...
+ *
  * A {@linkplain Dialect SQL dialect} for MySQL 5 and above.
  *
  * @author Gavin King

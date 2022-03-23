@@ -24,13 +24,20 @@ import org.hibernate.type.Type;
  * this interface ever be exposed to the application. It <b>is</b>
  * intended that users implement this interface to provide
  * custom identifier generation strategies.
+ *
+ * 通常在生成唯一标识符的类 和  Session 的一个约定
+ * 它并没有打算暴露给应用 ..
+ * 它是打算让用户实现 此接口去提供自定义的标识符生成策略 ...
  * <p>
  * Implementors should provide a public default constructor.
+ * 实现者应该提供一个公共的默认构造器
  * <p>
  * Implementations that accept configuration parameters should
  * also implement {@code Configurable}.
+ * 	实现接受配置参数  应该也需要实现Configurable
  * <p>
  * Implementors <em>must</em> be thread-safe
+ * 实现 必须线程安全 ...
  *
  * @author Gavin King
  *
@@ -86,7 +93,9 @@ public interface IdentifierGenerator extends Configurable, ExportableProducer {
 
 	/**
 	 * Initializes this instance, in particular pre-generates SQL as necessary.
+	 * 初始化此实例,特别是在必要时提前生成SQL。
 	 * <p>
+	 *     这个方法应该在 #registerExportables(Database) 之后 调用,第一次使用前..
 	 * This method is called after {@link #registerExportables(Database)}, before first use.
 	 *
 	 * @param context A context to help generate SQL strings

@@ -10,7 +10,10 @@ import java.io.Serializable;
 
 /**
  * Allows reaction to basic {@link SessionFactory} lifecycle events.
+ *
+ * 允许响应   基本的SessionFactory  生命周期事件
  * <p>
+ *     // SessionFactoryObserver 通过配置 属性注册
  * A {@code SessionFactoryObserver} may be registered using the configuration property
  * {@value org.hibernate.cfg.AvailableSettings#SESSION_FACTORY_OBSERVER}.
  *

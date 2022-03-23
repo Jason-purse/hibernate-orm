@@ -13,6 +13,8 @@ import org.hibernate.mapping.IndexedConsumer;
 
 /**
  * Container for one-or-more JdbcMappings
+ *
+ * JdbcMapping 一对多的容器
  */
 public interface JdbcMappingContainer {
 	/**

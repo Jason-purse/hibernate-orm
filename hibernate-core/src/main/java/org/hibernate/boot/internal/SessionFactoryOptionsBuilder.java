@@ -134,10 +134,14 @@ import static org.hibernate.internal.log.DeprecationLogger.DEPRECATION_LOGGER;
 /**
  * In-flight state of {@link SessionFactoryOptions}
  * during {@link org.hibernate.boot.SessionFactoryBuilder} processing.
+ *  在SessionFactoryBuilder 处理过程中 - SessionFactoryOptions 的中间状态 ...
+ *
  *
  * The intention is that {@code SessionFactoryBuilder} internally creates and populates
  * this builder, which is then used to construct the {@code SessionFactoryOptions}
  * as part of building the {@code SessionFactory} ({@link org.hibernate.boot.SessionFactoryBuilder#build})
+ *
+ * 这是打算 在 SessionFactoryBuilder 内部创建并填充此Builder, 这将用于构建SessionFactoryOptions 作为构建SessionFactory的一部分 ...
  *
  * @author Steve Ebersole
  */
@@ -1410,6 +1414,7 @@ public class SessionFactoryOptionsBuilder implements SessionFactoryOptions {
 		this.commentsEnabled = enabled;
 	}
 
+	// 引用SQL 函数
 	public void applySqlFunction(String registrationName, SqmFunctionDescriptor sqlFunction) {
 		if ( this.sqlFunctions == null ) {
 			this.sqlFunctions = new HashMap<>();

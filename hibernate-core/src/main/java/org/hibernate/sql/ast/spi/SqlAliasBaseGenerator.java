@@ -9,6 +9,8 @@ package org.hibernate.sql.ast.spi;
 /**
  * Generator for SqlAliasBase instances based on a stem.
  *
+ * 基于一个 名称生成 SqlAliasBase 实例
+ *
  * @author Steve Ebersole
  */
 public interface SqlAliasBaseGenerator {

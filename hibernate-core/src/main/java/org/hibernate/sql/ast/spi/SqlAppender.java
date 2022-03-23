@@ -9,6 +9,7 @@ package org.hibernate.sql.ast.spi;
 /**
  * Access to appending SQL fragments to an in-flight buffer
  *
+ *  访问追加到 动态缓冲区的SQL 碎片
  * @author Steve Ebersole
  */
 public interface SqlAppender extends Appendable {

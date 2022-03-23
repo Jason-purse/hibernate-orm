@@ -19,6 +19,8 @@ import org.hibernate.type.descriptor.jdbc.JdbcType;
 /**
  * Models the type of a thing that can be used as an expression in a SQL query
  *
+ * 能够作为一个表达式   使用在SQL 查询中 - 一个类型的模型 ..
+ *
  * @author Steve Ebersole
  */
 public interface JdbcMapping extends MappingType, JdbcMappingContainer {

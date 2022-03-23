@@ -24,6 +24,9 @@ import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManagerFactory;
 
 /**
+ * 会话工厂代表了  一个Hibernate 的实例
+ * 它维护了代表着持久化实体的运行时元数据 模型,它们的属性 ,它们的关联  以及 它们与关系型数据库表的映射
+ * configuration 会影响 Hibernate 的运行时行为, 服务的实例 - 需要它们执行它们的职责 ..
  * A {@code SessionFactory} represents an "instance" of Hibernate: it maintains
  * the runtime metamodel representing persistent entities, their attributes,
  * their associations, and their mappings to relational database tables, along
@@ -31,16 +34,24 @@ import jakarta.persistence.EntityManagerFactory;
  * affects the runtime behavior of Hibernate, and instances of services that
  * Hibernate needs to perform its duties.
  * <p>
+ * 尤为重要的, 一个程序会抓取Session, 通常来说  一个程序有单个 SessionFactory  实例, 并且每一次它服务一个客户端请求 需要从
+ * 工厂中包含一个Session 实例 ...
  * Crucially, this is where a program comes to obtain {@link Session sessions}.
  * Typically, a program has a single {@link SessionFactory} instance, and must
  * obtain a new {@link Session} instance from the factory each time it services
  * a client request.
  * <p>
+ * 依赖于Hibernate 如何配置, 这个SessionFactory 自身  可能需要对  JDBC 连接池的生命周期 以及事务负责
+ * // 或者仅仅简单的作为一个客户端（由容器环境提供的连接池  或者事务管理器)
  * Depending on how Hibernate is configured, the {@code SessionFactory} itself
  * might be responsible for the lifecycle of pooled JDBC connections and
  * transactions, or it may simply act as a client for a connection pool or
  * transaction manager provided by a container environment.
  * <p>
+ *     SessionFactory 的内部状态是认为不可变的..
+ *     然而 它和有状态服务(例如 JDBC连接池)交互的时候, 例如状态的改变绝不会使得它的客户端可见 ..
+ *     尤其是  运行时 元数据 模型   呈现了 entity 以及 它的O/R 映射 是固定的 - 在SessionFactory 创建时即固定 ..
+ *     当然SessionFactory 是线程安全的 ...
  * The internal state of a {@code SessionFactory} is considered in some sense
  * "immutable". While it interacts with stateful services like JDBC connection
  * pools, such state changes are never visible to its clients. In particular,
@@ -48,7 +59,10 @@ import jakarta.persistence.EntityManagerFactory;
  * fixed as soon as the {@code SessionFactory} is created. Of course, any
  * {@code SessionFactory} is threadsafe.
  * <p>
+ *     每一个SessionFactory 是一个JPA EntityManagerFactory
  * Every {@code SessionFactory} is a JPA {@link EntityManagerFactory}.
+ * 因此,Hibernate 可以作为一个JPA 持久化 提供器 ...
+ * EntityManagerFactory#unwrap(Class) 也许 可以被用来获取一个底层的SessionFactory
  * Furthermore, when Hibernate is acting as the JPA persistence provider, the
  * method {@link EntityManagerFactory#unwrap(Class)} may be used to obtain the
  * underlying {@code SessionFactory}.
@@ -81,6 +95,9 @@ public interface SessionFactory extends EntityManagerFactory, Referenceable, Ser
 	 * Any JDBC {@link Connection connection} will be obtained lazily from the
 	 * {@link org.hibernate.engine.jdbc.connections.spi.ConnectionProvider}
 	 * as needed to perform requested work.
+	 *
+	 * 打开一个会话
+	 * 任何一个JDBC 连接将会从ConnectionProvider中懒加载
 	 *
 	 * @return The created session.
 	 *

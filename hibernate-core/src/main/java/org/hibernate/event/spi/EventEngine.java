@@ -27,6 +27,8 @@ import org.hibernate.service.spi.Stoppable;
 /**
  * Composite for the things related to Hibernate's event system.
  *
+ * Hibernate 的事件系统 - 相关事件的组合 ..
+ *
  * @author Steve Ebersole
  */
 public class EventEngine {

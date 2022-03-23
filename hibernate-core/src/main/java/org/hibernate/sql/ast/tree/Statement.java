@@ -10,6 +10,7 @@ import org.hibernate.sql.ast.SqlAstWalker;
 
 /**
  * Base contract for any statement
+ * 一个 语句的基本约定
  *
  * @author Steve Ebersole
  */

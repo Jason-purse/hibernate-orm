@@ -17,9 +17,14 @@ public interface SqlSelectionProducer {
 	/**
 	 * Create a SqlSelection for the given JDBC ResultSet position
 	 *
-	 * @param jdbcPosition The index position used to read values from JDBC
+	 * 对于给定的JDBC创建一个Sql选择结果集的位置
+	 *
+	 * @param jdbcPosition The index position used to read values from JDBC  从jdbc中读取values的index 位置
+	 *                     // 当前jdbc values 数组中的位置 ..
 	 * @param valuesArrayPosition The position in our {@linkplain RowProcessingState#getJdbcValue(SqlSelection) "current JDBC values array"}
+	 *                            // java 类型描述器
 	 * @param javaType The descriptor for the Java type to read the value as
+	 *                 // 相关联的TypeConfiguration
 	 * @param typeConfiguration The associated TypeConfiguration
 	 */
 	SqlSelection createSqlSelection(

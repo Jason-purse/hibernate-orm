@@ -9,6 +9,7 @@ package org.hibernate.metamodel.mapping;
 import org.hibernate.type.descriptor.java.JavaType;
 
 /**
+ * 部分模型的部分层次类型描述符,如与属性。
  * Parts of the ModelPart hierarchy that are type descriptors, as opposed to attributes e.g.
  *
  * @author Steve Ebersole

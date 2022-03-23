@@ -18,6 +18,7 @@ import org.hibernate.sql.ast.tree.SqlAstNode;
 import org.hibernate.sql.ast.tree.expression.Expression;
 
 /**
+ * 查询部分
  * @author Christian Beikov
  */
 public abstract class QueryPart implements SqlAstNode, Expression, DomainResultProducer {
@@ -28,6 +29,7 @@ public abstract class QueryPart implements SqlAstNode, Expression, DomainResultP
 
 	private Expression offsetClauseExpression;
 	private Expression fetchClauseExpression;
+	// 总是提取前N rows
 	private FetchClauseType fetchClauseType = FetchClauseType.ROWS_ONLY;
 
 	public QueryPart(boolean isRoot) {

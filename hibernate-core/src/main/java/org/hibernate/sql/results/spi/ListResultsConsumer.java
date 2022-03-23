@@ -62,6 +62,7 @@ public class ListResultsConsumer<R> implements ResultsConsumer<List<R>, R> {
 			JdbcValuesSourceProcessingStateStandardImpl jdbcValuesSourceProcessingState,
 			RowProcessingStateStandardImpl rowProcessingState,
 			RowReader<R> rowReader) {
+		// 持久化上下文
 		final PersistenceContext persistenceContext = session.getPersistenceContext();
 		RuntimeException ex = null;
 		try {

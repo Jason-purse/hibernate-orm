@@ -10,8 +10,12 @@ import java.util.LinkedHashSet;
 /**
  * A fetch profile allows a user to dynamically modify the fetching strategy used for particular associations at
  * runtime, whereas that information was historically only statically defined in the metadata.
+ * 一个fetch profile 允许用户 动态的修改抓取策略
+ * 这些信息仅仅静态化的定义在metadata中 ...
  * <p/>
  * This class represent the data as it is defined in their metadata.
+ *
+ * 这个类呈现的数据定义在他们的metadata中 ..
  *
  * @author Steve Ebersole
  *

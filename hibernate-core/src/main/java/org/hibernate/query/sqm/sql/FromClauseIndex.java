@@ -21,6 +21,7 @@ import org.jboss.logging.Logger;
 
 /**
  * An index of various FROM CLAUSE resolutions.
+ * from clause 解析的一个 index
  *
  * @author Steve Ebersole
  */

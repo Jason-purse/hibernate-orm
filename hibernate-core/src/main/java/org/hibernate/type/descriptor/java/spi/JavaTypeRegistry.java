@@ -23,6 +23,8 @@ import org.jboss.logging.Logger;
 /**
  * Basically a map from {@link Class} -> {@link JavaType}
  *
+ * Class -> JavaType 的映射
+ *
  * @author Steve Ebersole
  * @author Andrea Boriero
  *
@@ -127,7 +129,7 @@ public class JavaTypeRegistry implements JavaTypeBaseline.BaselineTarget, Serial
 		descriptorsByType.put( javaType, created );
 		return created;
 	}
-
+	// 继续 描述器
 	public <J> JavaType<J> resolveDescriptor(Type javaType) {
 		return resolveDescriptor(
 				javaType,

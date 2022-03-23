@@ -13,6 +13,8 @@ import org.hibernate.metamodel.mapping.JdbcMappingContainer;
 import org.hibernate.sql.ast.SqlAstWalker;
 
 /**
+ * 两种条件  and / or
+ *
  * @author Steve Ebersole
  */
 public class Junction implements Predicate {
@@ -29,6 +31,7 @@ public class Junction implements Predicate {
 
 	private final Nature nature;
 	private final JdbcMappingContainer expressionType;
+	// 它可能有多个条件 组成一个条件
 	private final List<Predicate> predicates;
 
 	public Junction() {

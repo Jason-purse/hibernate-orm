@@ -10,8 +10,11 @@ import java.sql.Types;
 
 /**
  * The class that defines the constants that are used to identify generic
- * SQL types. This is an extension of {@link Types} that provides type codes
+ * SQL types.
+ * 此类标识了大多数SQL 类型  ...
+ * This is an extension of {@link Types} that provides type codes
  * for types that Hibernate supports in addition to the standard JDBC types.
+ *  这是Types 的扩展 -
  *
  * @author Christian Beikov
  */

@@ -12,6 +12,7 @@ import org.hibernate.LockOptions;
 
 /**
  *  Defines an event class for the loading of an entity.
+ *  加载一个entity 的 事件类
  *
  * @author Steve Ebersole
  */

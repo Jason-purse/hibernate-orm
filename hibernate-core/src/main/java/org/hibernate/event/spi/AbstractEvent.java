@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 /**
  * Defines a base class for Session generated events.
+ * 定义 一个基类(代表session 生成的events)
  *
  * @author Steve Ebersole
  */

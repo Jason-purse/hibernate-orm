@@ -11,8 +11,11 @@ import java.io.Serializable;
 import org.hibernate.SharedSessionContract;
 
 /**
- * Describes the mutability aspects of a Java type.  The term mutability refers to the fact that generally speaking
+ * Describes the mutability aspects of a Java type.
+ * 描述了Java类型的可变性方面
+ * The term mutability refers to the fact that generally speaking
  * the aspects described by this contract are defined by whether the Java type's internal state is mutable or not.
+ * 这个术语  可变性涉及到 面临 通常说的方面 - 由此约定定义 Java类型的内部状态是可变还是不可变..
  *
  * @author Steve Ebersole
  */

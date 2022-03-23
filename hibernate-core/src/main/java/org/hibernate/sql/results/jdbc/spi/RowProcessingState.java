@@ -16,6 +16,8 @@ import org.hibernate.sql.results.spi.RowReader;
 /**
  * State pertaining to the processing of a single "row" of a JdbcValuesSource
  *
+ * 单行 JdbcValuesSource 的处理状态
+ *
  * @author Steve Ebersole
  */
 public interface RowProcessingState extends ExecutionContext {

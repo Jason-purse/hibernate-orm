@@ -109,6 +109,7 @@ public class MetadataSources implements Serializable {
 		}
 		this.serviceRegistry = serviceRegistry;
 		this.classLoaderService = serviceRegistry.getService( ClassLoaderService.class );
+		// 禁用 xml 映射Binder ?
 		this.disableXmlMappingBinders = false;
 	}
 

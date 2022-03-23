@@ -156,8 +156,8 @@ public interface SharedSessionContractImplementor
 
 	/**
 	 * Performs a check whether the Session is open, and if not:<ul>
-	 *     <li>marks current transaction (if one) for rollback only</li>
-	 *     <li>throws an IllegalStateException (JPA defines the exception type)</li>
+	 *     <li>marks current transaction (if one) for rollback only</li>  // rollback only 表示非打开状态
+	 *     <li>throws an IllegalStateException (JPA defines the exception type)</li> // 抛出了一个异常 ..
 	 * </ul>
 	 */
 	default void checkOpen() {
@@ -413,6 +413,11 @@ public interface SharedSessionContractImplementor
 	}
 
 	/**
+	 *
+	 * 获取内部的持久化上下文
+	 * 有两种不同
+	 * a. 这个版本执行可能更好,因为它允许内联和更好的预测
+	 * b. 查看 SessionImpl#getPersistenceContext, 它根据会话的当前状态做一些检查 ...
 	 * This is similar to {@link #getPersistenceContext()}, with
 	 * two main differences:
 	 * a) this version performs better as
@@ -420,6 +425,7 @@ public interface SharedSessionContractImplementor
 	 * b) see SessionImpl{@link #getPersistenceContext()} : it
 	 * does some checks on the current state of the Session.
 	 *
+	 * 性能很重要,正确性优先 ...
 	 * Choose wisely: performance is important, correctness comes first.
 	 *
 	 * @return the PersistenceContext associated to this session.

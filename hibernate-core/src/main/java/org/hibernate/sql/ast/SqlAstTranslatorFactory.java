@@ -19,6 +19,8 @@ import org.hibernate.sql.exec.spi.JdbcUpdate;
 /**
  * Factory for obtaining single-use SQL AST translators
  *
+ * 获取单词使用的SQL AST 翻译器的工厂
+ *
  * @author Steve Ebersole
  */
 public interface SqlAstTranslatorFactory {

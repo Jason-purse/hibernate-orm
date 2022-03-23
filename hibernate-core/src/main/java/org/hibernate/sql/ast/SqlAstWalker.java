@@ -71,6 +71,8 @@ import org.hibernate.sql.ast.tree.update.Assignment;
 import org.hibernate.sql.ast.tree.update.UpdateStatement;
 
 /**
+ * SQL AST 步进器
+ *
  * @author Steve Ebersole
  * @author Andrea Boriero
  */

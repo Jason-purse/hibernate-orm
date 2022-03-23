@@ -73,14 +73,24 @@ import static org.hibernate.internal.CoreLogging.messageLogger;
 /**
  * Defines a set of available Type instances as isolated from other configurations.  The
  * isolation is defined by each instance of a TypeConfiguration.
+ *
+ * 定义一个必要的类型实例集合  隔离于其他配置 ...
+ * 这个隔离是通过每一个TypeConfiguration 的实例定义的..
  * <p/>
+ * 注意,每个类型本质上是“作用域”类型的配置
+ * 通过TypeConfiguration 访问一个Type
+ * 特别是TypeConfiguration 会 影响当前的持久化单元 ..
  * Note that each Type is inherently "scoped" to a TypeConfiguration.  We only ever access
  * a Type through a TypeConfiguration - specifically the TypeConfiguration in effect for
  * the current persistence unit.
  * <p/>
+ * 即使每一个类型实例  限制到 一个TypeConfiguration,
+ * Type 也不能访问TypeConfiguration(主要是因为Type 是一个扩展约束,这意味着Hibernate 不会管理一个TypeConfiguration 上的所有Type的集合)
  * Even though each Type instance is scoped to a TypeConfiguration, Types do not inherently
  * have access to that TypeConfiguration (mainly because Type is an extension contract - meaning
  * that Hibernate does not manage the full set of Types available in ever TypeConfiguration).
+ *
+ * 然而Type 经常是想要访问TypeConfiguration,这能够通过实现 TypeConfigurationAware 接口解决 ...
  * However Types will often want access to the TypeConfiguration, which can be achieved by the
  * Type simply implementing the {@link TypeConfigurationAware} interface.
  *
@@ -92,6 +102,7 @@ import static org.hibernate.internal.CoreLogging.messageLogger;
 public class TypeConfiguration implements SessionFactoryObserver, Serializable {
 	private static final CoreMessageLogger log = messageLogger( Scope.class );
 
+	// uuid
 	private final String uuid = LocalObjectUuidHelper.generateLocalObjectUuid();
 
 	private final Scope scope;
@@ -312,30 +323,42 @@ public class TypeConfiguration implements SessionFactoryObserver, Serializable {
 	}
 
 	/**
-	 * Encapsulation of lifecycle concerns for a TypeConfiguration:<ol>
+	 * Encapsulation of lifecycle concerns for a TypeConfiguration:
+	 * 对TypeConfiguration 生命周期概念的封装
+	 * <ol>
 	 *     <li>
+	 *         1. Boot ?
+	 *          用户模型转换到运行时模型的引导模型(是一开始就构建的)
 	 *         "Boot" is where the {@link TypeConfiguration} is first
 	 *         built as the boot-model ({@link org.hibernate.boot.model}) of
 	 *         the user's domain model is converted into the runtime-model
-	 *         ({@link org.hibernate.metamodel.model}). During this phase,
+	 *         ({@link org.hibernate.metamodel.model}).
+	 *         在 这个阶段, getMetadataBuildingContext 可以访问 getSessionFactory 但是会报错
+	 *         During this phase,
 	 *         {@link #getMetadataBuildingContext()} will be accessible but
 	 *         {@link #getSessionFactory} will throw an exception.
 	 *     </li>
 	 *     <li>
+	 *         2. 运行时  表示运行时模型可以 访问了 ...
+	 *         // 获取getMetadataBuildingContext 将会报错误(因为 构建上下文在构建完SessionFactory 之后就释放掉了)
 	 *         "Runtime" is where the runtime-model is accessible.  During this
 	 *         phase {@link #getSessionFactory()} is accessible while
 	 *         {@link #getMetadataBuildingContext()} will now throw an exception
 	 *     </li>
 	 *     <li>
+	 *         // 3. SessionFactory  已经被关闭了
+	 *         // 此时都会抛出异常...
 	 *        "Sunset" is after the SessionFactory has been closed.  At this point, both
 	 *        {@link #getSessionFactory()} and {@link #getMetadataBuildingContext()}
 	 *        will now throw an exception
 	 *     </li>
 	 * </ol>
 	 * <p/>
+	 * // 在BOOT / Runtime 阶段都可以调用getServiceRegistry ...
 	 * {@link #getServiceRegistry()} is available for both "Boot" and "Runtime".
 	 *
 	 * Each stage or phase is consider a scope for the TypeConfiguration.
+	 * 每一个阶段  都被考虑作为TypeConfiguration 的一个范围  ..
 	 */
 	private static class Scope implements Serializable {
 		private final TypeConfiguration typeConfiguration;

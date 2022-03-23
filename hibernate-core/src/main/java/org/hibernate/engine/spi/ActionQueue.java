@@ -61,7 +61,7 @@ import org.hibernate.type.Type;
  *
  * The ActionQueue holds the DML operations queued as part of a session's transactional-write-behind semantics. The
  * DML operations are queued here until a flush forces them to be executed against the database.
- *
+ *负责维护队列的操作相关的事件。行动队列拥有DML操作排队作为一个会话的一部分transactional-write-behind语义。这里的DML操作排队,直到冲洗迫使他们对数据库执行。
  * @author Steve Ebersole
  * @author Gail Badner
  * @author Anton Marsden

@@ -147,17 +147,22 @@ public class MetadataImpl implements MetadataImplementor, Serializable {
 
 	@Override
 	public SessionFactoryBuilder getSessionFactoryBuilder() {
+		// 获取这个服务
 		final SessionFactoryBuilderService factoryBuilderService = metadataBuildingOptions.getServiceRegistry().getService( SessionFactoryBuilderService.class );
+		//  此服务创建 一个SessionFactoryBuilder
 		final SessionFactoryBuilderImplementor defaultBuilder = factoryBuilderService.createSessionFactoryBuilder( this, bootstrapContext );
 
 		final ClassLoaderService cls = metadataBuildingOptions.getServiceRegistry().getService( ClassLoaderService.class );
+		// 加载所有的SessionFactoryBuilderFactory 服务 ...
 		final java.util.Collection<SessionFactoryBuilderFactory> discoveredBuilderFactories = cls.loadJavaServices( SessionFactoryBuilderFactory.class );
 
 		SessionFactoryBuilder builder = null;
 		List<String> activeFactoryNames = null;
 
 		for ( SessionFactoryBuilderFactory discoveredBuilderFactory : discoveredBuilderFactories ) {
+			// 如果发现了  获取一个 SessionFactoryBuilder
 			final SessionFactoryBuilder returnedBuilder = discoveredBuilderFactory.getSessionFactoryBuilder( this, defaultBuilder );
+
 			if ( returnedBuilder != null ) {
 				if ( activeFactoryNames == null ) {
 					activeFactoryNames = new ArrayList<>();
@@ -166,18 +171,18 @@ public class MetadataImpl implements MetadataImplementor, Serializable {
 				builder = returnedBuilder;
 			}
 		}
-
+		// 如果大于1个,是不必要的,因为它仅仅只需要一个 ...
 		if ( activeFactoryNames != null && activeFactoryNames.size() > 1 ) {
 			throw new HibernateException(
 					"Multiple active SessionFactoryBuilderFactory definitions were discovered : " +
 							String.join(", ", activeFactoryNames)
 			);
 		}
-
+		// 然后返回它 ...
 		if ( builder != null ) {
 			return builder;
 		}
-
+		// 否则使用默认的
 		return defaultBuilder;
 	}
 
@@ -372,11 +377,14 @@ public class MetadataImpl implements MetadataImplementor, Serializable {
 
 	@Override
 	public void validate() throws MappingException {
+
 		for ( PersistentClass entityBinding : this.getEntityBindings() ) {
+			// 映射验证
 			entityBinding.validate( this );
 		}
 
 		for ( Collection collectionBinding : this.getCollectionBindings() ) {
+			//
 			collectionBinding.validate( this );
 		}
 	}
@@ -390,15 +398,19 @@ public class MetadataImpl implements MetadataImplementor, Serializable {
 
 	@Override
 	public void initSessionFactory(SessionFactoryImplementor sessionFactory) {
+		// 拿到它本身的服务注册表
 		final ServiceRegistryImplementor sessionFactoryServiceRegistry = sessionFactory.getServiceRegistry();
 
 		assert sessionFactoryServiceRegistry != null;
 
+		// 获取 事件监听器注册表
 		final EventListenerRegistry eventListenerRegistry = sessionFactoryServiceRegistry.getService( EventListenerRegistry.class );
+		// 配置服务
 		final ConfigurationService cfgService = sessionFactoryServiceRegistry.getService( ConfigurationService.class );
 		final ClassLoaderService classLoaderService = sessionFactoryServiceRegistry.getService( ClassLoaderService.class );
 
 		for ( Map.Entry<?,?> entry : ( (Map<?, ?>) cfgService.getSettings() ).entrySet() ) {
+			// 获取所有配置,然后 为 事件进行配置 ...
 			if ( !String.class.isInstance( entry.getKey() ) ) {
 				continue;
 			}
@@ -406,10 +418,15 @@ public class MetadataImpl implements MetadataImplementor, Serializable {
 			if ( ! propertyName.startsWith( AvailableSettings.EVENT_LISTENER_PREFIX ) ) {
 				continue;
 			}
+			// 然后获取事件名
 			final String eventTypeName = propertyName.substring( AvailableSettings.EVENT_LISTENER_PREFIX.length() + 1 );
+			// 事件类型转换
 			final EventType eventType = EventType.resolveEventTypeByName( eventTypeName );
+			// 获取事件组
 			final EventListenerGroup eventListenerGroup = eventListenerRegistry.getEventListenerGroup( eventType );
+			// 然后 分割
 			for ( String listenerImpl : LISTENER_SEPARATION_PATTERN.split( ( (String) entry.getValue() ) ) ) {
+				// 增加每一个事件监听器
 				eventListenerGroup.appendListener( instantiate( listenerImpl, classLoaderService ) );
 			}
 		}
@@ -417,6 +434,7 @@ public class MetadataImpl implements MetadataImplementor, Serializable {
 
 	private Object instantiate(String listenerImpl, ClassLoaderService classLoaderService) {
 		try {
+			// 加载 实例化 ...
 			return classLoaderService.classForName( listenerImpl ).newInstance();
 		}
 		catch (Exception e) {

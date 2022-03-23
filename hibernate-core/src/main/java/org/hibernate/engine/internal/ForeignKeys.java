@@ -22,6 +22,7 @@ import org.hibernate.type.Type;
 
 /**
  * Algorithms related to foreign key constraint transparency
+ * 外键约束明朗的相关算法 ...
  *
  * @author Gavin King
  */
@@ -295,6 +296,7 @@ public final class ForeignKeys {
 
 		// we use the assumed value, if there is one, to avoid hitting
 		// the database
+		// 给一个提示值,不从 数据库中获取提示
 		if ( assumed != null ) {
 			return assumed;
 		}

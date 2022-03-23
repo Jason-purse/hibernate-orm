@@ -10,6 +10,7 @@ package org.hibernate.query.sqm;
  * Defines the comparison operators.  We could also get away with
  * only 3 and use negation...
  *
+ * 定义 比较操作符 , 仅仅有 4 种关系
  * @author Steve Ebersole
  */
 public enum ComparisonOperator {

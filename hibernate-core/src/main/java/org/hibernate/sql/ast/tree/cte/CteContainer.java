@@ -12,6 +12,8 @@ import java.util.Map;
  * The consumer part of a CTE statement - the select or insert or delete or update that uses
  * the CTE
  *
+ * 消费者CTE声明的一部分  crud 都是用  CTE
+ *
  * @author Steve Ebersole
  * @author Christian Beikov
  */

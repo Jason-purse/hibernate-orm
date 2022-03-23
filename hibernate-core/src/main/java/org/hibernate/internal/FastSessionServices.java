@@ -80,6 +80,7 @@ import static org.hibernate.cfg.AvailableSettings.JPA_SHARED_CACHE_STORE_MODE;
 
 /**
  * Internal component.
+ * 内部组件
  *
  * Collects any components that any Session implementation will likely need
  * for faster access and reduced allocations.
@@ -87,14 +88,21 @@ import static org.hibernate.cfg.AvailableSettings.JPA_SHARED_CACHE_STORE_MODE;
  * and SessionFactory.
  * Designed to be immutable, and shared across Session instances.
  *
- * Assumes to be created infrequently, possibly only once per SessionFactory.
+ * 收集任何会话 实现 想要快速访问和减少分配的任何组件..
+ * 概念上它作为一个不可变的缓存中介 (在Session  / SessionFactory)
  *
+ * Assumes to be created infrequently, possibly only once per SessionFactory.
+ * 假设被频繁的创建  , 每一个SessionFactory 一个 ..
  * If the Session is requiring to retrieve (or compute) anything from the SessionFactory,
  * and this computation would result in the same outcome for any Session created on
  * this same SessionFactory, then it belongs in a final field of this class.
+ * 如果Session 需要抓取 或者计算(从SessionFactory) 那么这个计算将会导致 - 相同SessionFactory 上的任何Session 返回相同结果 。。。
+ * 那么它属于这个类的final 字段 ...
  *
  * Finally, consider also limiting the size of each Session: some fields could be good
  * candidates to be replaced with access via this object.
+ *
+ * 最终,考虑 限制会话的大小,某些字段能够有好的候选者 - 通过这个对象访问进行替代 ...
  *
  * @author Sanne Grinovero
  */

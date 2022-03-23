@@ -8,7 +8,9 @@ package org.hibernate.sql.ast.tree.cte;
 
 /**
  * The kind of materialization that should be used for a CTE.
+ * 在CTE 中被使用的 物质化种类
  * This is a hint that like e.g. for PostgreSQL which allows to control this.
+ * 这是一个提示 - 对于Postgre SQL允许控制。
  *
  * @author Christian Beikov
  */

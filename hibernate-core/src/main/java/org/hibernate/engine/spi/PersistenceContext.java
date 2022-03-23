@@ -112,6 +112,8 @@ public interface PersistenceContext {
 	 * Get the current state of the entity as known to the underlying database, or null if there is no
 	 * corresponding row
 	 *
+	 * 获取 entity 的状态 - 根据已经知道的数据库 , 如果没有相关的信息 返回null
+	 *
 	 * @param id The identifier of the entity for which to grab a snapshot
 	 * @param persister The persister of the entity.
 	 *

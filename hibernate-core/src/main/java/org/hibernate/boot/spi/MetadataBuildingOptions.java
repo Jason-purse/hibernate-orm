@@ -28,6 +28,8 @@ import org.hibernate.type.spi.TypeConfiguration;
  * Describes the options used while building the Metadata object (during
  * {@link org.hibernate.boot.MetadataBuilder#build()} processing).
  *
+ * 在MetadataBuilder#build 处理的阶段  描述  被用来构建Metadata 对象的选项
+ *
  * @author Steve Ebersole
  *
  * @since 5.0

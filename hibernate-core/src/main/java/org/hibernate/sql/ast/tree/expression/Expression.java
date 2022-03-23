@@ -17,6 +17,9 @@ import org.hibernate.type.spi.TypeConfiguration;
 /**
  * Models an expression at the SQL AST level.
  *
+ * SQL 抽象语法树级别的表达式模型  ...
+ * SqlAstNode 节点 ...
+ *
  * @author Steve Ebersole
  */
 public interface Expression extends SqlAstNode, SqlSelectionProducer {

@@ -11,9 +11,10 @@ import org.hibernate.type.descriptor.java.JavaType;
 
 /**
  * Support for basic-value conversions.
+ * 支持基础类型转换的 基础数据转换
  *
  * Conversions might be defined by:
- *
+ *		 约定由 自定义的JPA 的AttributeConverter转换 / 隐含的,基于Java类型 ..(枚举)
  * 		* a custom JPA {@link jakarta.persistence.AttributeConverter},
  * 		* implicitly, based on the Java type (e.g., enums)
  * 	    * etc
@@ -34,6 +35,7 @@ public interface BasicValueConverter<D,R> {
 	/**
 	 * Convert the domain form into the relational form in preparation for
 	 * storage into JDBC
+	 * 转换domain 形式到关系形式 为存储到JDBC做准备
 	 */
 	R toRelationalValue(D domainForm);
 

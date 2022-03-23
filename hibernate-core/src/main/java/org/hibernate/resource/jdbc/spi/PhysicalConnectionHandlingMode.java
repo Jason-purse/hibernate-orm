@@ -21,6 +21,7 @@ import static org.hibernate.ConnectionReleaseMode.ON_CLOSE;
 /**
  * Enumerates valid combinations of {@link ConnectionAcquisitionMode} and
  * {@link ConnectionReleaseMode}.
+ * 合并连接获取 / 释放模式 -列出
  *
  * @see org.hibernate.cfg.AvailableSettings#CONNECTION_HANDLING
  *

@@ -12,6 +12,8 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 /**
  * Loader for loading an entity by a single identifier value.
  *
+ * 通过单个identifier value 获取一个entity 的加载器
+ *
  * @author Steve Ebersole
  */
 public interface SingleIdEntityLoader<T> extends SingleEntityLoader<T> {
@@ -34,6 +36,7 @@ public interface SingleIdEntityLoader<T> extends SingleEntityLoader<T> {
 
 	/**
 	 * Load database snapshot by primary key value
+	 * 通过主键加载数据库快照
 	 */
 	Object[] loadDatabaseSnapshot(Object id, SharedSessionContractImplementor session);
 }

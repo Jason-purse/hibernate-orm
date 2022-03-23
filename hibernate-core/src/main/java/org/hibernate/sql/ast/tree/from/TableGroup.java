@@ -23,6 +23,7 @@ import org.hibernate.sql.results.graph.DomainResultCreationState;
 /**
  * Group together {@link TableReference} references related to a single entity or
  * collection, along with joins to other TableGroups
+ * 聚合{表引用}引用与一个单一的实体或集合,一起加入到其他表组
  *
  * @author Steve Ebersole
  */

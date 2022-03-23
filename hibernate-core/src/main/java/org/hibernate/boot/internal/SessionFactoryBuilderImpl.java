@@ -409,9 +409,13 @@ public class SessionFactoryBuilderImpl implements SessionFactoryBuilderImplement
 
 	@Override
 	public SessionFactory build() {
+		// 获取
 		final StandardServiceRegistry serviceRegistry = metadata.getMetadataBuildingOptions().getServiceRegistry();
+		// 获取字节码提供器 (服务)
 		BytecodeProvider bytecodeProvider = serviceRegistry.getService( BytecodeProvider.class );
+		// 增加会话 工厂  观察者
 		addSessionFactoryObservers( new SessionFactoryObserverForBytecodeEnhancer( bytecodeProvider ) );
+		// 返回了一个会话工厂实现
 		return new SessionFactoryImpl( metadata, buildSessionFactoryOptions() );
 	}
 

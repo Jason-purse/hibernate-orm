@@ -12,6 +12,7 @@ import org.hibernate.boot.spi.SessionFactoryOptions;
 
 /**
  * Configuration for a named region for caching domain data.
+ * 为了缓存领域数据的一个命名region 配置...
  * A region's name is "unqualified"; i.e. it is not prefixed by
  * {@link SessionFactoryOptions#getCacheRegionPrefix()}.
  *

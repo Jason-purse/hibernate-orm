@@ -10,6 +10,7 @@ import org.hibernate.metamodel.model.convert.spi.BasicValueConverter;
 
 /**
  * A BasicValuedModelPart which can have a converter associated with it
+ * 它包含一个与它联系的基础值转换器
  *
  * @author Steve Ebersole
  */

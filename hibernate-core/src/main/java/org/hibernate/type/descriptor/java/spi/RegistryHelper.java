@@ -44,6 +44,7 @@ public class RegistryHelper {
 				javaType,
 				(javaTypeClass) -> {
 					MutabilityPlan<J> mutabilityPlan = determineMutabilityPlan( javaType, typeConfiguration );
+					// 这两者必然存在一个
 					if ( mutabilityPlan == null ) {
 						mutabilityPlan = fallbackMutabilityPlanResolver.get();
 					}

@@ -19,6 +19,8 @@ import org.hibernate.sql.results.graph.entity.LoadingEntityEntry;
 /**
  * A context for execution of SQL statements expressed via
  * SQL AST and JdbcOperation
+ *
+ * 通过SQL 抽象语法树  以及 JDBCOperation  表达的SQL 语句的执行的上下文
  */
 public interface ExecutionContext {
 

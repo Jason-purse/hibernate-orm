@@ -19,6 +19,7 @@ import org.hibernate.HibernateException;
 
 /**
  * Enumeration of the recognized types of events, including meta-information about each.
+ * 枚举组织了事件的类型,包括它们的元数据信息
  *
  * @author Steve Ebersole
  */

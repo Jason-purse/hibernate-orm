@@ -998,6 +998,8 @@ public interface AvailableSettings {
 	 * Specifies a {@link org.hibernate.context.spi.CurrentSessionContext} for
 	 * scoping the {@linkplain org.hibernate.SessionFactory#getCurrentSession()
 	 * current session}.
+	 *
+	 *  指定一个会话 上下文   -限制当前会话的范围
 	 */
 	String CURRENT_SESSION_CONTEXT_CLASS = "hibernate.current_session_context_class";
 

@@ -64,6 +64,7 @@ public class SelectStatement extends AbstractStatement {
 
 	@Override
 	public void accept(SqlAstWalker walker) {
+		// 查看 选择语句
 		walker.visitSelectStatement( this );
 	}
 }

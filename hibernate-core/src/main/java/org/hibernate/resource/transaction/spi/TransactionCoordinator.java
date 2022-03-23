@@ -12,6 +12,7 @@ import org.hibernate.jpa.spi.JpaCompliance;
 
 /**
  * Models the coordination of all transaction related flows.
+ * 所有事务相关的流的协调的模型
  *
  * @author Steve Ebersole
  */
@@ -55,6 +56,7 @@ public interface TransactionCoordinator {
 
 	/**
 	 * Used by owner of the JdbcSession as a means to indicate that implicit joining should be done if needed.
+	 * 由JdbcSession的用户使用 - 如果有需要 隐含的加入 ....
 	 */
 	void pulse();
 

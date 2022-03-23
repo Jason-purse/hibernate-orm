@@ -28,6 +28,11 @@ import static java.util.Collections.singletonList;
  * the given argument SQM nodes to produce a subtree of SQM nodes
  * representing the function invocation.
  *
+ *
+ * SQM 节点   呈现 某些命名函数的调用 的工厂
+ * 当一个函数名 以及参数出现在HQL中,   SqlFunctionDescriptor(给定名称的) 可以 从SqmFunctionRegistry中获取 ...
+ * 并且#generateSqmExpression 方法 将使用给定的SQM节点参数 调用生产一个SQM 的节点子树   来 的代表方法执行 ...
+ *
  * @author David Channon
  * @author Steve Ebersole
  * @author Gavin King

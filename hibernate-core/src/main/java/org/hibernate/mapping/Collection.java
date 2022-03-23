@@ -38,6 +38,7 @@ import org.hibernate.usertype.UserCollectionType;
 
 /**
  * Mapping for a collection. Subclasses specialize to particular collection styles.
+ * 一个集合的映射 , 子类指定特殊的集合风格
  *
  * @author Gavin King
  */

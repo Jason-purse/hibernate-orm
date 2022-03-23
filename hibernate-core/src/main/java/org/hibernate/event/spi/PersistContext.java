@@ -13,6 +13,8 @@ import java.util.IdentityHashMap;
  * applied to a single entity. A {@code PersistContext} is propagated across all cascaded persist operations,
  * and keeps track of all the entities we've already visited.
  *
+ * PersistContext 传播 所有级联的persist 操作, 并且跟踪已经能够查看到的所有entities
+ *
  * @author Gavin King
  */
 public interface PersistContext {

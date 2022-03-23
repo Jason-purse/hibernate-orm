@@ -55,6 +55,9 @@ import org.hibernate.type.descriptor.java.VersionJavaType;
  * SQL statements corresponding to basic lifecycle events, including
  * {@code insert}, {@code update}, and {@code delete} statements, and their
  * execution via JDBC.
+ *
+ * 持久化一个映射Entity 类的策略
+ * 一个EntityPersister 协调呈现SQL语句对应于基本的生命周期事件, 包括insert / update /  delete/ 通过JDBC 执行 ...
  * <p>
  * Concrete implementations of this interface handle the
  * {@linkplain SingleTableEntityPersister single table},
@@ -62,32 +65,39 @@ import org.hibernate.type.descriptor.java.VersionJavaType;
  * {@linkplain UnionSubclassEntityPersister union} inheritance mapping
  * strategies, and to a certain extent abstract the details of those
  * mappings from collaborators.
+ *
+ * 这个接口的具体实现 处理 这些 ... 单表 / join / union ...  不同的策略对应不同的Persister ..
+ *  在一定程度上抽象这些映射来自合作者的细节。
  * <p>
  * This interface defines a contract between the persistence strategy and
  * the {@link org.hibernate.engine.spi.SessionImplementor session}. It does
  * not define operations that are required for querying, nor for loading by
  * outer join.
+ *
+ *  这个接口定义了persistence startegy 和 Session 之间的约定, 它并不会定义查询必要的操作, 也不会加载任何外连接 ..
  * <p>
  * Unless a custom {@link org.hibernate.persister.spi.PersisterFactory} is
  * used, it is expected that implementations of {@code EntityPersister}
  * define a constructor accepting the following arguments:
+ *
+ * 除非使用自定义的PersisterFactory , 否则EntityPersister 实现 定义以下构造器 ...
  * <ol>
  *     <li>
  *         {@link org.hibernate.mapping.PersistentClass} - describes the
- *         metadata about the entity to be handled by the persister
+ *         metadata about the entity to be handled by the persister  由此persister 处理的entity 的元数据信息
  *     </li>
  *     <li>
  *         {@link EntityDataAccess} - the second level caching strategy for
- *         this entity
+ *         this entity  // entity的二级访问策略
  *     </li>
  *     <li>
  *         {@link NaturalIdDataAccess} - the second level caching strategy
- *         for any natural id defined for this entity
+ *         for any natural id defined for this entity   // 由entity 定义的原始id 的二级缓存访问策略
  *     </li>
  *     <li>
  *         {@link org.hibernate.metamodel.spi.RuntimeModelCreationContext} -
  *         access to additional information useful while constructing the
- *         persister.
+ *         persister. 在构建这个persister 期间可以访问一些额外的信息   ...
  *     </li>
  * </ol>
  * Implementations must be thread-safe (and preferably immutable).

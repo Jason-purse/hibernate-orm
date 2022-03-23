@@ -41,6 +41,7 @@ import org.hibernate.sql.results.graph.FetchParent;
 
 /**
  * Helper used when generating the database-snapshot select query
+ * 生成数据库快照查询的帮助器...
  */
 public class LoaderSqlAstCreationState
 		implements SqlAstProcessingState, SqlAstCreationState, DomainResultCreationState, QueryOptions {

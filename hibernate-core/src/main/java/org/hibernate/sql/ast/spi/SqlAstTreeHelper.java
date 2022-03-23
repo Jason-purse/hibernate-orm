@@ -10,6 +10,7 @@ import org.hibernate.sql.ast.tree.predicate.Junction;
 import org.hibernate.sql.ast.tree.predicate.Predicate;
 
 /**
+ * 抽象语法树帮助器
  * @author Steve Ebersole
  */
 public class SqlAstTreeHelper {
@@ -32,22 +33,24 @@ public class SqlAstTreeHelper {
 		}
 
 		final Junction combinedPredicate;
-
+		// 它本身就是一个Junction 不是一个简单的Predicate
 		if ( baseRestriction instanceof Junction ) {
 			final Junction junction = (Junction) baseRestriction;
 			if ( junction.isEmpty() ) {
 				return incomingRestriction;
 			}
-
+			// 判断是不是 ANT
 			if ( junction.getNature() == Junction.Nature.CONJUNCTION ) {
 				combinedPredicate = junction;
 			}
 			else {
+				// 否则 new Junction
 				combinedPredicate = new Junction( Junction.Nature.CONJUNCTION );
 				combinedPredicate.add( baseRestriction );
 			}
 		}
 		else {
+			// 否则同样新加一个
 			combinedPredicate = new Junction( Junction.Nature.CONJUNCTION );
 			combinedPredicate.add( baseRestriction );
 		}

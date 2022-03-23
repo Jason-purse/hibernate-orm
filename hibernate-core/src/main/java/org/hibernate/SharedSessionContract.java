@@ -52,6 +52,8 @@ public interface SharedSessionContract extends QueryProducer, Closeable, Seriali
 	boolean isConnected();
 
 	/**
+	 * 通过返回一个联系的事务  开启一个工作单元
+	 * 如果底层事务是必要的,开启这个事务, 否则在底层已经存在的事务之上的上下文中继续新的工作 ..
 	 * Begin a unit of work and return the associated {@link Transaction} object.
 	 * If a new underlying transaction is required, begin the transaction. Otherwise,
 	 * continue the new work in the context of the existing underlying transaction.

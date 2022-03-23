@@ -42,6 +42,7 @@ public interface SessionFactoryOptions extends QueryEngineOptions {
 	/**
 	 * Get the UUID unique to this SessionFactoryOptions.  Will be the
 	 * same value available as {@link SessionFactoryImplementor#getUuid()}.
+	 * 给GessionFactoryOptions   生成一个UUID  等价于SessionFactoryImplementor#getUUid
 	 *
 	 * @apiNote The value is generated as a {@link java.util.UUID}, but kept
 	 * as a String.
@@ -239,6 +240,8 @@ public interface SessionFactoryOptions extends QueryEngineOptions {
 	/**
 	 * The default catalog to use in generated SQL when a catalog wasn't specified in the mapping,
 	 * neither explicitly nor implicitly (see the concept of implicit catalog in XML mapping).
+	 *
+	 * 默认的catalog 被用来生成SQL -当  一个catalog 没有在mapping 中指定 - 既不是显式也不是隐式(查看在xml 映射 中的隐式catalog 概念)
 	 *
 	 * @return The default catalog to use.
 	 */

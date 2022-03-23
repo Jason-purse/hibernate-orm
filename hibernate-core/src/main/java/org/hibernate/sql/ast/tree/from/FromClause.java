@@ -17,6 +17,7 @@ import org.hibernate.sql.ast.tree.SqlAstNode;
 
 /**
  * The SQL AST from-clause node
+ * 对应clause 节点的SQL 抽象语法树
  *
  * @author Steve Ebersole
  */

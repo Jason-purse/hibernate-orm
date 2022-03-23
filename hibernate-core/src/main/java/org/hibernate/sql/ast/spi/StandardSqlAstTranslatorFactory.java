@@ -21,6 +21,7 @@ import org.hibernate.sql.exec.spi.JdbcSelect;
 import org.hibernate.sql.exec.spi.JdbcUpdate;
 
 /**
+ * 标准的SQL AST 翻译器工厂
  * @author Steve Ebersole
  */
 public class StandardSqlAstTranslatorFactory implements SqlAstTranslatorFactory {
