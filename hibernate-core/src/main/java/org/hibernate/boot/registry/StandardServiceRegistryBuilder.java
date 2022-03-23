@@ -378,7 +378,10 @@ public class StandardServiceRegistryBuilder {
 		applyServiceContributors();
 
 		final Map<String,Object> settingsCopy = new HashMap<>( settings );
+
+		// 为了在bootstrap 中任意访问 ...
 		settingsCopy.put( LOADED_CONFIG_KEY, aggregatedCfgXml );
+		// 解析占位符
 		ConfigurationHelper.resolvePlaceHolders( settingsCopy );
 		//  new 出一个
 		return new StandardServiceRegistryImpl(

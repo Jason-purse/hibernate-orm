@@ -42,16 +42,23 @@ import org.w3c.dom.Document;
 /**
  * Entry point for working with sources of O/R mapping metadata, either
  * in the form of annotated classes, or as XML mapping documents.
+ *
+ * 使用 OR 映射元数据源的入口点， 注解类的形式 或者xml 映射文档 ....
  * <p>
  * Note that XML mappings may be expressed using the JPA {@code orm.xml}
  * format, or in Hibernate's legacy {@code .hbm.xml} format.
+ *
+ * 注意到xml 映射也许使用JPA (orm.xml)格式进行表达 .... 或者 Hibernate 遗留的 xxx.hbm.xml 形式表达
  * <p>
+ *     MetadataSources的实例也许通过实例化获取, 使用 MetadataSources无参构造器实例化
+ *     // 客户端必须注册资源  并且 调用buildMetadata 或者 getMetadataBuilder 去定制化源如何被处理(通过注册的命名策略 或者其他)
  * An instance of {@code MetadataSources} may be obtained simply by
  * instantiation, using {@link #MetadataSources() new MetadataSources()}.
  * The client must register sources and then call {@link #buildMetadata()},
  * or use {@link #getMetadataBuilder()} to customize how the sources are
  * processed (by registering naming strategies, etc).
  * <p>
+ *     另一个方式是直接使用MetadataSources 工作, 以及 Metadata  以及Configuration ...
  * As an alternative to working directly with {@code MetadataSources}, and
  * {@link Metadata}, a program may use {@link org.hibernate.cfg.Configuration}.
  *
@@ -85,6 +92,8 @@ public class MetadataSources implements Serializable {
 	/**
 	 * Create a new instance using the given {@link ServiceRegistry}.
 	 *
+	 * 通过给定给的服务注册机创建实例
+	 *
 	 * @param serviceRegistry The service registry to use.
 	 */
 	public MetadataSources(ServiceRegistry serviceRegistry) {
@@ -104,7 +113,7 @@ public class MetadataSources implements Serializable {
 	}
 
 	/**
-	 * Consider this an SPI, used by Quarkus
+	 * Consider this an SPI, used by Quarkus(一个java 相关的框架 - 类似于云原生的理念)
 	 */
 	public MetadataSources(ServiceRegistry serviceRegistry, boolean disableXmlMappingBinders) {
 		Objects.requireNonNull( serviceRegistry );
@@ -158,6 +167,7 @@ public class MetadataSources implements Serializable {
 	 * @return The built metadata.
 	 */
 	public MetadataBuilder getMetadataBuilder() {
+		// 获取一个meta 的构建器
 		return getCustomBuilderOrDefault( new MetadataBuilderImpl(this) );
 	}
 
@@ -177,6 +187,7 @@ public class MetadataSources implements Serializable {
 	 */
 	private MetadataBuilder getCustomBuilderOrDefault(MetadataBuilderImpl defaultBuilder) {
 
+		// spi 加载
 		Collection<MetadataBuilderFactory> discoveredBuilderFactories =
 				serviceRegistry.getService( ClassLoaderService.class )
 						.loadJavaServices( MetadataBuilderFactory.class );

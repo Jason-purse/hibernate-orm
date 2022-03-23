@@ -35,6 +35,8 @@ import org.jboss.jandex.IndexView;
  * bootstrapping a SessionFactory that are expected to be released after
  * the SessionFactory is built.
  *
+ * 定义了一个上下文 - 通常这是必要的 - 引导一个SessionFactory的处理 - 它期待在SessionFactory释放之后
+ *
  * @author Steve Ebersole
  */
 @Incubating

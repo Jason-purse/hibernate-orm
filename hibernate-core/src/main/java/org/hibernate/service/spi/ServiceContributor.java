@@ -14,11 +14,14 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
  * @implSpec Implementations can be auto-discovered via Java's {@link java.util.ServiceLoader}
  * mechanism.
  *
+ * 贡献服务的约定
+ *
  * @author Steve Ebersole
  */
 public interface ServiceContributor {
 	/**
 	 * Contribute services to the indicated registry builder.
+	 * 贡献服务到 指定的注册表构建器
 	 *
 	 * @param serviceRegistryBuilder The builder to which services (or initiators) should be contributed.
 	 */

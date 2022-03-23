@@ -1,6 +1,8 @@
 package org.hibernate.orm.custom.test;
 
+import org.hibernate.SessionFactory;
 import org.hibernate.Version;
+import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -36,9 +38,18 @@ public class BaseTests {
     // start
     @Test
     public void started() {
-        StandardServiceRegistry build = new StandardServiceRegistryBuilder()
+        StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure()
                 .build();
+
+        try {
+            SessionFactory  sessionFactory = new MetadataSources( registry ).buildMetadata().buildSessionFactory();
+        }
+        catch (Exception e) {
+            // The registry would be destroyed by the SessionFactory, but we had trouble building the SessionFactory
+            // so destroy it manually.
+            StandardServiceRegistryBuilder.destroy( registry );
+        }
 
     }
 }

@@ -85,6 +85,7 @@ import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.SharedCacheMode;
 
 /**
+ * 默认的元数据构建者 实现 ...
  * @author Steve Ebersole
  */
 public class MetadataBuilderImpl implements MetadataBuilderImplementor, TypeContributions {
@@ -152,8 +153,9 @@ public class MetadataBuilderImpl implements MetadataBuilderImplementor, TypeCont
 		if ( aggregatedConfig == null ) {
 			return;
 		}
-
+		// 缓存定义
 		for ( CacheRegionDefinition cacheRegionDefinition : aggregatedConfig.getCacheRegionDefinitions() ) {
+			// 应用缓存定义
 			applyCacheRegionDefinition( cacheRegionDefinition );
 		}
 	}

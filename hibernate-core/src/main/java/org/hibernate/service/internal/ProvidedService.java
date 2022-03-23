@@ -8,6 +8,7 @@ package org.hibernate.service.internal;
 
 /**
  * A service provided as-is.
+ * 被提供作为服务 ..
  *
  * @author Steve Ebersole
  */

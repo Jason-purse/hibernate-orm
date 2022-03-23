@@ -11,6 +11,8 @@ import org.hibernate.boot.MetadataSources;
 /**
  * A bootstrap process hook for contributing sources to MetadataSources.
  *
+ * 一个引导程序钩子 - 为了为MetadataSources 共享资源
+ *
  * @author Steve Ebersole
  *
  * @since 5.0

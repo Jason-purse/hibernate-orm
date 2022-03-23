@@ -55,7 +55,10 @@ public class StandardServiceRegistryImpl extends AbstractServiceRegistryImpl imp
 	 * @param autoCloseRegistry See discussion on
 	 * {@link org.hibernate.boot.registry.StandardServiceRegistryBuilder#disableAutoClose}
 	 * @param bootstrapServiceRegistry The bootstrap service registry.
+	 *
+	 *        用户提供的任何标准的服务Initiator 提供给构建器的
 	 * @param serviceInitiators Any StandardServiceInitiators provided by the user to the builder
+	 *                          // 直接提供给构建的标准服务
 	 * @param providedServices Any standard services provided directly to the builder
 	 * @param configurationValues Configuration values
 	 *
@@ -71,13 +74,16 @@ public class StandardServiceRegistryImpl extends AbstractServiceRegistryImpl imp
 
 		this.configurationValues = configurationValues;
 
+		// 应用服务注册
 		applyServiceRegistrations( serviceInitiators, providedServices );
 	}
 
 	private void applyServiceRegistrations(List<StandardServiceInitiator<?>> serviceInitiators, List<ProvidedService<?>> providedServices) {
 		try {
 			// process initiators
+			// 处理初始化器
 			for ( ServiceInitiator<?> initiator : serviceInitiators ) {
+				// 创建服务绑定模型
 				createServiceBinding( initiator );
 			}
 
@@ -89,6 +95,7 @@ public class StandardServiceRegistryImpl extends AbstractServiceRegistryImpl imp
 			}
 		}
 		catch (RuntimeException e) {
+			// 查看所有的服务绑定 并一次停掉它们 ....
 			visitServiceBindings( binding -> binding.getLifecycleOwner().stopService( binding ) );
 			throw e;
 		}

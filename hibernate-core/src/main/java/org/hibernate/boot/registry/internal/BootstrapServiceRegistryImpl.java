@@ -273,6 +273,10 @@ public class BootstrapServiceRegistryImpl
 		}
 	}
 
+	/**
+	 * 这个方法 同步调用 ???
+	 * @param child 孩子
+	 */
 	@Override
 	public synchronized void registerChild(ServiceRegistryImplementor child) {
 		if ( childRegistries == null ) {

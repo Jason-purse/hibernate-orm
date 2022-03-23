@@ -19,6 +19,7 @@ public interface MetadataBuilderImplementor extends MetadataBuilder {
 	/**
 	 * Get the options being collected on this MetadataBuilder that will ultimately be used in
 	 * building the Metadata.
+	 * 由MetadataBuilder 收集的所有选项  - 最终被用来构建Metadata的options
 	 *
 	 * @return The current building options
 	 */

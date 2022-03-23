@@ -15,6 +15,7 @@ import org.jboss.logging.Logger;
 
 /**
  * Central service for spatial integration
+ * 空间集成的核心服务 ..
  *
  * @author Karel Maesen, Geovise BVBA
  * @author Steve Ebersole

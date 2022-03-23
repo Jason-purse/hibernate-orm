@@ -44,14 +44,18 @@ public abstract class AbstractServiceRegistryImpl
 		implements ServiceRegistryImplementor, ServiceBinding.ServiceLifecycleOwner {
 
 	private static final CoreMessageLogger log = CoreLogging.messageLogger( AbstractServiceRegistryImpl.class );
+	// 抓取所有必要的服务binding  - 为了给定Hibernate Service的注册表替代 ..
 	//Crawl all available service bindings for an alternate registration of a given Hibernate `Service`.
 	public static final String ALLOW_CRAWLING = "hibernate.service.allow_crawling";
 
 	private volatile ServiceRegistryImplementor parent;
 	private final boolean allowCrawling;
-
+	/**
+	 * 类型  对应的ServiceBinding ...
+	 */
 	private final ConcurrentMap<Class<?>,ServiceBinding<?>> serviceBindingMap = new ConcurrentHashMap<>();
 	private final ConcurrentMap<Class<?>,Class<?>> roleXref = new ConcurrentHashMap<>();
+	// 例如通过配置 或者依赖注入 或者started 完全初始化的服务 ...
 	// The services stored in initializedServiceByRole are completely initialized
 	// (i.e., configured, dependencies injected, and started)
 	private final ConcurrentMap<Class<?>,Service> initializedServiceByRole = new ConcurrentHashMap<>();
@@ -60,6 +64,9 @@ public abstract class AbstractServiceRegistryImpl
 	// iterate it in reverse order which is only available through ListIterator
 	// assume 20 services for initial sizing
 	// All access guarded by synchronization on the serviceBindingList itself.
+	// 此列表是为了有序解构 ...
+	// 不能使用map 因为我们需要反序迭代它, 这些仅仅唯一的方式 -通过ListIterator 假设20个为初始化尺寸 ..
+	// 通过在serviceBindingList 自身上 同步保证所有的访问 ...
 	private final List<ServiceBinding<?>> serviceBindingList = CollectionHelper.arrayList( 20 );
 
 	// Guarded by synchronization on this.
@@ -98,17 +105,24 @@ public abstract class AbstractServiceRegistryImpl
 	public AbstractServiceRegistryImpl(
 			BootstrapServiceRegistry bootstrapServiceRegistry,
 			boolean autoCloseRegistry) {
+		// 如果 bootstrapService Registry 不是一个 ServiceRegistryImplementor
 		if ( !(bootstrapServiceRegistry instanceof ServiceRegistryImplementor) ) {
+			// 父亲必须是一个ServiceRegistryImplementor
 			throw new IllegalArgumentException( "ServiceRegistry parent needs to implement ServiceRegistryImplementor" );
 		}
+
 		this.parent = (ServiceRegistryImplementor) bootstrapServiceRegistry;
+		// 根据 环境配置 决定,但是默认地毯式搜索
 		this.allowCrawling = ConfigurationHelper.getBoolean( ALLOW_CRAWLING, Environment.getProperties(), true );
 
 		this.autoCloseRegistry = autoCloseRegistry;
 		this.parent.registerChild( this );
 	}
 
+	//
 	protected <R extends Service> void createServiceBinding(ServiceInitiator<R> initiator) {
+
+		// 这个服务的生命周期  和对应的服务注册机绑定了 ...
 		final ServiceBinding<?> serviceBinding = new ServiceBinding<>( this, initiator );
 		serviceBindingMap.put( initiator.getServiceInitiated(), serviceBinding );
 	}
@@ -136,11 +150,14 @@ public abstract class AbstractServiceRegistryImpl
 		return locateServiceBinding( serviceRole, true );
 	}
 
+	// 定位ServiceBinding
+	// 根据服务角色,是否检查父亲 ... 来获取一个ServiceBinding<R>
 	@SuppressWarnings("unchecked")
 	protected <R extends Service> ServiceBinding<R> locateServiceBinding(Class<R> serviceRole, boolean checkParent) {
 		ServiceBinding<R> serviceBinding = (ServiceBinding<R>) serviceBindingMap.get( serviceRole );
 		if ( serviceBinding == null && checkParent && parent != null ) {
 			// look in parent
+			// 仅当True 的情况下才寻找父亲 ...
 			serviceBinding = parent.locateServiceBinding( serviceRole );
 		}
 
@@ -148,28 +165,39 @@ public abstract class AbstractServiceRegistryImpl
 			return serviceBinding;
 		}
 
+		// 抓取所有的?
 		if ( !allowCrawling ) {
 			return null;
 		}
 
 		// look for a previously resolved alternate registration
+		// 查询前面已经解析的其他的登记
 		final Class<?> alternative = roleXref.get( serviceRole );
 		if ( alternative != null ) {
+			// 如果不为空,尝试从serviceBindingMap 中获取 ...
 			return (ServiceBinding<R>) serviceBindingMap.get( alternative );
 		}
 
 		// perform a crawl looking for an alternate registration
+		// 地毯式搜索 登记
 		for ( ServiceBinding<?> binding : serviceBindingMap.values() ) {
+
+			// 当前这个binding 是否为它的子类 ...
 			if ( serviceRole.isAssignableFrom( binding.getServiceRole() ) ) {
 				// we found an alternate...
+				// 一个替代品
 				log.alternateServiceRole( serviceRole.getName(), binding.getServiceRole().getName() );
+				// 建立好联系 ...
 				registerAlternate( serviceRole, binding.getServiceRole() );
 				return (ServiceBinding<R>) binding;
 			}
 
+			// 如果获取的Service 不为空 并且  这个service 是这个类的实例
 			if ( binding.getService() != null && serviceRole.isInstance( binding.getService() ) ) {
 				// we found an alternate...
+				// 同样发现一个替代品 ...
 				log.alternateServiceRole( serviceRole.getName(), binding.getServiceRole().getName() );
+				// 同样建立好联系
 				registerAlternate( serviceRole, binding.getServiceRole() );
 				return (ServiceBinding<R>) binding;
 			}
@@ -179,6 +207,7 @@ public abstract class AbstractServiceRegistryImpl
 	}
 
 	private void registerAlternate(Class<?> alternate, Class<?> target) {
+		// 角色引用 ...
 		roleXref.put( alternate, target );
 	}
 

@@ -31,9 +31,13 @@ public final class ServiceBinding<R extends Service> {
 		<R extends Service> void stopService(ServiceBinding<R> binding);
 	}
 
+	// 服务生命周期拥有者
 	private final ServiceLifecycleOwner lifecycleOwner;
+	// 服务角色
 	private final Class<R> serviceRole;
+	// 服务初始化器
 	private final ServiceInitiator<R> serviceInitiator;
+	// 服务 volatile
 	private volatile R service;
 
 	public ServiceBinding(ServiceLifecycleOwner lifecycleOwner, Class<R> serviceRole, R service) {

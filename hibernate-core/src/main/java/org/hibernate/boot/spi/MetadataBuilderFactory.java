@@ -14,6 +14,9 @@ import org.hibernate.boot.MetadataSources;
  * a "discoverable service" ({@link java.util.ServiceLoader}). There can be at most one implementation discovered that
  * returns a non-null SessionFactoryBuilder.
  *
+ * 一个integrators的扩展点 - 希望回调 Metadata的构建处理过程中..
+ * 打算通过ServiceLoader 发现服务 ... 大多数情况能发现一个返回非空的SessionFactoryBuilder
+ *
  * @author Gunnar Morling
  */
 public interface MetadataBuilderFactory {

@@ -43,7 +43,7 @@ public interface ServiceRegistryImplementor extends ServiceRegistry {
 	 * When a registry is created with a parent, the parent is notified of the child
 	 * via this callback.
 	 *
-	 * 当一个注册机通过父亲创建,父亲通知孩子通过此回调。。。
+	 * 当一个注册机通过父亲创建,孩子给父亲发送通知靠这个..
 	 */
 	void registerChild(ServiceRegistryImplementor child);
 
