@@ -9,6 +9,8 @@ package org.hibernate.sql.ast.tree.expression;
 import org.hibernate.sql.exec.spi.JdbcParameterBinder;
 
 /**
+ *
+ *
  * @author Steve Ebersole
  */
 public interface JdbcParameter extends Expression {

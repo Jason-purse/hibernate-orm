@@ -12,6 +12,8 @@ import org.hibernate.engine.jdbc.env.spi.IdentifierHelper;
 
 /**
  * A context provided to methods responsible for generating SQL strings on startup.
+ *
+ * 一个上下文(提供了一些方法  有责任在启动时生成SQL 字符串)
  */
 public interface SqlStringGenerationContext {
 

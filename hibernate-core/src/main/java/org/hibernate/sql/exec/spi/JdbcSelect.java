@@ -19,6 +19,7 @@ import org.hibernate.sql.results.jdbc.spi.JdbcValuesMappingProducer;
 
 /**
  * Executable JDBC command
+ * 执行JDBC 命令
  *
  * @author Steve Ebersole
  */

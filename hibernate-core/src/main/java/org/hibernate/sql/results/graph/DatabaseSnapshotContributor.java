@@ -13,12 +13,15 @@ import org.hibernate.sql.ast.tree.from.TableGroup;
  * Contract for model-parts which contribute to their container's
  * state array for database snapshots
  *
+ * 为数据库快照   - 将部分模型合并到 容器状态数组中 ..
+ *
  * @author Steve Ebersole
  */
 public interface DatabaseSnapshotContributor extends Fetchable {
 
 	/**
 	 * Create a DomainResult to be used when selecting snapshots from the database.
+	 * 从数据库中获取快照  用来创建DomainResult
 	 * <p/>
 	 * By default, simply use {@link #createDomainResult}
 	 */

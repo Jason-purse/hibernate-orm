@@ -48,6 +48,7 @@ import static org.hibernate.bytecode.enhance.spi.LazyPropertyInitializer.UNFETCH
 
 /**
  * Mapping of an entity
+ * 实体的映射
  *
  * @see jakarta.persistence.Entity
  *

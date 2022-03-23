@@ -24,6 +24,8 @@ import org.hibernate.query.sqm.spi.NamedSqmQueryMemento;
  * named HQL, JPAQL, native and procedure queries as well as named result-set
  * mappings
  *
+ * 仓库 - 引用 相关的命名字符串进行查询, 包括 HQL / JPAQL / native / procedure(过程) 查询  同样 返回结果集映射
+ *
  * @author Steve Ebersole
  */
 @Incubating
@@ -66,6 +68,7 @@ public interface NamedObjectRepository {
 
 	/**
 	 * Perform a validity check on all named queries
+	 * 在所有的命名查询上执行验证检查
 	 */
 	Map<String, HibernateException> checkNamedQueries(QueryEngine queryPlanCache);
 
@@ -79,6 +82,7 @@ public interface NamedObjectRepository {
 
 	/**
 	 * Prepare for runtime use
+	 * 准备 - 为了运行时 使用
 	 */
 	void prepare(SessionFactoryImplementor sessionFactory, MetadataImplementor bootMetamodel, BootstrapContext bootstrapContext);
 

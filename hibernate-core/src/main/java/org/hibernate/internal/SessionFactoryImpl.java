@@ -130,8 +130,16 @@ import org.jboss.logging.Logger;
 
 
 /**
- * Concrete implementation of the {@code SessionFactory} interface. Has the following
+ * Concrete implementation of the {@code SessionFactory} interface.
+ * SessionFactory的具体实现
+ * Has the following
  * responsibilities
+ * 1. 缓存配置设置(不可变)
+ * 2. 缓存 编译的映射 (例如 EntityPersister / CollectionPersister)
+ * 3. 缓存编译 的查询(内存敏感的缓存)
+ * 4. 管理 PreparedStatements
+ * 5. 代理JDBC连接管理到ConnectionProvider
+ * 6. SessionImpl的工厂
  * <ul>
  * <li>caches configuration settings (immutably)
  * <li>caches "compiled" mappings ie. {@code EntityPersister}s and
@@ -141,6 +149,8 @@ import org.jboss.logging.Logger;
  * <li> delegates JDBC {@code Connection} management to the {@code ConnectionProvider}
  * <li>factory for instances of {@code SessionImpl}
  * </ul>
+ * 这个类必须生产不可变的客户端, 即使它各种各样的缓存和对象池
+ * 它是非常重要的是 类不仅仅 线程安全  也支持高并发  / 同步使用的非常少 ...
  * This class must appear immutable to clients, even if it does all kinds of caching
  * and pooling under the covers. It is crucial that the class is not only thread
  * safe, but also highly concurrent. Synchronization must be used extremely sparingly.
@@ -201,6 +211,7 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 
 		this.sessionFactoryOptions = options;
 
+		// 构建一个服务注册表
 		this.serviceRegistry = options
 				.getServiceRegistry()
 				.getService( SessionFactoryServiceRegistryFactory.class )
@@ -208,13 +219,18 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 
 		this.eventEngine = new EventEngine( bootMetamodel, this );
 
+		// 用它初始化 会话工厂
 		bootMetamodel.initSessionFactory( this );
 
+		// cfg xml 配置访问服务
 		final CfgXmlAccessService cfgXmlAccessService = serviceRegistry.getService( CfgXmlAccessService.class );
 
+		// 获取会话工厂名称
 		String sfName = sessionFactoryOptions.getSessionFactoryName();
+		// 如果 xml 配置存在
 		if ( cfgXmlAccessService.getAggregatedConfig() != null ) {
 			if ( sfName == null ) {
+				// 且 工厂名为空,获取会话工厂名称
 				sfName = cfgXmlAccessService.getAggregatedConfig().getSessionFactoryName();
 			}
 		}
@@ -228,9 +244,12 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 
 		this.properties = new HashMap<>();
 		this.properties.putAll( configurationService.getSettings() );
+		// 获取配置 ...
 		if ( !properties.containsKey( AvailableSettings.JPA_VALIDATION_FACTORY )
 				&& !properties.containsKey( AvailableSettings.JAKARTA_VALIDATION_FACTORY ) ) {
+			// 如果 验证器工厂引用 != null
 			if ( getSessionFactoryOptions().getValidatorFactoryReference() != null ) {
+				// 还是放入 默认行为...
 				properties.put(
 						AvailableSettings.JPA_VALIDATION_FACTORY,
 						getSessionFactoryOptions().getValidatorFactoryReference()
@@ -241,17 +260,21 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 				);
 			}
 		}
-
+		// 抹去 敏感信息
 		maskOutSensitiveInformation(this.properties);
+		// 纪录
 		logIfEmptyCompositesEnabled( this.properties );
 
+		//
 		sqlStringGenerationContext = SqlStringGenerationContextImpl.fromExplicit(
 				jdbcServices.getJdbcEnvironment(), bootMetamodel.getDatabase(),
 				options.getDefaultCatalog(), options.getDefaultSchema() );
 
+		// 缓存访问
 		this.cacheAccess = this.serviceRegistry.getService( CacheImplementor.class );
 		this.jpaPersistenceUnitUtil = new PersistenceUnitUtilImpl( this );
 
+		// 会话工厂观察者
 		for ( SessionFactoryObserver sessionFactoryObserver : options.getSessionFactoryObservers() ) {
 			this.observer.addObserver( sessionFactoryObserver );
 		}
@@ -261,12 +284,13 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 
 		LOG.debugf( "Session factory constructed with filter configurations : %s", filters );
 		LOG.debugf( "Instantiating session factory with properties: %s", properties );
-
+		// 集成者也需要响应 生成周期事件
 		class IntegratorObserver implements SessionFactoryObserver {
 			private final ArrayList<Integrator> integrators = new ArrayList<>();
 
 			@Override
 			public void sessionFactoryCreated(SessionFactory factory) {
+
 			}
 
 			@Override
@@ -281,7 +305,9 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 		this.observer.addObserver( integratorObserver );
 		try {
 			for ( Integrator integrator : serviceRegistry.getService( IntegratorService.class ).getIntegrators() ) {
+				// 直接调用 ...
 				integrator.integrate( bootMetamodel, bootstrapContext, this );
+				//  并增加 ...
 				integratorObserver.integrators.add( integrator );
 			}
 			//Generators:
@@ -292,6 +318,7 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 						jdbcServices.getJdbcEnvironment().getDialect(),
 						(RootClass) model
 				);
+				// 生成器初始化
 				generator.initialize( sqlStringGenerationContext );
 				identifierGenerators.put( model.getEntityName(), generator );
 			} );
@@ -299,8 +326,10 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 
 			LOG.debug( "Instantiated session factory" );
 
+			// 首选 二级缓存 ..
 			primeSecondLevelCacheRegions( bootMetamodel );
 
+			// 创建查询引擎 ..
 			this.queryEngine = QueryEngine.from( this, bootMetamodel );
 
 			final RuntimeMetamodelsImpl runtimeMetamodels = new RuntimeMetamodelsImpl();
@@ -313,6 +342,7 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 
 			this.queryEngine.prepare( this, bootMetamodel, bootstrapContext );
 
+			// ??? 命名查询启动检查
 			if ( options.isNamedQueryStartupCheckingEnabled() ) {
 				final Map<String, HibernateException> errors = queryEngine.getNamedObjectRepository().checkNamedQueries( queryEngine );
 
@@ -329,7 +359,7 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 					throw exception;
 				}
 			}
-
+			//
 			SchemaManagementToolCoordinator.process(
 					bootMetamodel,
 					serviceRegistry,
@@ -378,6 +408,7 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 			this.fastSessionServices = new FastSessionServices( this );
 			this.wrapperOptions = new SessionFactoryBasedWrapperOptions( this );
 
+			// 工厂创建好了,可以使用了 ...
 			this.observer.sessionFactoryCreated( this );
 
 			SessionFactoryRegistry.INSTANCE.addSessionFactory(
@@ -390,14 +421,19 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 
 			//As last operation, delete all caches from ReflectionManager
 			//(not modelled as a listener as we want this to be last)
+			// 最后一步, 从ReflectionManager中 删除所有的缓存 ..
+			// 不是模仿作为侦听器我们希望这是最后一次(它期望构建完毕之后释放 ....)
 			bootstrapContext.getReflectionManager().reset();
 
 			this.entityNameResolver = new CoordinatingEntityNameResolver( this, getInterceptor() );
 		}
+
 		catch (Exception e) {
+			// 如果出问题  移除
 			for ( Integrator integrator : serviceRegistry.getService( IntegratorService.class ).getIntegrators() ) {
 				integrator.disintegrate( this, serviceRegistry );
 				integratorObserver.integrators.remove( integrator );
+				// 关闭注册机
 				serviceRegistry.close();
 			}
 
@@ -438,7 +474,9 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 			final AccessType accessType = AccessType.fromExternalName( bootEntityDescriptor.getCacheConcurrencyStrategy() );
 
 			if ( accessType != null ) {
+				//  需要缓存 ??
 				if ( bootEntityDescriptor.isCached() ) {
+					//  获取 缓存region name
 					regionConfigBuilders.computeIfAbsent(
 							bootEntityDescriptor.getRootClass().getCacheRegionName(),
 							DomainDataRegionConfigImpl.Builder::new
@@ -484,6 +522,7 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 	}
 
 	public Session openSession() throws HibernateException {
+		// 默认的会话打开选择 不能在某些情况下使用 - 例如使用 TenantIdentifierResolver
 		//The defaultSessionOpenOptions can't be used in some cases; for example when using a TenantIdentifierResolver.
 		if ( this.defaultSessionOpenOptions != null ) {
 			return this.defaultSessionOpenOptions.openSession();
@@ -513,6 +552,7 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 
 	@Override
 	public SessionBuilderImplementor withOptions() {
+		// 默认的SessionBuilderImpl
 		return new SessionBuilderImpl<>( this );
 	}
 
@@ -737,9 +777,14 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 	/**
 	 * Closes the session factory, releasing all held resources.
 	 *
+	 * 管理会话工厂, 释放所有持有的资源
+	 *
 	 * <ol>
+	 *     1. 清理使用的缓存 regions 并停止 缓存 提供器
 	 * <li>cleans up used cache regions and "stops" the cache provider.
+	 * 		2. 关闭 JDBC 连接 ...
 	 * <li>close the JDBC connection
+	 * 		3. 移除JNDI 绑定
 	 * <li>remove the JNDI binding
 	 * </ol>
 	 *
@@ -747,6 +792,8 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 	 * be a "heavy" object memory wise after close() has been called.  Thus
 	 * it is important to not keep referencing the instance to let the garbage
 	 * collector release the memory.
+	 * 注意:   小心 sessionFactory 在close 调用之后 依旧带有很重的对象内存
+	 * // 需要注意  不要让 其他对象引用此对象   - 让垃圾回收器释放此内存 ....
 	 */
 	@Override
 	public void close() throws HibernateException {
@@ -765,16 +812,19 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 
 		try {
 			LOG.closing();
+
+			// 关闭会话 工厂  回调 。。
 			observer.sessionFactoryClosing( this );
 
 		// NOTE : the null checks below handle cases where close is called from
 		//		a failed attempt to create the SessionFactory
-
+			//  有可能Session Factory 创建失败了,需要 空检查判断 。。。
 			if ( cacheAccess != null ) {
 				cacheAccess.close();
 			}
 
 			if ( runtimeMetamodels != null && runtimeMetamodels.getMappingMetamodel() != null ) {
+				// 关闭连接 ...
 				final JdbcConnectionAccess jdbcConnectionAccess = jdbcServices.getBootstrapJdbcConnectionAccess();
 				runtimeMetamodels.getMappingMetamodel().forEachEntityDescriptor(
 						entityPersister -> {
@@ -792,17 +842,19 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 							}
 						}
 				);
+				// 关闭映射元数据模型
 				( (MappingMetamodelImpl) runtimeMetamodels.getMappingMetamodel() ).close();
 			}
 
+			// 关闭查询引擎
 			if ( queryEngine != null ) {
 				queryEngine.close();
 			}
-
+			// 一步删除??
 			if ( delayedDropAction != null ) {
 				delayedDropAction.perform( serviceRegistry );
 			}
-
+			// 移除此会话工厂注册
 			SessionFactoryRegistry.INSTANCE.removeSessionFactory(
 					getUuid(),
 					name,
@@ -813,8 +865,9 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 		finally {
 			status = Status.CLOSED;
 		}
-
+		//工厂关闭完成
 		observer.sessionFactoryClosed( this );
+		// 摧毁 ...
 		serviceRegistry.destroy();
 	}
 
@@ -1009,6 +1062,7 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 				return new ManagedSessionContext(this);
 			default:
 				try {
+					//  否则实例化 ...
 					Class<?> implClass = serviceRegistry.getService(ClassLoaderService.class).classForName(impl);
 					return (CurrentSessionContext)
 							implClass.getConstructor( new Class[]{SessionFactoryImplementor.class} )
@@ -1116,7 +1170,7 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 
 		return null;
 	}
-
+	// 一个默认的SessionBuilder 实现
 	public static class SessionBuilderImpl<T extends SessionBuilder> implements SessionBuilderImplementor<T>, SessionCreationOptions {
 		private static final Logger log = CoreLogging.logger( SessionBuilderImpl.class );
 
@@ -1148,12 +1202,16 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 			final SessionFactoryOptions sessionFactoryOptions = sessionFactory.getSessionFactoryOptions();
 			this.statementInspector = sessionFactoryOptions.getStatementInspector();
 			this.connectionHandlingMode = sessionFactoryOptions.getPhysicalConnectionHandlingMode();
+			// 会话是否自动关闭 ...
 			this.autoClose = sessionFactoryOptions.isAutoCloseSessionEnabled();
 
+			// 多个会话工厂的情况下  获取 当前会话
 			final CurrentTenantIdentifierResolver currentTenantIdentifierResolver = sessionFactory.getCurrentTenantIdentifierResolver();
 			if ( currentTenantIdentifierResolver != null ) {
+				// 解析 ...
 				tenantIdentifier = currentTenantIdentifierResolver.resolveCurrentTenantIdentifier();
 			}
+			// 时区
 			this.jdbcTimeZone = sessionFactoryOptions.getJdbcTimeZone();
 		}
 

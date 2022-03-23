@@ -52,7 +52,10 @@ import static org.hibernate.internal.log.DeprecationLogger.DEPRECATION_LOGGER;
 /**
  * Responsible for coordinating SchemaManagementTool execution(s) for auto-tooling whether
  * from JPA or hbm2ddl.auto.
+ *
+ * 负责对协调SchemaManagementTool 执行 - 为了自动处理(无论是JPA / 还是hbm2dd.auto)
  * <p/>
+ * 主要入口是process
  * The main entry point is {@link #process}
  *
  * @author Steve Ebersole

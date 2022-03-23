@@ -165,12 +165,17 @@ import static org.hibernate.jpa.SpecHints.HINT_SPEC_QUERY_TIMEOUT;
 
 /**
  * Concrete implementation of a the {@link Session} API.
+ *
+ * Session API 的具体实现
  * <p/>
  * Exposes two interfaces:<ul>
+ *     1. Session
+ *     2. SessionImplementor 给其他的Hibernate 组件(SPI)
  * <li>{@link Session} to the application</li>
  * <li>{@link SessionImplementor} to other Hibernate components (SPI)</li>
  * </ul>
  * <p/>
+ * // 此类不是线程安全的 ...
  * This class is not thread-safe.
  *
  * @author Gavin King
@@ -572,6 +577,8 @@ public class SessionImpl
 	}
 
 	protected void checkNoUnresolvedActionsBeforeOperation() {
+		//执行队列中是否存在 未解析 的 Entity 插入动作
+		// 级联级别 == 0
 		if ( persistenceContext.getCascadeLevel() == 0 && actionQueue.hasUnresolvedEntityInsertActions() ) {
 			throw new IllegalStateException( "There are delayed insert actions before operation as cascade level 0." );
 		}
@@ -713,6 +720,7 @@ public class SessionImpl
 	@Override
 	public void persist(Object object) throws HibernateException {
 		checkOpen();
+		// 触发 持久化
 		firePersist( new PersistEvent( null, object, this ) );
 	}
 
@@ -726,8 +734,10 @@ public class SessionImpl
 		Throwable originalException = null;
 		try {
 			checkTransactionSynchStatus();
+			// 操作之前检查未解析的动作 ...
 			checkNoUnresolvedActionsBeforeOperation();
 
+			// persist 事件监听组 快速触发 ...
 			fastSessionServices.eventListenerGroup_PERSIST
 					.fireEventOnEachListener( event, PersistEventListener::onPersist );
 		}

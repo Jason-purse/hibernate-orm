@@ -14,6 +14,7 @@ import org.hibernate.metamodel.mapping.EntityMappingType;
 
 /**
  * Describes the table definition for the CTE - its name amd its columns
+ * 使用CTE 描述 表的 定义  - 它的名字和字段
  *
  * @author Steve Ebersole
  */
@@ -25,6 +26,7 @@ public class CteTable {
 	public CteTable(String cteName, EntityMappingType entityDescriptor) {
 		final int numberOfColumns = entityDescriptor.getIdentifierMapping().getJdbcTypeCount();
 		final List<CteColumn> columns = new ArrayList<>( numberOfColumns );
+		// 标识Mapping
 		entityDescriptor.getIdentifierMapping().forEachSelectable(
 				(columnIndex, selection) -> columns.add(
 						new CteColumn("cte_" + selection.getSelectionExpression(), selection.getJdbcMapping() )

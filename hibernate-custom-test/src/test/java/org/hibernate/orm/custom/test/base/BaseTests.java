@@ -1,12 +1,15 @@
-package org.hibernate.orm.custom.test;
+package org.hibernate.orm.custom.test.base;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Version;
 import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.orm.custom.test.base.model.Event;
 import org.junit.jupiter.api.Test;
+
+import java.util.Date;
 
 public class BaseTests {
     @Test
@@ -40,15 +43,24 @@ public class BaseTests {
     public void started() {
         StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure()
-                .build();
+                .build(); // 构建完毕, 还需要以此创建会话工厂
 
         try {
             SessionFactory  sessionFactory = new MetadataSources( registry ).buildMetadata().buildSessionFactory();
 
+
+            // 开启一个会话
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.persist( new Event( "Our very first event!", new Date() ) );
+            session.persist( new Event( "A follow up event", new Date() ) );
+            session.getTransaction().commit();
+            session.close();
         }
         catch (Exception e) {
             // The registry would be destroyed by the SessionFactory, but we had trouble building the SessionFactory
             // so destroy it manually.
+
             StandardServiceRegistryBuilder.destroy( registry );
         }
 

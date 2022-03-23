@@ -36,6 +36,7 @@ import org.hibernate.type.spi.TypeConfiguration;
 
 /**
  * References to common {@link BasicTypeReference} instances
+ * 基础类型实例引用
  *
  * @author Gavin King
  * @author Steve Ebersole

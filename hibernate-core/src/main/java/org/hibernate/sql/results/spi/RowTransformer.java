@@ -10,8 +10,10 @@ import org.hibernate.Incubating;
 
 /**
  * Defines transformation of a raw row in the domain query result row.
+ *  将一个raw row 转换为 领域查询结果row
  *
  * E.g. a query might select multiple
+ * 例如一个查询可能查询多次
  *
  * @see org.hibernate.query.TupleTransformer
  *

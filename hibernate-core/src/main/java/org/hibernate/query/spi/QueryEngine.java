@@ -373,7 +373,7 @@ public class QueryEngine {
 			return new QueryInterpretationCacheDisabledImpl( statisticsSupplier );
 		}
 	}
-
+	//  预备
 	public void prepare(
 			SessionFactoryImplementor sessionFactory,
 			MetadataImplementor bootMetamodel,

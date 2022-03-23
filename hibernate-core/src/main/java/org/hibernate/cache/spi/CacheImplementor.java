@@ -27,6 +27,8 @@ import org.hibernate.service.Service;
  * implementation of the {@link Cache} API. Extends {@code Cache} with operations
  * called internally by Hibernate.
  *
+ * 一个SPI - 由任何Hibernate 服务 - 可以提供一个Cache API 的实现, 扩展Cache(操作完全由Hibernate 内部调用)
+ *
  * @since 4.1
  *
  * @author Strong Liu
@@ -48,6 +50,7 @@ public interface CacheImplementor extends Service, Cache, Serializable {
 	/**
 	 * An initialization phase allowing the caching provider to prime itself
 	 * from the passed configs
+	 *
 	 *
 	 * @since 5.3
 	 */

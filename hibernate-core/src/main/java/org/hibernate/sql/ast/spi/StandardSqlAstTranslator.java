@@ -16,6 +16,9 @@ import org.hibernate.sql.exec.spi.JdbcSelect;
  * "interpretation".  For a select query, that means an instance of
  * {@link JdbcSelect}.
  *
+ * 查询翻译的最终阶段, 这里我们能够调用SQL-AST  进行解析, 对于一个select query, 这意味着是
+ * JdbcSelect的实例
+ *
  * @author Christian Beikov
  */
 public class StandardSqlAstTranslator<T extends JdbcOperation> extends AbstractSqlAstTranslator<T> {

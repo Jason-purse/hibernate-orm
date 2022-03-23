@@ -23,6 +23,8 @@ import org.hibernate.type.spi.TypeConfiguration;
 /**
  * Parses SQL fragments specified in mapping documents
  *
+ * 解析SQL 碎片 (指定在映射文档中的 ...)
+ *
  * @author Gavin King
  */
 public final class Template {

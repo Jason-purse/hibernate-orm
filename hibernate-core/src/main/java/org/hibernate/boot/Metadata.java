@@ -39,6 +39,7 @@ import org.hibernate.query.sqm.function.SqmFunctionDescriptor;
 public interface Metadata extends Mapping {
 	/**
 	 * Get the builder for {@link SessionFactory} instances based on this metamodel.
+	 * 基于此模型  获取一个构建SessionFactory 实例的builder
 	 *
 	 * @return The builder for {@link SessionFactory} instances.
 	 */
@@ -47,6 +48,7 @@ public interface Metadata extends Mapping {
 	/**
 	 * Short-hand form of building a {@link SessionFactory} through the builder without any additional
 	 * option overrides.
+	 * 构建SessionFactory的快捷方式 - 通过构建器创建而无需任何额外的选项覆盖 ...
 	 *
 	 * @return THe built SessionFactory.
 	 */
@@ -197,6 +199,7 @@ public interface Metadata extends Mapping {
 
 	java.util.Collection<Table> collectTableMappings();
 
+	// 一些Sqm函数 描述符
 	Map<String, SqmFunctionDescriptor> getSqlFunctionMap();
 
 	/**

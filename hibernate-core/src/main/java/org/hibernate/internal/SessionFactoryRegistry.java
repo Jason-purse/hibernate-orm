@@ -25,7 +25,10 @@ import org.hibernate.internal.util.StringHelper;
 
 /**
  * A registry of all {@link SessionFactory} instances for the same classloader as this class.
+ *
+ * 通过此类的类加载器  注册所有的SessionFactory
  * <p/>
+ * 这个registry 同样用于jndi 绑定的序列化 / 反序列化 。。
  * This registry is used for serialization/deserialization as well as JNDI binding.
  *
  * @author Steve Ebersole

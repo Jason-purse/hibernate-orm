@@ -19,10 +19,13 @@ public enum ConnectionAcquisitionMode {
 	 * The Connection will be acquired as soon as the Hibernate Session is opened.  This
 	 * also circumvents ConnectionReleaseMode, as the Connection will then be held until the
 	 * Session is closed.
+	 *
+	 * 立即获取连接 - 这影响了连接释放模式
 	 */
 	IMMEDIATELY,
 	/**
 	 * The legacy behavior.  A Connection is only acquired when (if) it is actually needed.
+	 * 遗留的 行为 , 当实际需要的时候才获取 ...
 	 */
 	AS_NEEDED;
 

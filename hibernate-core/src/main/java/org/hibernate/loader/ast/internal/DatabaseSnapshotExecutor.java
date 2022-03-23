@@ -51,6 +51,7 @@ import org.jboss.logging.Logger;
 import static org.hibernate.sql.ast.spi.SqlExpressionResolver.createColumnReferenceKey;
 
 /**
+ * 数据库快照 执行器
  * @author Steve Ebersole
  */
 class DatabaseSnapshotExecutor {
@@ -64,15 +65,19 @@ class DatabaseSnapshotExecutor {
 	DatabaseSnapshotExecutor(
 			EntityMappingType entityDescriptor,
 			SessionFactoryImplementor sessionFactory) {
+		//
 		this.entityDescriptor = entityDescriptor;
+		// 获取jdbc参数个数
 		this.jdbcParameters = new ArrayList<>(
 				entityDescriptor.getIdentifierMapping().getJdbcTypeCount()
 		);
-
+		//
 		final QuerySpec rootQuerySpec = new QuerySpec( true );
+
 
 		final SqlAliasBaseManager sqlAliasBaseManager = new SqlAliasBaseManager();
 
+		//
 		final LoaderSqlAstCreationState state = new LoaderSqlAstCreationState(
 				rootQuerySpec,
 				sqlAliasBaseManager,
@@ -85,6 +90,7 @@ class DatabaseSnapshotExecutor {
 
 		final NavigablePath rootPath = new NavigablePath( entityDescriptor.getEntityName() );
 
+		// 实例描述对象   创建根表group
 		final TableGroup rootTableGroup = entityDescriptor.createRootTableGroup(
 				true,
 				rootPath,
@@ -95,6 +101,7 @@ class DatabaseSnapshotExecutor {
 		);
 
 		rootQuerySpec.getFromClause().addRoot( rootTableGroup );
+		//
 		state.getFromClauseAccess().registerTableGroup( rootPath, rootTableGroup );
 
 		// We produce the same state array as if we were creating an entity snapshot
@@ -106,11 +113,12 @@ class DatabaseSnapshotExecutor {
 		domainResults.add(
 				new QueryLiteral<>(
 						null,
-						sessionFactory.getTypeConfiguration()
-								.getBasicTypeRegistry()
+						sessionFactory.getTypeConfiguration() // 类型配置 ..
+								.getBasicTypeRegistry()  //
 								.resolve( StandardBasicTypes.INTEGER )
 				).createDomainResult( null, state )
 		);
+
 		final NavigablePath idNavigablePath = rootPath.append( entityDescriptor.getIdentifierMapping().getNavigableRole().getNavigableName() );
 		entityDescriptor.getIdentifierMapping().forEachSelectable(
 				(columnIndex, selection) -> {
@@ -122,6 +130,7 @@ class DatabaseSnapshotExecutor {
 					final JdbcParameter jdbcParameter = new JdbcParameterImpl( selection.getJdbcMapping() );
 					jdbcParameters.add( jdbcParameter );
 
+					// 字段引用
 					final ColumnReference columnReference = (ColumnReference) sqlExpressionResolver
 							.resolveSqlExpression(
 									createColumnReferenceKey( tableReference, selection.getSelectionExpression() ),
@@ -131,7 +140,7 @@ class DatabaseSnapshotExecutor {
 											sessionFactory
 									)
 							);
-
+					// 拼接条件
 					rootQuerySpec.applyPredicate(
 							new ComparisonPredicate(
 									columnReference,
@@ -142,7 +151,7 @@ class DatabaseSnapshotExecutor {
 				}
 		);
 
-
+		// 然后
 		entityDescriptor.visitAttributeMappings(
 				attributeMapping -> {
 					final NavigablePath navigablePath = rootPath.append( attributeMapping.getAttributeName() );
@@ -159,10 +168,13 @@ class DatabaseSnapshotExecutor {
 
 		final SelectStatement selectStatement = new SelectStatement( rootQuerySpec, domainResults );
 
+		// 获取JDBC服务
 		final JdbcServices jdbcServices = sessionFactory.getJdbcServices();
+		// 获取 JDBC 环境
 		final JdbcEnvironment jdbcEnvironment = jdbcServices.getJdbcEnvironment();
+		// sql 翻译器工厂
 		final SqlAstTranslatorFactory sqlAstTranslatorFactory = jdbcEnvironment.getSqlAstTranslatorFactory();
-
+		// 构建一个  jdbcSelect
 		this.jdbcSelect = sqlAstTranslatorFactory.buildSelectTranslator( sessionFactory, selectStatement )
 				.translate( null, QueryOptions.NONE );
 	}
@@ -204,6 +216,7 @@ class DatabaseSnapshotExecutor {
 						return sql;
 					}
 
+					// 管理以一个查询的所有参数
 					@Override
 					public QueryParameterBindings getQueryParameterBindings() {
 						return QueryParameterBindings.NO_PARAM_BINDINGS;

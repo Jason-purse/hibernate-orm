@@ -23,25 +23,46 @@ import jakarta.persistence.criteria.CriteriaUpdate;
  * The main runtime interface between a Java application and Hibernate. Represents the
  * notion of a <em>persistence context</em>, a set of managed entity instances associated
  * with a logical transaction.
+ *
+ * Session 代表了持久化上下文的一个概念, 一个受管理的entity 实例和一个本地事务联系 ..
  * <p>
  * The lifecycle of a {@code Session} is bounded by the beginning and end of the logical
  * transaction. (But a long logical transaction might span several database transactions.)
  * <p>
+ * Session的 生命周期和一个逻辑事务约定(通过开启事务 /  或者结束事务)
+ * 但是一个长逻辑事务  可能分为几块数据库事务
+ *
  * The primary purpose of the {@code Session} is to offer create, read, and delete
  * operations for instances of mapped entity classes. An instance may be in one of three
  * states with respect to a given session:
+ *
+ * session 的 主要目的 是 提供创建 /  读取 / 删除  操作 -  对于一个 映射的 entity class的实例
+ * 一个实例 也许有三种状态 -  分别对应给定的session
  * <ul>
+ *     // 1.  transient 绝不 持久化 /  不与 session 关联
+ *     // 2. persistent 与一个会话关联
+ *     // 3. detached  批量持久化, 不和任何Session 关联
  * <li><em>transient:</em> never persistent, not associated with any {@code Session},
  * <li><em>persistent:</em> associated with a unique {@code Session}, or
  * <li><em>detached:</em> previously persistent, not associated with any {@code Session}
  * </ul>
+ *
+ * 通过get(Class,Object) 返回或者 通过一个查询返回的 是持久化的对象 ...
  * Any instance returned by {@link #get(Class, Object)} or by a query is persistent.
  * <p>
+ *     1. 一个瞬时实例 能够通过persist 持久化
+ *     2. 一个持久化实例 能够被detach ,通过  detach 调用
+ *     3. 一个持久化实例也能够标记为 删除 ,甚至是transient  ,通过调用 remove(..)
  * A transient instance may be made persistent by calling {@link #persist(Object)}.
  * A persistent instance may be made detached by calling {@link #detach(Object)}.
  * A persistent instance may be marked for removal, and eventually made transient, by
  * calling {@link #remove(Object)}.
  * <p>
+ *     持久化实例  能够持久化上下文通过一个管理的状态持有 ...
+ *     任何改变持久化实例的状态 即将会自动检测并刷新到数据库中
+ *     自动改变检测的处理叫做 脏检查  并且在某些环境下可能很昂贵..
+ *     脏检查 也许能够通过标记一个entity 为read-only 禁用  - 通过setReadOnly(Object,boolean) 或者简单的通过detach 从持久化上下文中驱逐...
+ *     一个会话也许能够设置加载entity - 已read-only 形式（状态), 或者在查询级别上进行控制 ...
  * Persistent instances are held in a managed state by the persistence context. Any
  * change to the state of a persistent instance is automatically detected and eventually
  * flushed to the database. This process of automatic change detection is called
@@ -52,11 +73,16 @@ import jakarta.persistence.criteria.CriteriaUpdate;
  * {@linkplain #setDefaultReadOnly(boolean) by default}, or this may be controlled at the
  * {@linkplain Query#setReadOnly(boolean) query level}.
  * <p>
+ *    一个transient / detached 实例也许能够持久化  通过复制它到一个持久化实例- 只需要merge即可
+ *    所有旧操作移动到detached 实例 的持久化状态是不建议的,应该使用merge ....
  * The state of a transient or detached instance may be made persistent by copying it to
  * a persistent instance using {@link #merge(Object)}. All older operations which moved a
  * detached instance to the persistent state are now deprecated, and clients should now
  * migrate to the use of {@code merge()}.
  * <p>
+ *     // 根据刷新模式,  session 执行一个 刷新操作 , 并且同步状态 持有一个内存中的persistent状态 (在数据库中通过执行insert / update / delete)语句处理 ...
+ *     // 注意 SQL 语句 经常没有执行同步 - (session接口的相关方法)
+ *     如果需要SQL 的同步 执行,使用StatelessSession ;
  * From {@link FlushMode time to time}, the session performs a {@linkplain #flush() flushing}
  * operation, and synchronizes state held in memory with persistent state held in the
  * database by executing SQL {@code insert}, {@code update}, and {@code delete} statements.
@@ -64,6 +90,10 @@ import jakarta.persistence.criteria.CriteriaUpdate;
  * {@code Session} interface. If synchronous execution of SQL is desired, the
  * {@link StatelessSession} allows this.
  * <p>
+ *     一个持久化上下文  持有 强引用( 所有它的entities 导致它们不可能被垃圾回收)
+ *     因此 Session 是一个短活的对象,并且当逻辑事务结束之后应该立即抛弃, 在特殊情况下
+ *     clear  / detach 对象也许能用来控制内存使用
+ *     然而  对于读取大量entity 的处理 , 应该使用StatelessSession;
  * A persistence context holds hard references to all its entities and prevents them
  * from being garbage collected. Therefore, a {@code Session} is a short-lived object,
  * and must be discarded as soon as a logical transaction ends. In extreme cases,
@@ -71,9 +101,12 @@ import jakarta.persistence.criteria.CriteriaUpdate;
  * However, for processes which read many entities, a {@link StatelessSession} should
  * be used.
  * <p>
+ *     一个Session 并不是线程安全的, 每一个线程  或者事务 必须从SessionFactory 中获取 session;
  * A {@code Session} is never threadsafe. Each thread or transaction must obtain its own
  * instance from a {@link SessionFactory}.
  * <p>
+ *     一个session 可能会和  JTA事务联系, 或者 它可能在资源本地数据库事务中控制 , 在资源本地的事务中, 客户端必须 使用Transaction 区分 事务开始 或者结束..
+ *     // 一个通常的基于资源的本地事务  应该使用以下俚语(习语)
  * A session might be associated with a container-managed JTA transaction, or it might be
  * in control of its own <em>resource-local</em> database transaction. In the case of a
  * resource-local transaction, the client must demarcate the beginning and end of the
@@ -97,12 +130,16 @@ import jakarta.persistence.criteria.CriteriaUpdate;
  * }
  * </pre>
  * <p>
+ *     如果Session 抛出异常, 当前事务 必须回滚  并且会话应该被抛弃 ...
+ *     Session 内部状态可能在异常处理之后和数据库不一致
  * If the {@code Session} throws an exception, the current transaction must be rolled back
  * and the session must be discarded. The internal state of the {@code Session} might not
  * be consistent with the database after the exception occurs.
  * <p>
+ *     如果它的entities 可序列化  那么Session 实例应该是可以序列化 ..
  * A {@code Session} instance is serializable if its entities are serializable.
  * <p>
+ *     每一个Session 是一个EntityManager, 因此 当Hibernate 作为JPA 持久化提供器的时候, EntityManager#unwrap(Class) 可以用来获取底层的Session...
  * Every {@code Session} is a JPA {@link EntityManager}. Furthermore, when Hibernate is
  * acting as the JPA persistence provider, the method {@link EntityManager#unwrap(Class)}
  * may be used to obtain the underlying {@code Session}.
@@ -463,7 +500,12 @@ public interface Session extends SharedSessionContract, EntityManager {
 	 * generator is used.) This operation cascades to associated instances if the
 	 * association is mapped with
 	 * {@link org.hibernate.annotations.CascadeType#SAVE_UPDATE}.
+	 *
+	 * 持久化给定的瞬时实例, 首先给它分配一个生成的标识符
+	 * (或者使用当给定的标识符  属性的值,如果已经使用了一个给定的生成器), 这个操作级联到相关的实例
+	 * 如果这个级联类型为  SAVE_UPDATE
 	 * <p>
+	 *     // 这个操作类似于 persist(Object)
 	 * This operation is very similar to {@link #persist(Object)}.
 	 *
 	 * @param object a transient instance of a persistent class
@@ -592,7 +634,11 @@ public interface Session extends SharedSessionContract, EntityManager {
 	 * Make a transient instance persistent and mark it for later insertion in the
 	 * database. This operation cascades to associated instances if the association
 	 * is mapped with {@link jakarta.persistence.CascadeType#PERSIST}.
+	 * 让一个transient 的实例持久化  在插入到数据库之后 标记他 ..
+	 * 这个操作级联到相关的实例 (如果是CascadeType#Persist)
 	 * <p>
+	 *     对于使用GeneratedValue 生成id 的实例  persist 最终的结果会为给定的实例生成一个标识符
+	 *     但是这是一步的,当session 刷新的时候, 这依赖于identifier 生成策略 ...
 	 * For entities with a {@link jakarta.persistence.GeneratedValue generated id},
 	 * {@code persist()} ultimately results in generation of an identifier for the
 	 * given instance. But this may happen asynchronously, when the session is

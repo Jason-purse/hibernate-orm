@@ -75,8 +75,11 @@ import org.hibernate.type.descriptor.java.ZoneOffsetJavaType;
 import org.hibernate.type.descriptor.java.ZonedDateTimeJavaType;
 
 /**
+ *  最后是 具有 Hibernate的基准线 JavaType 注册机的 BaselineTarget...
  * Primes the {@link BaselineTarget} (which is essentially the {@link JavaTypeRegistry})
  * with Hibernate's baseline {@link JavaType} registrations
+ *
+ * 具有
  */
 public class JavaTypeBaseline {
 	/**
@@ -174,6 +177,7 @@ public class JavaTypeBaseline {
 	}
 
 	private static void primePrimitive(BaselineTarget target, JavaType descriptor) {
+		// 增加包装器描述符之外,还包装一个基础类型  也使用这个描述器 ...
 		target.addBaselineDescriptor( descriptor );
 		target.addBaselineDescriptor( ( (PrimitiveJavaType) descriptor ).getPrimitiveClass(), descriptor );
 	}

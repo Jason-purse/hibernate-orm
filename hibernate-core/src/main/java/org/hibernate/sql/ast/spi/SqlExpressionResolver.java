@@ -18,7 +18,9 @@ import org.hibernate.type.spi.TypeConfiguration;
 import static java.util.Locale.ROOT;
 
 /**
- * Resolution of a SqlSelection reference for a given SqlSelectable.  Some
+ * Resolution of a SqlSelection reference for a given SqlSelectable.
+ *
+ * Some
  * SqlSelectable are required to be qualified (e.g. a Column) - this is indicated
  * by the QualifiableSqlSelectable sub-type.  The NonQualifiableSqlSelectable
  * sub-type indicates a SqlSelectable that does not require qualification (e.g. a
@@ -31,6 +33,9 @@ import static java.util.Locale.ROOT;
  *
  * Note also that the returns can be a specialized Expression represented by
  * {@link org.hibernate.sql.ast.tree.expression.SqlSelectionExpression}
+ *
+ *
+ *
  *
  * @author Steve Ebersole
  */

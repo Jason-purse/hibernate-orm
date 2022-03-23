@@ -9,7 +9,8 @@ package org.hibernate.sql.results.graph;
 import org.hibernate.Incubating;
 
 /**
- * Represents a result value in the domain query results.  Acts as the producer for the
+ * Represents a result value in the domain query results.
+ * Acts as the producer for the
  * {@link DomainResultAssembler} for this result as well as any {@link Initializer} instances needed
  *
  * Not the same as a result column in the JDBC ResultSet!  This contract represents an individual

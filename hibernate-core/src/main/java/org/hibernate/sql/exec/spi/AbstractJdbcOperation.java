@@ -17,15 +17,16 @@ import org.hibernate.sql.ast.tree.expression.JdbcParameter;
 
 /**
  * Executable JDBC command
+ * 执行JDBC  命令
  *
  * @author Steve Ebersole
  */
 public class AbstractJdbcOperation implements JdbcOperation {
 	protected final String sql;
 	protected final List<JdbcParameterBinder> parameterBinders;
-	protected final Set<String> affectedTableNames;
-	protected final Set<FilterJdbcParameter> filterJdbcParameters;
-	protected final Map<JdbcParameter, JdbcParameterBinding> appliedParameters;
+	protected final Set<String> affectedTableNames;  // 受影响的表名
+	protected final Set<FilterJdbcParameter> filterJdbcParameters; //  ??
+	protected final Map<JdbcParameter, JdbcParameterBinding> appliedParameters; // 应用的 参数
 
 	public AbstractJdbcOperation(
 			String sql,

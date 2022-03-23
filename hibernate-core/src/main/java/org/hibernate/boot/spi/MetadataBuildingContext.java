@@ -12,9 +12,12 @@ import org.hibernate.internal.util.config.ConfigurationHelper;
 
 /**
  * Describes the context in which the process of building Metadata out of MetadataSources occurs.
+ * 描述 构建元数据的元数据来源出现的过程 ...
  *
  * BindingContext are generally hierarchical getting more specific as we "go
  * down".  E.g.  global -> PU -> document -> mapping
+ *
+ * BindingContext 通常是一个体系 通常可以向下了解到更多
  *
  * @author Steve Ebersole
  *

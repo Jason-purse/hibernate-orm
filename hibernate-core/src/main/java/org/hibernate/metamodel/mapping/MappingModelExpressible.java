@@ -9,6 +9,9 @@ package org.hibernate.metamodel.mapping;
 /**
  * Something that can be expressible at the mapping model level.
  *
+ * 有些事情在映射模型级别上就能够表达
+ *
+ * // 通常 被用来生成一个SQL AST
  * Generally this is used generation of SQL AST
  *
  * todo (6.0) : Better name?  This one's a bit verbose.  See description for clues

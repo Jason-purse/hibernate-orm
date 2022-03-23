@@ -20,6 +20,7 @@ import org.hibernate.type.spi.TypeConfiguration;
 
 /**
  * The SPI-level Metadata contract.
+ * 基于SPI的元数据约定
  *
  * @author Steve Ebersole
  *
@@ -46,6 +47,7 @@ public interface MetadataImplementor extends Metadata, Mapping {
 
 	Set<MappedSuperclass> getMappedSuperclassMappingsCopy();
 
+	// 初始化会话工厂的hook
 	void initSessionFactory(SessionFactoryImplementor sessionFactoryImplementor);
 
 	void visitRegisteredComponents(Consumer<Component> consumer);

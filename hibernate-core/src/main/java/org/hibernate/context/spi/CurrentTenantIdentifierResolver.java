@@ -11,6 +11,8 @@ package org.hibernate.context.spi;
  * for resolving the current tenant identifier for use with {@link CurrentSessionContext}
  * and {@link org.hibernate.SessionFactory#getCurrentSession()}.
  *
+ * 通过SessionFactory 注册的回调, 获取当前 租户 标识符 - 为了使用CurrentSessionContext 以及 获取当前的Session ;
+ *
  * @author Steve Ebersole
  */
 public interface CurrentTenantIdentifierResolver {

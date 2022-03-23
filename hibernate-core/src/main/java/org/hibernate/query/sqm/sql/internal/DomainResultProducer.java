@@ -12,11 +12,14 @@ import org.hibernate.sql.results.graph.DomainResultCreationState;
 /**
  * Something that can produce a DomainResult as part of a SQM interpretation
  *
+ * 能够生产一个领域结果作为SQL 解析的一部分的某些事情 ..
+ *
  * @author Steve Ebersole
  */
 public interface DomainResultProducer<T> {
 
 	// this has to be designed as a bridge, but more geared toward the SQL
+	// 这必须设计成一座桥,但更多的面向SQL
 
 	/*
 	 * select p.name, p2.name from Person p, Person p2

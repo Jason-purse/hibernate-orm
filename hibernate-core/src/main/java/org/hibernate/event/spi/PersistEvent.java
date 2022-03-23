@@ -9,6 +9,7 @@ package org.hibernate.event.spi;
 /**
  * An event class for persist()
  *
+ * 持久化的事件类
  * @author Gavin King
  */
 public class PersistEvent extends AbstractEvent {

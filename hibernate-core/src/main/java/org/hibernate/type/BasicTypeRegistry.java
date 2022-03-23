@@ -29,6 +29,7 @@ import org.hibernate.usertype.UserType;
 
 /**
  * A registry of {@link BasicType} instances
+ * 基础类型的注册表
  *
  * @author Steve Ebersole
  */
@@ -41,6 +42,7 @@ public class BasicTypeRegistry implements Serializable {
 	private boolean primed;
 
 	private final Map<String, BasicType<?>> typesByName = new ConcurrentHashMap<>();
+	// 通过名称引用基础类型的cache
 	private final Map<String, BasicTypeReference<?>> typeReferencesByName = new ConcurrentHashMap<>();
 
 	public BasicTypeRegistry(TypeConfiguration typeConfiguration){
@@ -64,12 +66,14 @@ public class BasicTypeRegistry implements Serializable {
 		if ( typeReference == null ) {
 			return null;
 		}
+		// 解决基础非包装类型
 		if ( !name.equals( typeReference.getName() ) ) {
 			final BasicType<?> basicType = typesByName.get( typeReference.getName() );
 			if ( basicType != null ) {
 				return basicType;
 			}
 		}
+		// 获取java 类型注册机
 		final JavaType<Object> javaType = typeConfiguration.getJavaTypeRegistry().getDescriptor(
 				typeReference.getBindableJavaType()
 		);
@@ -277,7 +281,7 @@ public class BasicTypeRegistry implements Serializable {
 
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// priming
+	// priming 引爆 ?? / 初始化
 
 	public boolean isPrimed() {
 		return primed;

@@ -36,6 +36,7 @@ public interface ServiceRegistryImplementor extends ServiceRegistry {
 
 	/**
 	 * Release resources
+	 * 释放资源
 	 */
 	void destroy();
 

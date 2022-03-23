@@ -80,7 +80,9 @@ public interface EventListenerGroup<T> {
 	/**
 	 * Fires an event on each registered event listener of this group.
 	 *
-	 * Implementation note (performance):
+	 * Implementation note (performance): 实现注意：
+	 * 1. 在监听器没有注册之前 - 事件能够避免创建
+	 * 2. 第二个参数是专门设计,以避免需要捕捉 lambda;
 	 * the first argument is a supplier so that events can avoid being created when no listener is registered.
 	 * the second argument is specifically designed to avoid needing a capturing lambda.
 	 *
@@ -92,6 +94,9 @@ public interface EventListenerGroup<T> {
 	/**
 	 * Similar as {@link #fireLazyEventOnEachListener(Supplier, BiConsumer)} except it doesn't use a {{@link Supplier}}:
 	 * useful when there is no need to lazily initialize the event.
+	 *
+	 * 类似于#fireLazyEventOnEachListener(Supplier, BiConsumer) 除了它并没有使用Supplier
+	 * // 不需要懒惰初始化事件时 ...
 	 *
 	 * @param <U> the kind of event
 	 */

@@ -9,10 +9,12 @@ package org.hibernate.sql.ast.tree.predicate;
 /**
  * Something that can contain predicates
  *
+ * 有些 能够包含一些条件
  * @author Steve Ebersole
  */
 public interface PredicateContainer {
 	/**
+	 *  给这个容器应用 条件
 	 * Apply a predicate to this container
 	 */
 	void applyPredicate(Predicate predicate);

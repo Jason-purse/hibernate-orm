@@ -15,6 +15,7 @@ import org.hibernate.query.spi.QueryOptions;
 
 /**
  * Unifying contract for any SQL statement we want to execute via JDBC.
+ * 最终约定 - 我们想要通过JDBC  执行的 SQL 语句
  *
  * @author Steve Ebersole
  */

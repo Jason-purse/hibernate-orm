@@ -13,8 +13,12 @@ import org.hibernate.sql.ast.spi.SqlSelection;
 /**
  * Represents a selection that is "re-used" in certain parts of the query
  * other than the select-clause (mainly important for order-by, group-by and
- * having).  Allows usage of the selection position within the select-clause
+ * having).
+ * 代表着一个选择 (能够 中重用查询的某些部分,而不是 select-clause)  - 对于order-by groupby / having 非常重要 。。
+ * Allows usage of the selection position within the select-clause
  * in that other part of the query rather than the full expression
+ *
+ * 允许使用select子句中的位置选择在其他查询的一部分而不是完整的表达式
  *
  * @author Steve Ebersole
  */

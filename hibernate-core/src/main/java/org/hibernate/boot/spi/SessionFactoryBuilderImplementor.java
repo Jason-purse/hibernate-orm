@@ -12,6 +12,9 @@ import org.hibernate.boot.SessionFactoryBuilder;
  * Additional contract for SessionFactoryBuilder mainly intended for implementors
  * of SessionFactoryBuilderFactory.
  *
+ * 对SessionFactoryBuilder的感兴趣的一个额外的接口约定 ...
+ * 对SessionFactoryBuilderFactory 工厂实现者感兴趣的约定 ...
+ *
  * @author Steve Ebersole
  */
 public interface SessionFactoryBuilderImplementor extends SessionFactoryBuilder {

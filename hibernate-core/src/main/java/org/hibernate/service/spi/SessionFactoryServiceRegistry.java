@@ -10,6 +10,8 @@ package org.hibernate.service.spi;
  * Specialized {@link org.hibernate.service.ServiceRegistry} implementation that holds services which need access
  * to the {@link org.hibernate.SessionFactory} during initialization.
  *
+ * 会话  工厂 服务注册表  的标准实现  - 持有一些服务 - 能够在SessionFactory 初始化的时候访问...
+ *
  * @author Steve Ebersole
  */
 public interface SessionFactoryServiceRegistry extends ServiceRegistryImplementor {

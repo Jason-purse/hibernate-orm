@@ -29,6 +29,8 @@ import org.hibernate.sql.results.graph.basic.BasicResult;
  * Represents a literal in the SQL AST.  This form accepts a {@link BasicValuedMapping}
  * as its {@link org.hibernate.metamodel.mapping.MappingModelExpressible}.
  *
+ * 表示SQL AST 中的一个文本,  这个形式接受  BasicValuedMapping 作为它的 MappingModelExpressible
+ *
  * @see JdbcLiteral
  *
  * @author Steve Ebersole
@@ -38,19 +40,23 @@ public class QueryLiteral<T> implements Literal, DomainResultProducer<T> {
 	private final BasicValuedMapping type;
 
 	public QueryLiteral(T value, BasicValuedMapping type) {
+		// 约定的模型 .. 基础类型 可以处理 ..
 		if ( type instanceof ConvertibleModelPart ) {
 			final ConvertibleModelPart convertibleModelPart = (ConvertibleModelPart) type;
 			final BasicValueConverter valueConverter = convertibleModelPart.getValueConverter();
 
 			if ( valueConverter != null ) {
-				final Object literalValue = value;
-				final Object sqlLiteralValue;
+				final Object literalValue = value; // 文本值
+				final Object sqlLiteralValue; // sql 值
 
 				if ( valueConverter.getDomainJavaType().getJavaTypeClass().isInstance( literalValue ) ) {
 					sqlLiteralValue = valueConverter.toRelationalValue( literalValue );
 				}
 				else {
+					// 否则获取关系型Java类型 判断实例
 					if ( !valueConverter.getRelationalJavaType().getJavaTypeClass().isInstance( literalValue ) ) {
+						// 本身提供的数据都有问题 ...
+						// 数据库完全不支持
 						throw new SqlTreeCreationException(
 								String.format(
 										Locale.ROOT,
@@ -61,8 +67,10 @@ public class QueryLiteral<T> implements Literal, DomainResultProducer<T> {
 								)
 						);
 					}
+					// 否则直接设置..
 					sqlLiteralValue = literalValue;
 				}
+				// 强转 值
 				this.value = (T) sqlLiteralValue;
 				this.type = convertibleModelPart;
 			}
@@ -72,6 +80,7 @@ public class QueryLiteral<T> implements Literal, DomainResultProducer<T> {
 			}
 		}
 		else {
+			// 否则直接 ...设置
 			this.value = value;
 			this.type = type;
 		}

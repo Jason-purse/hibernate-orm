@@ -38,6 +38,9 @@ public interface ServiceRegistry extends AutoCloseable {
 	 * registered for this service role, the service will be initialized and returned.
 	 * <p/>
 	 * NOTE: We cannot return {@code <R extends Service<T>>} here because the service might come from the parent...
+	 *
+	 * 根据角色  抓取一个服务,如果服务没有发现,  但是发现了ServiceInitiator 那么  将会初始化并返回 ...
+	 * 其实就是基于 Class 抓取 服务
 	 * 
 	 * @param serviceRole The service role
 	 * @param <R> The service role type

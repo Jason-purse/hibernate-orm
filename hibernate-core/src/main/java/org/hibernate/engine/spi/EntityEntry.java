@@ -19,6 +19,9 @@ import org.hibernate.persister.entity.EntityPersister;
  * Implementation Warning: Hibernate needs to instantiate a high amount of instances of this class,
  * therefore we need to take care of its impact on memory consumption.
  *
+ * 需要一个entry 告诉我们这个对象当前的状态 -跟它的持久化状态相关的 . 所有状态 ..
+ * 实现警告:  Hibernate 需要 实例化此类的大量实例, 因此 我们需要注意 内存消耗
+ *
  * @author Gavin King
  * @author <a href="mailto:emmanuel@hibernate.org">Emmanuel Bernard</a>
  * @author Gunnar Morling

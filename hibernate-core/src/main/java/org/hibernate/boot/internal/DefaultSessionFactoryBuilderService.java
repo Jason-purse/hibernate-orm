@@ -13,6 +13,8 @@ import org.hibernate.boot.spi.SessionFactoryBuilderService;
 /**
  * This is the default implementation of SessionFactoryBuilderService, which just
  * returns the default SessionFactoryBuilderImpl.
+ *
+ * 默认SessionFactoryBuilderService    用于 构建默认的SessionFactoryBuilder 的默认服务
  */
 public final class DefaultSessionFactoryBuilderService implements SessionFactoryBuilderService {
 

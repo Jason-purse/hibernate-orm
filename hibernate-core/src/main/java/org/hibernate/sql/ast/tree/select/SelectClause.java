@@ -18,6 +18,8 @@ import org.hibernate.query.sqm.sql.internal.DomainResultProducer;
  * The SELECT CLAUSE in the SQL AST.  Each selection here is a
  * {@link DomainResultProducer}
  *
+ * SQL 抽象语法树的Select 子句  每一个selection  在这里都是一个DomainResultProducer.
+ *
  * @author Steve Ebersole
  */
 public class SelectClause implements SqlAstNode {

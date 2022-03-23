@@ -696,9 +696,12 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 	}
 
 	protected JdbcSelect translateSelect(SelectStatement sqlAstSelect) {
+		// 纪录领域结果图
 		logDomainResultGraph( sqlAstSelect.getDomainResultDescriptors() );
+		// 纪录 SQL AST
 		logSqlAst( sqlAstSelect );
 
+		// 查看select state ment
 		visitSelectStatement( sqlAstSelect );
 
 		final int rowsToSkip;
@@ -826,6 +829,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 		dmlStatement = null;
 		try {
 			visitCteContainer( statement );
+			// sqlTreeWalker
 			statement.getQueryPart().accept( this );
 		}
 		finally {
@@ -1317,22 +1321,30 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 		}
 	}
 
+	// 参观 CTE 容器
 	public void visitCteContainer(CteContainer cteContainer) {
+		// 获取 CTE 语句.values
 		final Collection<CteStatement> cteStatements = cteContainer.getCteStatements().values();
+		// 为空 ???
 		if ( cteStatements.isEmpty() ) {
 			return;
 		}
+		// 追加SQL
 		appendSql( "with " );
 
+		// 是否递归 ??
 		if ( cteContainer.isWithRecursive() ) {
 			appendSql( "recursive " );
 		}
 
+		// 主要分隔符
 		String mainSeparator = "";
+
 		for ( CteStatement cte : cteStatements ) {
 			appendSql( mainSeparator );
+			//
 			appendSql( cte.getCteTable().getTableExpression() );
-
+			//
 			appendSql( " (" );
 
 			String separator = "";
@@ -1350,6 +1362,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 			}
 
 			appendSql( OPEN_PARENTHESIS );
+			//
 			cte.getCteDefinition().accept( this );
 
 			appendSql( ')' );

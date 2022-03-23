@@ -25,6 +25,8 @@ import org.hibernate.sql.exec.spi.JdbcOperation;
 /**
  * A SQL AST translator for MySQL.
  *
+ * MYSQL 的  SQL AST 翻译器
+ *
  * @author Christian Beikov
  */
 public class MySQLSqlAstTranslator<T extends JdbcOperation> extends AbstractSqlAstTranslator<T> {

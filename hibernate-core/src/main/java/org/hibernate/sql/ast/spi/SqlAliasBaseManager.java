@@ -13,6 +13,8 @@ import java.util.Set;
 /**
  * Helper used in creating unique SQL table aliases for a SQL AST
  *
+ * 被用来为一个SQL 抽象语法树 创建唯一的SQL 数据表别名 的帮助器  ...
+ *
  * @author Steve Ebersole
  */
 public class SqlAliasBaseManager implements SqlAliasBaseGenerator {

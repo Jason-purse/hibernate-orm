@@ -31,6 +31,8 @@ import org.hibernate.proxy.LazyInitializer;
  * Defines the default create event listener used by hibernate for creating
  * transient entities in response to generated create events.
  *
+ * 定义默认的创建事务监听器 - 由hibernate 使用 来创建 transient entities 为了响应生成的create 事件 ...
+ *
  * @author Gavin King
  */
 public class DefaultPersistEventListener
@@ -64,16 +66,24 @@ public class DefaultPersistEventListener
 		final Object object = event.getObject();
 
 		final Object entity;
+
+		// 是不是一个HibernateProxy
 		if ( object instanceof HibernateProxy ) {
+			// 获取初始化器
 			LazyInitializer li = ( (HibernateProxy) object ).getHibernateLazyInitializer();
+			// 没有初始化
 			if ( li.isUninitialized() ) {
+				// 退出 ??
 				if ( li.getSession() == source ) {
 					return; //NOTE EARLY EXIT!
 				}
 				else {
+					// 否则抛出异常 ...
 					throw new PersistentObjectException( "uninitialized proxy passed to persist()" );
 				}
 			}
+
+			// 获取实现
 			entity = li.getImplementation();
 		}
 		else {
@@ -85,11 +95,14 @@ public class DefaultPersistEventListener
 			entityName = event.getEntityName();
 		}
 		else {
+			// 猜测Entity 名称
 			entityName = source.bestGuessEntityName( entity );
+			// 设置EntityName
 			event.setEntityName( entityName );
 		}
 
 		final EntityEntry entityEntry = source.getPersistenceContextInternal().getEntry( entity );
+
 		EntityState entityState = EntityState.getEntityState( entity, entityName, entityEntry, source, true );
 		if ( entityState == EntityState.DETACHED ) {
 			// JPA 2, in its version of a "foreign generated", allows the id attribute value

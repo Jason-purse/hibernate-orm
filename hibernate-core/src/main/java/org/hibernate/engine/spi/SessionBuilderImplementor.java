@@ -11,6 +11,7 @@ import org.hibernate.SessionBuilder;
 /**
  * Defines the internal contract between the {@link SessionBuilder} and
  * other parts of Hibernate.
+ * 在SessionBuilder 和Hibernate 的其他部分定义约定
  *
  * @see SessionBuilder
  *

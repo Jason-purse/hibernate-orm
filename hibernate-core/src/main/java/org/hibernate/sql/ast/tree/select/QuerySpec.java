@@ -37,6 +37,7 @@ public class QuerySpec extends QueryPart implements SqlAstNode, PredicateContain
 	private final FromClause fromClause;
 	private final SelectClause selectClause;
 
+	// where 子句限制
 	private Predicate whereClauseRestrictions;
 
 	private List<Expression> groupByClauseExpressions = Collections.emptyList();
@@ -44,8 +45,8 @@ public class QuerySpec extends QueryPart implements SqlAstNode, PredicateContain
 
 	public QuerySpec(boolean isRoot) {
 		super( isRoot );
-		this.fromClause = new FromClause();
-		this.selectClause = new SelectClause();
+		this.fromClause = new FromClause(); // from clause
+		this.selectClause = new SelectClause(); // select clause
 	}
 
 	public QuerySpec(boolean isRoot, int expectedNumberOfRoots) {

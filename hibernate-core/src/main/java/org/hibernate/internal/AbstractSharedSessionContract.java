@@ -397,6 +397,7 @@ public abstract class AbstractSharedSessionContract implements SharedSessionCont
 	@Override
 	public void checkOpen(boolean markForRollbackIfClosed) {
 		if ( isClosed() ) {
+			// 关闭了? 就标记为 rollback only
 			if ( markForRollbackIfClosed && transactionCoordinator.isTransactionActive() ) {
 				markForRollbackOnly();
 			}
@@ -513,6 +514,7 @@ public abstract class AbstractSharedSessionContract implements SharedSessionCont
 	protected void pulseTransactionCoordinator() {
 		if ( !isClosed() ) {
 			try {
+				// 脉冲一下 ..
 				transactionCoordinator.pulse();
 			}
 			catch (HibernateException e) {

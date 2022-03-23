@@ -21,6 +21,8 @@ import org.hibernate.query.TupleTransformer;
 /**
  * Encapsulates options for the execution of a HQL/Criteria/native query
  *
+ * 封装 一个 HQL /Criteria / native  query 的选项 ..
+ *
  * @author Steve Ebersole
  */
 public interface QueryOptions {

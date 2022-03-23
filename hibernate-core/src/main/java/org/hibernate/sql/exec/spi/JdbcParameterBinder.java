@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 /**
  * Performs parameter value binding to a JDBC PreparedStatement.
+ * 将参数值绑定到JDBC PreparedStatement ....
  *
  * @author Steve Ebersole
  * @author John O'Hara
