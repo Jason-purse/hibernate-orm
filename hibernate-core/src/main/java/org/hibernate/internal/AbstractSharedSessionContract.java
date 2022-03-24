@@ -180,7 +180,7 @@ public abstract class AbstractSharedSessionContract implements SharedSessionCont
 		else {
 			sessionEventsManager = new SessionEventListenerManagerImpl( customSessionEventListener.toArray( new SessionEventListener[0] ) );
 		}
-
+		// 设置 协调 EntityName 解析器
 		this.entityNameResolver = new CoordinatingEntityNameResolver( factory, interceptor );
 
 		final StatementInspector statementInspector = interpret( options.getStatementInspector() );
@@ -264,7 +264,7 @@ public abstract class AbstractSharedSessionContract implements SharedSessionCont
 	public boolean shouldAutoJoinTransaction() {
 		return autoJoinTransactions;
 	}
-
+	// 拦截 是否有拦截,如果有直接使用 ...
 	private Interceptor interpret(Interceptor interceptor) {
 		return interceptor == null ? EmptyInterceptor.INSTANCE : interceptor;
 	}
@@ -297,7 +297,7 @@ public abstract class AbstractSharedSessionContract implements SharedSessionCont
 	public JdbcSessionContext getJdbcSessionContext() {
 		return this.jdbcSessionContext;
 	}
-
+	// 获取一个Entity 名称解析器
 	public EntityNameResolver getEntityNameResolver() {
 		return entityNameResolver;
 	}
@@ -416,7 +416,7 @@ public abstract class AbstractSharedSessionContract implements SharedSessionCont
 			);
 		}
 	}
-
+	// 检查Open 对于 等待自动关闭 配置检查
 	protected void checkOpenOrWaitingForAutoClose() {
 		if ( !waitingForAutoClose ) {
 			checkOpen();

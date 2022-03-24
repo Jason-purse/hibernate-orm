@@ -19,13 +19,13 @@ import org.hibernate.type.descriptor.ValueExtractor;
  * @asciidoclet
  *
  * Represents a selection at the SQL/JDBC level.  Essentially made up of:
- *
+ *		呈现了一个SQL /JDBC层级上的selection , 由  getJdbcValueExtractor : 如何从JDBC中读取数据(概念类似于方法引用)   getValuesArrayPosition 当前数据在jdbc values中的未知 ... 根据位置获取数据
  * 		{@link #getJdbcValueExtractor}:: How to read a value from JDBC (conceptually similar to a method reference)
  * 		{@link #getValuesArrayPosition}:: The position for this selection in relation to the "JDBC values array" (see {@link RowProcessingState#getJdbcValue})
- * 		{@link #getJdbcResultSetIndex()}:: The position for this selection in relation to the JDBC object (ResultSet, etc)
+ * 		{@link #getJdbcResultSetIndex()}:: The position for this selection in relation to the JDBC object (ResultSet, etc) // 获取结果集的index(相关jdbc对象(结果集)的selection 的位置)
  *
  * Additional support for allowing a selection to "prepare" itself prior to first use is defined through
- * {@link #prepare}.  This is generally only used for NativeQuery execution.
+ * {@link #prepare}.  This is generally only used for NativeQuery execution. // 也有额外的支持  它可以首先在第一次使用之前通过prepare 预定义 ... 通常被NativeQuery 执行所使用 ..
  *
  * @author Steve Ebersole
  */

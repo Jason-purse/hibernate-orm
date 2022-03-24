@@ -175,16 +175,16 @@ public class TypeConfiguration implements SessionFactoryObserver, Serializable {
 		log.debugf( "Scoping TypeConfiguration [%s] to MetadataBuildingContext [%s]", this, metadataBuildingContext );
 		scope.setMetadataBuildingContext( metadataBuildingContext );
 	}
-
+	// 通过此方法构建一个MappingMetamodelImpl
 	public MappingMetamodelImpl scope(SessionFactoryImplementor sessionFactory) {
 		log.debugf( "Scoping TypeConfiguration [%s] to SessionFactoryImplementor [%s]", this, sessionFactory );
-
+		// 这个阶段 还是未知的(bootstrap phase) ,应该不可能..
 		if ( scope.getMetadataBuildingContext() == null ) {
 			throw new IllegalStateException( "MetadataBuildingContext not known" );
 		}
-
+		// 设置会话工厂
 		scope.setSessionFactory( sessionFactory );
-		sessionFactory.addObserver( this );
+		sessionFactory.addObserver( this ); // 增加一个监听者
 
 		return new MappingMetamodelImpl( sessionFactory, this );
 	}
@@ -221,15 +221,15 @@ public class TypeConfiguration implements SessionFactoryObserver, Serializable {
 	public void sessionFactoryCreated(SessionFactory factory) {
 		// Instead of allowing scope#setSessionFactory to influence this, we use the SessionFactoryObserver callback
 		// to handle this, allowing any SessionFactory constructor code to be able to continue to have access to the
-		// MetadataBuildingContext through TypeConfiguration until this callback is fired.
-		log.tracef( "Handling #sessionFactoryCreated from [%s] for TypeConfiguration", factory );
-		scope.setMetadataBuildingContext( null );
+		// MetadataBuildingContext through TypeConfiguration until this callback is fired. 虽然scope#setSessionFactory 能够影响它 .. 使用SessionFactoryObserver 回调处理 ...
+		log.tracef( "Handling #sessionFactoryCreated from [%s] for TypeConfiguration", factory ); // 允许任意SessionFactory 构建器代码能够继续访问MetadataBuildingContext - 通过 TypeConfiguration (直到这个回调被触发)
+		scope.setMetadataBuildingContext( null ); // 创建成功之后,MetadataBuildingContext 设置为null
 	}
 
 	@Override
 	public void sessionFactoryClosed(SessionFactory factory) {
 		log.tracef( "Handling #sessionFactoryClosed from [%s] for TypeConfiguration", factory );
-
+		// 清理会话工厂 ...
 		scope.unsetSessionFactory( factory );
 
 		// todo (6.0) : finish this

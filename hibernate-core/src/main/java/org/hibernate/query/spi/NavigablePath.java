@@ -14,8 +14,8 @@ import org.hibernate.query.sqm.spi.EntityIdentifierNavigablePath;
 
 /**
  * Compound-name where each path references to a domain or mapping model-part relative to a root path.  Generally
- * this root path is an entity name or a collection-role.
- *
+ * this root path is an entity name or a collection-role.  通常root path 是一个entity name 或者是一个集合角色
+ *  组合名称 - 这里每一个路径应用了一个领域 或者 部分模型映射(相对于根路径)
  * @author Steve Ebersole
  */
 public class NavigablePath implements DotIdentifierSequence, Serializable {

@@ -27,7 +27,7 @@ import org.hibernate.type.spi.TypeConfiguration;
 
 /**
  * Access to information about the runtime relational O/R mapping model
- *
+ *	能够访问 运行时关系型O/R 映射模型的信息
  * @author Steve Ebersole
  */
 @Incubating

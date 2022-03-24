@@ -10,7 +10,7 @@ import org.hibernate.Incubating;
 
 /**
  * Used to indicate which query clause we are currently processing
- *
+ *  指定当前我们正在处理的哪一种子句(条约)
  * @author Steve Ebersole
  */
 @Incubating

@@ -35,7 +35,7 @@ public class LockOptions implements Serializable {
 	/**
 	 * Represents LockMode.UPGRADE (will wait forever for lock and scope of false meaning only entity is locked).
 	 */
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation") // 悲观锁
 	public static final LockOptions UPGRADE = new LockOptions(LockMode.PESSIMISTIC_WRITE);
 
 	/**

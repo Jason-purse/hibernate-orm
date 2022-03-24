@@ -31,7 +31,8 @@ import org.hibernate.query.sqm.function.SqmFunctionDescriptor;
 /**
  * Represents the ORM model as determined by aggregating the provided mapping sources.
  * An instance may be obtained by calling {@link MetadataSources#buildMetadata()}.
- *
+ *	代表了一个orm 模型 - 能够通过聚合提供的映射资源进行检测 ...
+ *一个实例  也许通过MetadataSources#buildMetadata 获取
  * @author Steve Ebersole
  *
  * @since 5.0

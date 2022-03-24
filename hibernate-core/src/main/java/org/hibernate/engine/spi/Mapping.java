@@ -11,8 +11,8 @@ import org.hibernate.type.Type;
 
 /**
  * Declares operations used by implementors of {@link Type} that are common to
- * "compiled" mappings held at runtime by a {@link org.hibernate.SessionFactory}
- * and "uncompiled" mappings held by a {@link org.hibernate.cfg.Configuration}.
+ * "compiled" mappings held at runtime by a {@link org.hibernate.SessionFactory}  // 编译的映射由SessionFactory 持有
+ * and "uncompiled" mappings held by a {@link org.hibernate.cfg.Configuration}. // 未编译的  映射通过Configuration 持有 ..
  *
  * @see Type
  * @see org.hibernate.internal.SessionFactoryImpl

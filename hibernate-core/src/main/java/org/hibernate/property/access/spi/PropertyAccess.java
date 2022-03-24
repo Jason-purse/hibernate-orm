@@ -10,7 +10,7 @@ import org.hibernate.metamodel.spi.ManagedTypeRepresentationStrategy;
 
 /**
  * Describes access to a particular persistent property in terms of getting and setting
- * values.
+ * values.  描述了一个特殊的持久化属性 - 通过getter / setter 访问
  * <p/>
  * Instances are obtained from {@link PropertyAccessStrategy}
  *

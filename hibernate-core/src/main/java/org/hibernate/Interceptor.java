@@ -13,22 +13,22 @@ import org.hibernate.metamodel.RepresentationMode;
 import org.hibernate.metamodel.spi.EntityRepresentationStrategy;
 import org.hibernate.type.Type;
 
-/**
+/** 用于用户代码检测  或者 改变entity 属性值 (在他们写入数据库之前, 或者在他们从数据库中读取之后改变属性值)
  * Allows user code to inspect and/or change entity property values before they are
  * written to the database, or after the are read from the database.
- * <p>
+ * <p> Session 也许不能够从回调中执行 ( 或者 回调可能会导致 集合 或者代理懒初始化)
  * The {@link Session} may not be invoked from a callback (nor may a callback cause
  * a collection or proxy to be lazily initialized).
- * <p>
+ * <p> 对于一个SessionFactory 应该可能只有一个Interceptor...  或者 对每一个Session 创建一个新的实例 ...
  * There might be a single instance of {@code Interceptor} for a {@link SessionFactory},
  * or a new instance might be created for each {@link Session}. Use:
- * <ul>
+ * <ul>	 // 通过Interceptor 指定需要在session 中共享的拦截器
  *     <li>{@link org.hibernate.cfg.AvailableSettings#INTERCEPTOR} to specify an
- *         interceptor shared between sessions, or
+ *         interceptor shared between sessions, or  // 或者session 级别的拦截器 ...
  *     <li>{@link org.hibernate.cfg.AvailableSettings#SESSION_SCOPED_INTERCEPTOR} to
  *         specify that there is a dedicated instance of the interceptor for each
  *         session.
- * </ul>
+ * </ul> 无论使用那种方式, 拦截器必须被序列化 如果Session 可以序列化 , 这意味着SessionFactory级别的拦截器  必须实现 readResolve()
  * Whichever approach is used, the interceptor must be serializable for the
  * {@code Session} to be serializable. This means that {@code SessionFactory}-scoped
  * interceptors should implement {@code readResolve()}.

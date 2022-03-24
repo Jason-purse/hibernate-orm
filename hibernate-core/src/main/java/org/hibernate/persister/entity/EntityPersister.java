@@ -900,12 +900,12 @@ public interface EntityPersister
 	/**
 	 * A request has already identified the entity-name of this persister as the mapping for the given instance.
 	 * However, we still need to account for possible subclassing and potentially re-route to the more appropriate
-	 * persister.
-	 * <p/>
+	 * persister.  一个请求已经识别了此persister 的entity 名称 作为给定实例的映射 ，然而 我们需要继续统计  可能子类 以及 潜在的重新路由的更加合适的persister ...
+	 * <p/>  例如 一个请求命名Animal 作为 entity 名称 并且被此persister 解析.. 但是实际的类型是Cat 是一个子类, 因此 Animal 必须返回Cat的persister ..
 	 * For example, a request names {@code Animal} as the entity-name which gets resolved to this persister.  But the
 	 * actual instance is really an instance of {@code Cat} which is a subclass of {@code Animal}.  So, here the
 	 * {@code Animal} persister is being asked to return the persister specific to {@code Cat}.
-	 * <p/>
+	 * <p/>  它也是可能 实际上是Animal ,那么就返回this
 	 * It is also possible that the instance is actually an {@code Animal} instance in the above example in which
 	 * case we would return {@code this} from this method.
 	 *

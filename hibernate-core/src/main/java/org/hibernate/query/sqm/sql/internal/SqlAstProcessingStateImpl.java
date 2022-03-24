@@ -28,7 +28,7 @@ import org.hibernate.type.spi.TypeConfiguration;
 /**
  * Implementation of ProcessingState used on its own as the impl for
  * DML statements and as the base for QuerySpec state
- *
+ * ProcessingState 的实现单独用作 DML 语句的 impl 和 QuerySpec 状态的基础
  * @author Steve Ebersole
  */
 public class SqlAstProcessingStateImpl
@@ -117,7 +117,7 @@ public class SqlAstProcessingStateImpl
 			// selected expression (within the select-clause) as the
 			// order-by, group-by or having expression
 			final SqlSelection selection = sqlSelectionMap().get( expression );
-			if ( selection != null ) {
+			if ( selection != null ) { //
 				return new SqlSelectionExpression( selection );
 			}
 		}

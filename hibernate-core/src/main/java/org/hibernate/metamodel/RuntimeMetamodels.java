@@ -14,7 +14,7 @@ import org.hibernate.metamodel.model.domain.JpaMetamodel;
 
 /**
  * Access to Hibernate's runtime metamodels which includes its domain-model (JPA impl) and its
- * relational-mapping model
+ * relational-mapping model  访问Hibernate的运行时models - 它包括了领域模型(JPA 实现) 以及它的关系型映射模型
  *
  * @author Steve Ebersole
  */

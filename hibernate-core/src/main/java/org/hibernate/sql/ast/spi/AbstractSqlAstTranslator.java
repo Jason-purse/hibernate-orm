@@ -701,7 +701,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 		// 纪录 SQL AST
 		logSqlAst( sqlAstSelect );
 
-		// 查看select state ment
+		// 查看select state ment  已经在拼接SQL了
 		visitSelectStatement( sqlAstSelect );
 
 		final int rowsToSkip;

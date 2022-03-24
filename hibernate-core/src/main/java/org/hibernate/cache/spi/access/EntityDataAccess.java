@@ -23,7 +23,7 @@ import org.hibernate.persister.entity.EntityPersister;
  * There is another usage pattern that is used to invalidate entries
  * after performing "bulk" HQL/SQL operations:
  * {@link #lockRegion} -> {@link #removeAll} -> {@link #unlockRegion}
- *
+ * 管理事务 以及并发访问entity 数据的约定 , 相关操作的调用顺序 ...   另外一种使用模式是 在执行bulk HQL /SQL 操作之后让entries无效 ..
  * @author Gavin King
  * @author Steve Ebersole
  */

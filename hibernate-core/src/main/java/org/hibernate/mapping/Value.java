@@ -21,7 +21,8 @@ import org.hibernate.type.Type;
  * reference. It is essentially a Hibernate {@link Type}, together
  * with zero or more columns. Values are wrapped by things with
  * higher level semantics, for example properties, collections,
- * classes.
+ * classes.  一个是是任何一个可以被持久化的数据,而不是引用 ... 他最终是一个hibernate的Type , 包含一个或者多个字段 , Values 通过
+ * 高级语义包装,例如properties / collections //
  *
  * @author Gavin King
  */

@@ -11,7 +11,7 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 
 /**
  * Strategy for instantiating a managed type
- *
+ *	实例化一个指定类型的策略 ...
  * @author Steve Ebersole
  */
 @Incubating

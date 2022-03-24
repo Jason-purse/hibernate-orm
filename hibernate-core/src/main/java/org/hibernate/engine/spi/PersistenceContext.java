@@ -22,7 +22,7 @@ import org.hibernate.persister.collection.CollectionPersister;
 import org.hibernate.persister.entity.EntityPersister;
 import org.hibernate.sql.results.spi.LoadContexts;
 
-/**
+/**表示 Hibernate 正在跟踪的“东西”的状态，包括（不详尽）：
  * Represents the state of "stuff" Hibernate is tracking, including (not exhaustive):
  * <ul>
  *     <li>entities</li>
@@ -32,7 +32,7 @@ import org.hibernate.sql.results.spi.LoadContexts;
  * </ul>
  * <p/>
  * Often referred to as the "first level cache".
- *
+ *	这个是一级缓存
  * @author Gavin King
  * @author Steve Ebersole
  */

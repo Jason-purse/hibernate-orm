@@ -60,7 +60,7 @@ class DatabaseSnapshotExecutor {
 	private final EntityMappingType entityDescriptor;
 
 	private final JdbcSelect jdbcSelect;
-	private final List<JdbcParameter> jdbcParameters;
+	private final List<JdbcParameter> jdbcParameters; // 存在的jdbc参数个数,很明确的是通过identifier 获取快照,那么其实就是identifier的columns
 
 	DatabaseSnapshotExecutor(
 			EntityMappingType entityDescriptor,
@@ -71,7 +71,7 @@ class DatabaseSnapshotExecutor {
 		this.jdbcParameters = new ArrayList<>(
 				entityDescriptor.getIdentifierMapping().getJdbcTypeCount()
 		);
-		//
+		// 查询的一个规范指定完毕
 		final QuerySpec rootQuerySpec = new QuerySpec( true );
 
 
@@ -104,7 +104,7 @@ class DatabaseSnapshotExecutor {
 		//
 		state.getFromClauseAccess().registerTableGroup( rootPath, rootTableGroup );
 
-		// We produce the same state array as if we were creating an entity snapshot
+		// We produce the same state array as if we were creating an entity snapshot(一行数据的字段信息)
 		final List<DomainResult<?>> domainResults = new ArrayList<>();
 
 		final SqlExpressionResolver sqlExpressionResolver = state.getSqlExpressionResolver();
@@ -151,10 +151,10 @@ class DatabaseSnapshotExecutor {
 				}
 		);
 
-		// 然后
+		// 然后 查看属性(除了标识符之外的columns)
 		entityDescriptor.visitAttributeMappings(
 				attributeMapping -> {
-					final NavigablePath navigablePath = rootPath.append( attributeMapping.getAttributeName() );
+					final NavigablePath navigablePath = rootPath.append( attributeMapping.getAttributeName() ); // 根据根路径进行追加 ..
 					domainResults.add(
 							attributeMapping.createSnapshotDomainResult(
 									navigablePath,

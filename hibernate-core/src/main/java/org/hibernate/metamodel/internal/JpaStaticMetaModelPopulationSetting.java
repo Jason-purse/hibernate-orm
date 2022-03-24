@@ -14,7 +14,7 @@ import org.hibernate.internal.util.config.ConfigurationHelper;
 /**
  * Enumerated setting used to control whether Hibernate looks for and populates
  * JPA static metamodel models of application's domain model.
- *
+ * 这里列出的配置被用来控制 Hibernate 是否应该查询并收集应用程序域模型的 JPA 静态元模型模型。
  * @author Andrea Boriero
  */
 public enum JpaStaticMetaModelPopulationSetting {
@@ -28,7 +28,7 @@ public enum JpaStaticMetaModelPopulationSetting {
 	 * of the application domain model.
 	 */
 	DISABLED,
-	/**
+	/** 会忽略非JPA 特性 - (这些特性可能会导致收集失败)
 	 * SKIP_UNSUPPORTED works as ENABLED but ignores any non-JPA features that would otherwise
 	 * result in the population failing.
 	 */

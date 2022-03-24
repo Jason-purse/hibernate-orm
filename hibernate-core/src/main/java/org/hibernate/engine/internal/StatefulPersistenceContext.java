@@ -112,7 +112,7 @@ public class StatefulPersistenceContext implements PersistenceContext {
 	private ConcurrentReferenceHashMap<EntityKey, Object> proxiesByKey;
 
 	// Snapshots of current database state for entities
-	// that have *not* been loaded
+	// that have *not* been loaded  // 已经被加载的entities的当前数据库状态的快照信息
 	private HashMap<EntityKey, Object> entitySnapshotsByKey;
 
 	// Identity map of array holder ArrayHolder instances, by the array instance

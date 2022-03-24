@@ -57,7 +57,7 @@ import static org.hibernate.internal.CoreLogging.messageLogger;
 
 /**
  * Centralizes metamodel information about an entity.
- *
+ * 关于一个entity 的元数据模型信息的集中..
  * @author Steve Ebersole
  */
 public class EntityMetamodel implements Serializable {
@@ -72,7 +72,7 @@ public class EntityMetamodel implements Serializable {
 	private EntityType entityType;
 
 	private final IdentifierProperty identifierAttribute;
-	private final boolean versioned;
+	private final boolean versioned;  // 乐观锁??
 
 	private final int propertySpan;
 	private final int versionPropertyIndex;

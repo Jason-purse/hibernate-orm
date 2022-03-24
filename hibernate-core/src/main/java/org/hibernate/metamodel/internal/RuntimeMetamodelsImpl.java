@@ -41,9 +41,9 @@ public class RuntimeMetamodelsImpl implements RuntimeMetamodelsImplementor {
 		throw new NotYetImplementedFor6Exception( getClass() );
 	}
 
-	/**
+	/** 鸡和蛋的问题, 因为有些事情尝试去使用 SessionFactory 在它准备好之前(特别是MappingMetamodel)
 	 * Chicken-and-egg because things try to use the SessionFactory (specifically the MappingMetamodel)
-	 * before it is ready.  So we do this fugly code...
+	 * before it is ready.  So we do this fugly code...  因此我们写出了这样丑陋的代码
 	 */
 	public void finishInitialization(
 			MetadataImplementor bootMetamodel,
@@ -51,7 +51,7 @@ public class RuntimeMetamodelsImpl implements RuntimeMetamodelsImplementor {
 			SessionFactoryImpl sessionFactory) {
 		final MappingMetamodelImpl mappingMetamodel = bootstrapContext.getTypeConfiguration().scope( sessionFactory );
 		this.mappingMetamodel = mappingMetamodel;
-		mappingMetamodel.finishInitialization(
+		mappingMetamodel.finishInitialization( // 尝试完成mappingMetamodel的初始化 ..
 				bootMetamodel,
 				bootstrapContext,
 				sessionFactory

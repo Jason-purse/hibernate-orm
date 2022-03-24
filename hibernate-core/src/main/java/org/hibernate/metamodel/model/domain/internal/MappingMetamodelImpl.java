@@ -81,9 +81,9 @@ import org.hibernate.type.spi.TypeConfiguration;
 import static org.hibernate.metamodel.internal.JpaMetaModelPopulationSetting.determineJpaMetaModelPopulationSetting;
 import static org.hibernate.metamodel.internal.JpaStaticMetaModelPopulationSetting.determineJpaStaticMetaModelPopulationSetting;
 
-/**
+/** Hibernate 对于JPA的Metamodel 约定的实现..
  * Hibernate implementation of the JPA {@link jakarta.persistence.metamodel.Metamodel} contract.
- *
+ *  真的比领域模型更多的是映射模型，尽管它有JpaMetamodel的引用 ...
  * Really more of the mapping model then the domain model, though it does have reference to the `JpaMetamodel`
  *
  * NOTE : we suppress deprecation warnings because at the moment we still implement a deprecated API so
@@ -111,7 +111,7 @@ public class MappingMetamodelImpl implements MappingMetamodelImplementor, Metamo
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// RuntimeModel
-
+	// entity -> 映射到 数据库的类型
 	private final Map<String, EntityPersister> entityPersisterMap = new ConcurrentHashMap<>();
 	private final Map<String, CollectionPersister> collectionPersisterMap = new ConcurrentHashMap<>();
 	private final Map<String, Set<String>> collectionRolesByEntityParticipant = new ConcurrentHashMap<>();
@@ -174,7 +174,7 @@ public class MappingMetamodelImpl implements MappingMetamodelImplementor, Metamo
 			MetadataImplementor bootModel,
 			BootstrapContext bootstrapContext,
 			SessionFactoryImplementor sessionFactory) {
-		final RuntimeModelCreationContext runtimeModelCreationContext = new RuntimeModelCreationContext() {
+		final RuntimeModelCreationContext runtimeModelCreationContext = new RuntimeModelCreationContext() { // 创建运行时模型创建上下文
 			@Override
 			public BootstrapContext getBootstrapContext() {
 				return bootstrapContext;
@@ -195,11 +195,11 @@ public class MappingMetamodelImpl implements MappingMetamodelImplementor, Metamo
 				return MappingMetamodelImpl.this;
 			}
 		};
-
+		// 拿取PersisterFactory 服务
 		final PersisterFactory persisterFactory = sessionFactory.getServiceRegistry().getService( PersisterFactory.class );
-
+		// 根据EntityManager工厂 的属性和关联的值 决定静态检查元数据模型 并收集配置 ..
 		final JpaStaticMetaModelPopulationSetting jpaStaticMetaModelPopulationSetting = determineJpaStaticMetaModelPopulationSetting( sessionFactory.getProperties() );
-		final JpaMetaModelPopulationSetting jpaMetaModelPopulationSetting = determineJpaMetaModelPopulationSetting( sessionFactory.getProperties() );
+		final JpaMetaModelPopulationSetting jpaMetaModelPopulationSetting = determineJpaMetaModelPopulationSetting( sessionFactory.getProperties() ); // ?
 
 		bootModel.visitRegisteredComponents( Component::prepareForMappingModel );
 		bootModel.getMappedSuperclassMappingsCopy().forEach( MappedSuperclass::prepareForMappingModel );
@@ -258,7 +258,7 @@ public class MappingMetamodelImpl implements MappingMetamodelImplementor, Metamo
 			final EntityDataAccess accessStrategy = cacheImplementor.getEntityRegionAccess( rootEntityRole );
 			final NaturalIdDataAccess naturalIdAccessStrategy = cacheImplementor
 					.getNaturalIdCacheRegionAccessStrategy( rootEntityRole );
-
+			// 根据持久化工厂  创建一个Entity Persister
 			final EntityPersister cp = persisterFactory.createEntityPersister(
 					model,
 					accessStrategy,

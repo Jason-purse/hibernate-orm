@@ -29,7 +29,7 @@ import org.hibernate.sql.results.graph.basic.BasicResult;
 import org.hibernate.type.descriptor.java.JavaType;
 import org.hibernate.type.spi.TypeConfiguration;
 
-/**
+/** 查询规范
  * @author Steve Ebersole
  */
 public class QuerySpec extends QueryPart implements SqlAstNode, PredicateContainer, Expression, DomainResultProducer {

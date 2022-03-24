@@ -4676,7 +4676,7 @@ public abstract class AbstractEntityPersister
 	@Override
 	public Boolean isTransient(Object entity, SharedSessionContractImplementor session) throws HibernateException {
 		final Object id;
-		if ( canExtractIdOutOfEntity() ) {
+		if ( canExtractIdOutOfEntity() ) { // entity 之外能够抓到id ??
 			id = getIdentifier( entity, session );
 		}
 		else {
@@ -4704,7 +4704,7 @@ public abstract class AbstractEntityPersister
 		if ( result != null ) {
 			return result;
 		}
-
+		// 检查二级缓存 ..
 		// check to see if it is in the second-level cache
 		if ( session.getCacheMode().isGetEnabled() && canReadFromCache() ) {
 			final EntityDataAccess cache = getCacheAccessStrategy();
@@ -5519,7 +5519,7 @@ public abstract class AbstractEntityPersister
 	private final EntityRepresentationStrategy representationStrategy;
 
 	private EntityMappingType superMappingType;
-	private SortedMap<String, EntityMappingType> subclassMappingTypes;
+	private SortedMap<String, EntityMappingType> subclassMappingTypes; // 子类映射类型
 
 	private EntityIdentifierMapping identifierMapping;
 	private NaturalIdMapping naturalIdMapping;

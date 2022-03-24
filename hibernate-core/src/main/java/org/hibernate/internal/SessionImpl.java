@@ -1495,7 +1495,7 @@ public class SessionImpl
 					.getMappingMetamodel()
 					.getEntityDescriptor( guessEntityName( object ) );
 		}
-		else {
+		else {  // try 块是对当前 tuplizer 没有机会解析子类实体名称的事实的破解。如果我们不能基于给定的 entityName，这允许（我们假设自定义）拦截器影响这个决定  好像没有必要 (一般来说Entity 都会单独建立)
 			// try block is a hack around fact that currently tuplizers are not
 			// given the opportunity to resolve a subclass entity name.  this
 			// allows the (we assume custom) interceptor the ability to
@@ -1508,7 +1508,7 @@ public class SessionImpl
 						.getSubclassEntityPersister( object, getFactory() );
 			}
 			catch (HibernateException e) {
-				try {
+				try { // 这里猜测 就会使用interceptor 进行解析 ..
 					return getEntityPersister( null, object );
 				}
 				catch (HibernateException e2) {
@@ -1732,7 +1732,7 @@ public class SessionImpl
 		}
 		EntityEntry entry = persistenceContext.getEntry( object );
 		if ( entry == null ) {
-			return guessEntityName( object );
+			return guessEntityName( object ); // 尝试猜测Entity 名称
 		}
 		else {
 			return entry.getPersister().getEntityName();

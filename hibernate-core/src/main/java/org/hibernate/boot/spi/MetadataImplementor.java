@@ -49,6 +49,6 @@ public interface MetadataImplementor extends Metadata, Mapping {
 
 	// 初始化会话工厂的hook
 	void initSessionFactory(SessionFactoryImplementor sessionFactoryImplementor);
-
+	// 查看所有注册的组件
 	void visitRegisteredComponents(Consumer<Component> consumer);
 }

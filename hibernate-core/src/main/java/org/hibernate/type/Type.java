@@ -21,15 +21,15 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 /**
  * Defines a mapping between a Java type and one or more JDBC {@linkplain java.sql.Types types}, as well
  * as describing the in-memory semantics of the given java type (how do we check it for 'dirtiness', how do
- * we copy values, etc).
- * <p/>
+ * we copy values, etc). 定义了一个映射(Java / JDBC(java.sql.Types)的映射, 同样描述了给定java类型的内存中存放的语义(如何对脏进行检查)
+ * <p/>  // 怎样处理copy 数据
  * Application developers needing custom types can implement this interface (either directly or via subclassing an
  * existing impl) or by the (slightly more stable, though more limited) {@link org.hibernate.usertype.UserType}
- * interface.
+ * interface. 应用开发者 需要 自定义类型必须实现此接口(要么直接或者通过已经存在的impl 子类) 或者 通过 UserType(稍微更稳定，但更有限）
  * <p/>
  * Implementations of this interface must certainly be thread-safe.  It is recommended that they be immutable as
  * well, though that is difficult to achieve completely given the no-arg constructor requirement for custom types.
- *
+ *	此接口的实现必须尽可能线程安全 . 推荐是不可变是最好的.. 尽管鉴于自定义类型的无参数构造函数要求，这很难完全实现。
  * @author Gavin King
  * @author Steve Ebersole
  */

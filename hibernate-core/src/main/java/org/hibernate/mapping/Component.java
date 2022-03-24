@@ -38,7 +38,7 @@ import org.hibernate.type.Type;
 /**
  * The mapping for a component, composite element,
  * composite identifier, etc.
- *
+ *映射的组件 / 组合的元素 / 组合的标识符等等
  * @author Gavin King
  * @author Steve Ebersole
  */
@@ -214,15 +214,15 @@ public class Component extends SimpleValue implements MetaAttributable, Sortable
 	@Override
 	public Type getType() throws MappingException {
 		// Resolve the type of the value once and for all as this operation generates a proxy class
-		// for each invocation.
+		// for each invocation.  解析一次这个类型的value  为这个操作的每一次调用生成一个代理类
 		// Unfortunately, there's no better way of doing that as none of the classes are immutable and
-		// we can't know for sure the current state of the property or the value.
+		// we can't know for sure the current state of the property or the value. 没有更好的方法可以做到这一点，因为没有一个类是不可变的 / 我们不知道如何确保当前属性的状态或者value的状态
 		Type localType = type;
 
 		if ( localType == null ) {
 			synchronized ( this ) {
 				localType = type;
-				if ( localType == null ) {
+				if ( localType == null ) {  // 组件排序  其他组件应该已经被排序 ..
 					// Make sure this is sorted which is important especially for synthetic components
 					// Other components should be sorted already
 					sortProperties( true );
@@ -518,7 +518,7 @@ public class Component extends SimpleValue implements MetaAttributable, Sortable
 	}
 
 	public void prepareForMappingModel() {
-		// This call will initialize the type properly
+		// This call will initialize the type properly  // 用于初始化可用的Type
 		getType();
 	}
 

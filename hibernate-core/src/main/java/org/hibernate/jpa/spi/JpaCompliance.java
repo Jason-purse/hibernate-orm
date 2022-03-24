@@ -11,7 +11,7 @@ import org.hibernate.Transaction;
 /**
  * Encapsulates settings controlling whether Hibernate complies strictly
  * with certain debatable strictures of the JPA specification.
- *
+ *	封装控制 Hibernate 是否严格遵守 JPA 规范的某些有争议的限制的设置。
  * @author Steve Ebersole
  */
 public interface JpaCompliance {

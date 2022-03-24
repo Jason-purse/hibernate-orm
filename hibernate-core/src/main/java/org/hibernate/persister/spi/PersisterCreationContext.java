@@ -17,7 +17,7 @@ import org.hibernate.type.spi.TypeConfiguration;
 /**
  * "Parameter object" providing access to additional information that may be needed
  * in the creation of the persisters.
- *
+ *	参数对象 - 提供访问额外的信息(也许在持久化器创建的过程中这是需要的)
  * @author Steve Ebersole
  *
  * @deprecated Use {@link RuntimeModelCreationContext} instead

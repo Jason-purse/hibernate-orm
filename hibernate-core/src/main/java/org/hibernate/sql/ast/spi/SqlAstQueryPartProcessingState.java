@@ -9,7 +9,7 @@ package org.hibernate.sql.ast.spi;
 import org.hibernate.sql.ast.tree.select.QueryPart;
 
 /**
- * SqlAstProcessingState specialization for
+ * SqlAstProcessingState specialization for   sql ast query process state spec
  * @author Steve Ebersole
  */
 public interface SqlAstQueryPartProcessingState extends SqlAstProcessingState {

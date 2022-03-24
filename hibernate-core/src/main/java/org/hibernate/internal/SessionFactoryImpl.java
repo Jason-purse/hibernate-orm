@@ -334,7 +334,7 @@ public class SessionFactoryImpl implements SessionFactoryImplementor {
 
 			final RuntimeMetamodelsImpl runtimeMetamodels = new RuntimeMetamodelsImpl();
 			this.runtimeMetamodels = runtimeMetamodels;
-			runtimeMetamodels.finishInitialization(
+			runtimeMetamodels.finishInitialization( // 初始化运行时模型,这个时候sessionFactory 还没有发布事件
 					bootMetamodel,
 					bootstrapContext,
 					this

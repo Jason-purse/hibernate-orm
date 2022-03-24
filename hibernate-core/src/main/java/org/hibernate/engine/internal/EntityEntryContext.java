@@ -23,13 +23,13 @@ import java.lang.reflect.Method;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-/**
+/** 定义一个上下文，用于维护与最终拥有此 EntityEntryContext 实例的 Session 关联的实体与该实体的相应 EntityEntry 之间的关系。
  * Defines a context for maintaining the relation between an entity associated with the Session ultimately owning this
- * EntityEntryContext instance and that entity's corresponding EntityEntry.  2 approaches are supported:<ul>
- *     <li>
+ * EntityEntryContext instance and that entity's corresponding EntityEntry.  2 approaches are supported:<ul>  // 支持两种方式
+ *     <li> entity -> EntityEntry 通过此类的Map维护
  *         the entity->EntityEntry association is maintained in a Map within this class
  *     </li>
- *     <li>
+ *     <li> // EntityEntry 通过注入到entity 中(需要entity 实现ManagedEntity接口) 或者直接通过字节码增强..
  *         the EntityEntry is injected into the entity via it implementing the {@link ManagedEntity} contract,
  *         either directly or through bytecode enhancement.
  *     </li>
@@ -48,10 +48,10 @@ public class EntityEntryContext {
 	private transient ManagedEntity head;
 	private transient ManagedEntity tail;
 	private transient int count;
-
+	// 未增强的 Entity引用
 	private transient IdentityHashMap<Object,ManagedEntity> nonEnhancedEntityXref;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //
 	private transient Map.Entry<Object,EntityEntry>[] reentrantSafeEntries = new Map.Entry[0];
 	private transient boolean dirty;
 
@@ -149,7 +149,7 @@ public class EntityEntryContext {
 	}
 
 	private ManagedEntity getAssociatedManagedEntity(Object entity) {
-		if (entity instanceof ManagedEntity) {
+		if (entity instanceof ManagedEntity) { // 实现了MangedEntity 直接从中获取EntityEntry
 			final ManagedEntity managedEntity = (ManagedEntity) entity;
 			if ( managedEntity.$$_hibernate_getEntityEntry() == null ) {
 				// it is not associated
@@ -171,7 +171,7 @@ public class EntityEntryContext {
 						: null;
 			}
 		}
-		else {
+		else { // 没有增强 直接获取 ..
 			return nonEnhancedEntityXref != null
 					? nonEnhancedEntityXref.get( entity )
 					: null;

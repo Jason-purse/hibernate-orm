@@ -15,7 +15,7 @@ package org.hibernate;
  */
 @FunctionalInterface
 public interface EntityNameResolver {
-	/**
+	/** 根据给定的entity 实例  ,判断它的entity name
 	 * Given an entity instance, determine its entity name.
 	 *
 	 * @param entity The entity instance.

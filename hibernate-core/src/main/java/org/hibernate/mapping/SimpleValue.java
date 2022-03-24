@@ -61,7 +61,7 @@ import org.hibernate.type.descriptor.jdbc.NationalizedTypeMappings;
 import org.hibernate.type.spi.TypeConfiguration;
 import org.hibernate.usertype.DynamicParameterizedType;
 
-/**
+/** 映射到columns上的任何值
  * Any value that maps to columns.
  * @author Gavin King
  */
