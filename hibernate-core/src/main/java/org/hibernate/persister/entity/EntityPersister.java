@@ -220,9 +220,9 @@ public interface EntityPersister
 	/**
 	 * Returns an array of objects that identify spaces in which properties of
 	 * this entity are persisted, for instances of this class and its subclasses.
-	 * <p/>
+	 * <p/>  返回一个标识包含的对象数组(被持久化的entity的属性)
 	 * Much like {@link #getPropertySpaces()}, except that here we include subclass
-	 * entity spaces.
+	 * entity spaces. // 和PropertySpaces类似,但是这里还包含子类的netity 包含的..
 	 *
 	 * @return The query spaces.
 	 */
@@ -587,7 +587,7 @@ public interface EntityPersister
 	boolean[] getPropertyInsertability();
 
 	/**
-	 * Get the "updateability" of the properties of this class
+	 * Get the "updateability" of the properties of this class (获取需要更新的属性)
 	 * (does the property appear in an SQL UPDATE)
 	 */
 	boolean[] getPropertyUpdateability();
@@ -688,6 +688,8 @@ public interface EntityPersister
 	/**
 	 * Get the current database state of the object, in a "hydrated" form, without
 	 * resolving identifiers
+	 *
+	 * 获取此对象的当前数据库状态 (在一个“水分”的形式,  不需要 解析 identifiers)
 	 * @return null if there is no row in the database
 	 */
 	Object[] getDatabaseSnapshot(Object id, SharedSessionContractImplementor session) throws HibernateException;

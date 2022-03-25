@@ -312,7 +312,7 @@ public abstract class AbstractEntityPersister
 	private final int identifierColumnSpan;
 	private final String versionColumnName;
 	private final boolean hasFormulaProperties;
-	protected final int batchSize;
+	protected final int batchSize; // 批处理??
 	private final boolean hasSubselectLoadableCollections;
 	protected final String rowIdName;
 
@@ -749,11 +749,13 @@ public abstract class AbstractEntityPersister
 
 		if ( bootDescriptor.getLoaderName() != null ) {
 			// We must resolve the named query on-demand through the boot model because it isn't initialized yet
+			// 需要通过boot model 解析命名查询, 因为它可能还没有初始化 。。
 			final NamedQueryMemento namedQueryMemento = factory.getQueryEngine().getNamedObjectRepository()
 					.resolve( factory, creationContext.getBootModel(), bootDescriptor.getLoaderName() );
 			if ( namedQueryMemento == null ) {
 				throw new IllegalArgumentException( "Could not resolve named load-query [" + getEntityName() + "] : " + bootDescriptor.getLoaderName() );
 			}
+			// 单个 Id  实体 加载器提供器查询实现
 			singleIdEntityLoader = new SingleIdEntityLoaderProvidedQueryImpl<>(
 					this,
 					namedQueryMemento

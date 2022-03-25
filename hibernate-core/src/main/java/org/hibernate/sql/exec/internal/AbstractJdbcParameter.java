@@ -51,7 +51,7 @@ public abstract class AbstractJdbcParameter
 	}
 
 	@Override
-	public void accept(SqlAstWalker sqlTreeWalker) {
+	public void accept(SqlAstWalker sqlTreeWalker) { // jdbc 参数 浏览参数
 		sqlTreeWalker.visitParameter( this );
 	}
 

@@ -16,7 +16,7 @@ import org.hibernate.sql.exec.spi.JdbcParameters;
 
 /**
  * Standard implementation of JdbcParameters
- *
+ *	JdbcParameters 集合
  * @author Steve Ebersole
  */
 public class JdbcParametersImpl implements JdbcParameters {

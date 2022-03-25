@@ -22,6 +22,7 @@ import org.hibernate.type.descriptor.java.JavaType;
 /**
  * Describes a mapping related to any part of the app's domain model - e.g.
  * an attribute, an entity identifier, collection elements, etc
+ * 描述了一个应用 领域模型的任何部分相关的映射,例如  一个属性 / 一个entity identifier,集合元素 ..等等 ..
  *
  * @see DomainResultProducer
  * @see jakarta.persistence.metamodel.Bindable

@@ -8,15 +8,15 @@ package org.hibernate.sql.ast.tree.expression;
 
 import org.hibernate.sql.ast.tree.SqlAstNode;
 
-/**
+/** sql 元组容器
  * @author Steve Ebersole
  */
 public interface SqlTupleContainer {
 	SqlTuple getSqlTuple();
 
 	static SqlTuple getSqlTuple(SqlAstNode expression) {
-		if ( expression instanceof SqlTupleContainer ) {
-			return ( (SqlTupleContainer) expression ).getSqlTuple();
+		if ( expression instanceof SqlTupleContainer ) { // 如果是 ..
+			return ( (SqlTupleContainer) expression ).getSqlTuple(); // 获取SQL 元组
 		}
 		return null;
 	}

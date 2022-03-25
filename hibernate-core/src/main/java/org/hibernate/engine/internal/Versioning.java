@@ -15,7 +15,7 @@ import org.jboss.logging.Logger;
 
 /**
  * Utilities for dealing with optimistic locking values.
- *
+ *	乐观锁的处理工具类
  * @author Gavin King
  */
 public final class Versioning {
@@ -115,7 +115,7 @@ public final class Versioning {
 
 	/**
 	 * Extract the optimistic locking value out of the entity state snapshot.
-	 *
+	 * entity 状态 快照之外的抓取乐观锁值..
 	 * @param fields The state snapshot
 	 * @param persister The entity persister
 	 * @return The extracted optimistic locking value

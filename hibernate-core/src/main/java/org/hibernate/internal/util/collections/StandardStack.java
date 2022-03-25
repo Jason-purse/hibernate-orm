@@ -94,9 +94,11 @@ public final class StandardStack<T> implements Stack<T> {
 
 	@Override
 	public void visitRootFirst(Consumer<T> action) {
+		// 内部栈为空
 		if ( internalStack == null ) {
 			return;
 		}
+		// 获取倒序迭代器,就是栈了 ..
 		final Iterator<T> iterator = internalStack.descendingIterator();
 		while ( iterator.hasNext() ) {
 			action.accept( iterator.next() );

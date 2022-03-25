@@ -189,29 +189,37 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 	// pre-req state
 	private final SessionFactoryImplementor sessionFactory;
 
-	// In-flight state
+	// In-flight state 动态 状态 sql
 	private final StringBuilder sqlBuffer = new StringBuilder();
-
+	// 参数绑定列表 ? 绑定
 	private final List<JdbcParameterBinder> parameterBinders = new ArrayList<>();
-	private final JdbcParametersImpl jdbcParameters = new JdbcParametersImpl();
-
+	private final JdbcParametersImpl jdbcParameters = new JdbcParametersImpl(); // jdbc 参数
+	// 过滤器JDBC参数
 	private final Set<FilterJdbcParameter> filterJdbcParameters = new HashSet<>();
 
+	// 子句堆栈(处理完毕就是弹出)
 	private final Stack<Clause> clauseStack = new StandardStack<>();
+	// 查询 部分堆栈
 	private final Stack<QueryPart> queryPartStack = new StandardStack<>();
 
 	private final Dialect dialect;
 	private final Statement statement;
+	// 受影响的表名(收集起来干嘛?)
 	private final Set<String> affectedTableNames = new HashSet<>();
+	// 可变的 语句(可能此翻译器正在执行的语句)
 	private MutationStatement dmlStatement;
+	// select 部分需要别名 ??
 	private boolean needsSelectAliases;
-	// Column aliases that need to be injected
+	// Column aliases that need to be injected, 需要被注入的字段别名
 	private List<String> columnAliases;
 	private Predicate additionalWherePredicate;
 	// We must reset the queryPartForRowNumbering fields to null if a query part is visited that does not
 	// contribute to the row numbering i.e. if the query part is a sub-query in the where clause.
 	// To determine whether a query part contributes to row numbering, we remember the clause depth
 	// and when visiting a query part, compare the current clause depth against the remembered one.
+
+	// 我们必须重置这个字段为null(如果一个query part 被观察(但是它并没有 贡献row number).例如 query part 是一个where 子句中 的子查询
+	//  为了判断一个query part 是否贡献了 row number,我们需要记住 子句的 深度  并在观察一个querypart的时候, 比较当前子句深度和纪录的深度 ...
 	private QueryPart queryPartForRowNumbering;
 	private int queryPartForRowNumberingClauseDepth = -1;
 	private int queryPartForRowNumberingAliasCounter;
@@ -220,9 +228,9 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 	private transient LazySessionWrapperOptions lazySessionWrapperOptions;
 	private transient BasicType<Integer> integerType;
 	private transient BasicType<Boolean> booleanType;
-
+	// 节点渲染模式
 	private SqlAstNodeRenderingMode parameterRenderingMode = SqlAstNodeRenderingMode.DEFAULT;
-
+	// 已经应用的参数绑定
 	private Map<JdbcParameter, JdbcParameterBinding> appliedParameterBindings = Collections.emptyMap();
 	private JdbcParameterBindings jdbcParameterBindings;
 	private LockOptions lockOptions;
@@ -620,6 +628,8 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 		return clauseStack;
 	}
 
+
+	// 翻译的核心方法
 	@Override
 	public T translate(JdbcParameterBindings jdbcParameterBindings, QueryOptions queryOptions) {
 		try {
@@ -709,12 +719,12 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 				getSql(),
 				getParameterBinders(),
 				new JdbcValuesMappingProducerStandard(
-						sqlAstSelect.getQuerySpec().getSelectClause().getSqlSelections(),
-						sqlAstSelect.getDomainResultDescriptors()
+						sqlAstSelect.getQuerySpec().getSelectClause().getSqlSelections(), // sql 选择s
+						sqlAstSelect.getDomainResultDescriptors() // domainResult 描述符 s
 				),
 				getAffectedTableNames(),
 				getFilterJdbcParameters(),
-				rowsToSkip = getRowsToSkip( sqlAstSelect, getJdbcParameterBindings() ),
+				rowsToSkip = getRowsToSkip( sqlAstSelect, getJdbcParameterBindings() ), // 跳过多少行
 				getMaxRows( sqlAstSelect, getJdbcParameterBindings(), rowsToSkip ),
 				getAppliedParameterBindings(),
 				getJdbcLockStrategy(),
@@ -722,14 +732,14 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 				getLimitParameter()
 		);
 	}
-
+	// 获取跳过的行数
 	protected int getRowsToSkip(SelectStatement sqlAstSelect, JdbcParameterBindings jdbcParameterBindings) {
-		if ( hasLimit() ) {
+		if ( hasLimit() ) { // 是否有limit
 			if ( offsetParameter != null && needsRowsToSkip() ) {
 				return interpretExpression( offsetParameter, jdbcParameterBindings );
 			}
 		}
-		else {
+		else { // 否则 正常形式
 			final Expression offsetClauseExpression = sqlAstSelect.getQueryPart().getOffsetClauseExpression();
 			if ( offsetClauseExpression != null && needsRowsToSkip() ) {
 				return interpretExpression( offsetClauseExpression, jdbcParameterBindings );
@@ -737,7 +747,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 		}
 		return 0;
 	}
-
+	// 获取最大行
 	protected int getMaxRows(SelectStatement sqlAstSelect, JdbcParameterBindings jdbcParameterBindings, int rowsToSkip) {
 		if ( hasLimit() ) {
 			if ( limitParameter != null && needsMaxRows() ) {
@@ -1057,7 +1067,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 			}
 			else {
 				// Since we get here, we know that no alias locks were applied.
-				// We only apply locking on the root query though if there is a global lock mode
+				// We only apply locking on the root query though if there is a global lock mode(如果是全局锁模式锁表)
 				final LockOptions lockOptions = getLockOptions();
 				final Boolean followOnLocking = getLockOptions() == null ? Boolean.FALSE : lockOptions.getFollowOnLocking();
 				if ( Boolean.TRUE.equals( followOnLocking ) ) {
@@ -1195,15 +1205,15 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 	protected String getSkipLocked() {
 		return " skip locked";
 	}
-
+	// 获取有效的锁模式
 	protected LockMode getEffectiveLockMode(String alias) {
 		if ( getLockOptions() == null ) {
 			return LockMode.NONE;
 		}
 		final QueryPart currentQueryPart = getQueryPartStack().getCurrent();
 		LockMode lockMode = getLockOptions().getAliasSpecificLockMode( alias );
-		if ( currentQueryPart.isRoot() && lockMode == null ) {
-			lockMode = getLockOptions().getLockMode();
+		if ( currentQueryPart.isRoot() && lockMode == null ) { // 如果是root 且 lockMode == null
+			lockMode = getLockOptions().getLockMode(); // 设置为Lock options 的LockMode
 		}
 		return lockMode == null ? LockMode.NONE : lockMode;
 	}
@@ -1530,7 +1540,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 	}
 
 	@Override
-	public void visitQuerySpec(QuerySpec querySpec) {
+	public void visitQuerySpec(QuerySpec querySpec) { // 查询QuerySpec
 		final QueryPart queryPartForRowNumbering = this.queryPartForRowNumbering;
 		final int queryPartForRowNumberingClauseDepth = this.queryPartForRowNumberingClauseDepth;
 		final boolean needsSelectAliases = this.needsSelectAliases;
@@ -1541,38 +1551,38 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 			this.forUpdate = null;
 			// See the field documentation of queryPartForRowNumbering etc. for an explanation about this
 			// In addition, we also reset the row numbering if the currently row numbered query part is a query group
-			// which means this query spec is a part of that query group.
-			// We want the row numbering to happen on the query group level, not on the query spec level, so we reset
+			// which means this query spec is a part of that query group. 除此之外,如果当前行query 是查询组的一部分,我们也重置这个row number,这意味着query spec 是query group的一部分
+			// We want the row numbering to happen on the query group level, not on the query spec level, so we reset // 我们想要在query group 级别上发生这种事情,而不是query spec,所以我们重置
 			final QueryPart currentQueryPart = queryPartStack.getCurrent();
 			if ( currentQueryPart != null && ( queryPartForRowNumbering instanceof QueryGroup || queryPartForRowNumberingClauseDepth != clauseStack.depth() ) ) {
-				this.queryPartForRowNumbering = null;
+				this.queryPartForRowNumbering = null; // 如果query part 存在,且必须当前row number 是一个QUERY group, 或者子句堆栈深度不等于 这个query Group子句深度(深度不一致了,代表不是同一个query group)
 				this.queryPartForRowNumberingClauseDepth = -1;
 			}
-			String queryGroupAlias = "";
+			String queryGroupAlias = ""; // 查询组别名
 			final boolean needsParenthesis;
 			if ( currentQueryPart instanceof QueryGroup ) {
 				// We always need query wrapping if we are in a query group and this query spec has a fetch clause
-				// because of order by precedence in SQL
-				needsParenthesis = querySpec.hasOffsetOrFetchClause();
-				if ( needsParenthesis ) {
-					// If the parent is a query group with a fetch clause,
-					// or if the database does not support simple query grouping, we must use a select wrapper
-					if ( !supportsSimpleQueryGrouping() || currentQueryPart.hasOffsetOrFetchClause() ) {
+				// because of order by precedence in SQL    我们总是需要query 包装(如果我们在一个query group 中 并且 query spec 还有一个fetch clause) ,因为SQL order by 优先级高
+				needsParenthesis = querySpec.hasOffsetOrFetchClause(); // 存在offset / fetch clause
+				if ( needsParenthesis ) { // 需要
+					// If the parent is a query group with a fetch clause,  parent 是一个query group 并且使用了getch clause
+					// or if the database does not support simple query grouping, we must use a select wrapper // 或者如果数据库 不支持简单的查询分组, 我们必须使用一个select wrapper
+					if ( !supportsSimpleQueryGrouping() || currentQueryPart.hasOffsetOrFetchClause() ) { //
 						queryGroupAlias = " grp_" + queryGroupAliasCounter + '_';
-						queryGroupAliasCounter++;
-						appendSql( "select" );
-						appendSql( queryGroupAlias );
+						queryGroupAliasCounter++; // 分组计数器
+						appendSql( "select" ); // 追加select ...
+						appendSql( queryGroupAlias ); // queryGroupAlias
 						appendSql( ".* from " );
 					}
 				}
-			}
-			else {
-				needsParenthesis = !querySpec.isRoot();
-			}
+			} // 表示当前在子查询中,直接处理
+			else { // 子查询
+				needsParenthesis = !querySpec.isRoot(); // 需不需要括号
+			} // 入栈
 			queryPartStack.push( querySpec );
 			if ( needsParenthesis ) {
 				appendSql( OPEN_PARENTHESIS );
-			}
+			} // select
 			visitSelectClause( querySpec.getSelectClause() );
 			visitFromClause( querySpec.getFromClause() );
 			visitWhereClause( querySpec.getWhereClauseRestrictions() );
@@ -1580,21 +1590,21 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 			visitHavingClause( querySpec );
 			visitOrderBy( querySpec.getSortSpecifications() );
 			visitOffsetFetchClause( querySpec );
-			// We render the FOR UPDATE clause in the parent query
-			if ( queryPartForRowNumbering == null ) {
-				visitForUpdateClause( querySpec );
+			// We render the FOR UPDATE clause in the parent query, 在父查询中 直接渲染for update
+			if ( queryPartForRowNumbering == null ) { // 如果为空  则表示query part 是一个顶级的 ...=> querySpec
+				visitForUpdateClause( querySpec ); // 是否需要for update
 			}
 
-			if ( needsParenthesis ) {
+			if ( needsParenthesis ) { // 子查询需要(
 				appendSql( CLOSE_PARENTHESIS );
-				appendSql( queryGroupAlias );
+				appendSql( queryGroupAlias ); // query group 别名
 			}
 		}
 		finally {
-			this.queryPartStack.pop();
-			this.queryPartForRowNumbering = queryPartForRowNumbering;
-			this.queryPartForRowNumberingClauseDepth = queryPartForRowNumberingClauseDepth;
-			this.needsSelectAliases = needsSelectAliases;
+			this.queryPartStack.pop(); // 弹出
+			this.queryPartForRowNumbering = queryPartForRowNumbering; // 设置为之前的queryPartForRowNumbering
+			this.queryPartForRowNumberingClauseDepth = queryPartForRowNumberingClauseDepth; // 之前的深度
+			this.needsSelectAliases = needsSelectAliases; // 之前的信息
 			this.additionalWherePredicate = additionalWherePredicate;
 			if ( queryPartForRowNumbering == null ) {
 				this.forUpdate = forUpdate;
@@ -1812,8 +1822,8 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 	protected void visitOrderBy(List<SortSpecification> sortSpecifications) {
 		// If we have a query part for row numbering, there is no need to render the order by clause
 		// as that is part of the row numbering window function already, by which we then order by in the outer query
-		if ( queryPartForRowNumbering == null ) {
-			renderOrderBy( true, sortSpecifications );
+		if ( queryPartForRowNumbering == null ) {  // 如果这里具有一个约定row number的query part ,那就没必要渲染 order by clause;
+			renderOrderBy( true, sortSpecifications ); //因为这已经是行编号窗口函数的一部分，然后我们在外部查询中按顺序排序
 		}
 	}
 
@@ -3061,29 +3071,29 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 
 	@Override
 	public void visitSelectClause(SelectClause selectClause) {
-		clauseStack.push( Clause.SELECT );
+		clauseStack.push( Clause.SELECT ); // 子句堆栈中推入
 
 		try {
-			appendSql( "select " );
-			if ( selectClause.isDistinct() ) {
+			appendSql( "select " ); // 追加 select
+			if ( selectClause.isDistinct() ) { // 需不需要去重
 				appendSql( "distinct " );
 			}
-			visitSqlSelections( selectClause );
+			visitSqlSelections( selectClause ); // 查看Sql 选择部分
 		}
 		finally {
-			clauseStack.pop();
+			clauseStack.pop(); // 弹出
 		}
 	}
 
 	protected void visitSqlSelections(SelectClause selectClause) {
-		final List<SqlSelection> sqlSelections = selectClause.getSqlSelections();
+		final List<SqlSelection> sqlSelections = selectClause.getSqlSelections(); // 拿到SQL Selections
 		final int size = sqlSelections.size();
-		final SelectItemReferenceStrategy referenceStrategy = getDialect().getGroupBySelectItemReferenceStrategy();
+		final SelectItemReferenceStrategy referenceStrategy = getDialect().getGroupBySelectItemReferenceStrategy(); // 获取方言 ,获取GroupBy 选择项 引用策略
 		// When the dialect needs to render the aliased expression and there are aliased group by items,
 		// we need to inline parameters as the database would otherwise not be able to match the group by item
-		// to the select item, ultimately leading to a query error
-		final BitSet selectItemsToInline;
-		if ( referenceStrategy == SelectItemReferenceStrategy.EXPRESSION ) {
+		// to the select item, ultimately leading to a query error  当方言需要渲染基于别名的表达式并且 通过items 别名分组,我们需要内联参数作为数据库否则无法匹配组项的选择项
+		final BitSet selectItemsToInline; // 最终将导致查询错误
+		if ( referenceStrategy == SelectItemReferenceStrategy.EXPRESSION ) { // 表达式
 			selectItemsToInline = getSelectItemsToInline();
 		}
 		else {
@@ -3136,10 +3146,10 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 				final SqlSelection sqlSelection = sqlSelections.get( i );
 				appendSql( separator );
 				if ( selectItemsToInline != null && selectItemsToInline.get( i ) ) {
-					parameterRenderingMode = SqlAstNodeRenderingMode.INLINE_ALL_PARAMETERS;
+					parameterRenderingMode = SqlAstNodeRenderingMode.INLINE_ALL_PARAMETERS;  // 将所有的参数放置到一行 ..
 				}
 				else {
-					parameterRenderingMode = SqlAstNodeRenderingMode.NO_PLAIN_PARAMETER;
+					parameterRenderingMode = SqlAstNodeRenderingMode.NO_PLAIN_PARAMETER; // 非简单的参数形式
 				}
 				visitSqlSelection( sqlSelection );
 				parameterRenderingMode = original;
@@ -3165,20 +3175,20 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 			}
 		}
 	}
-
-	private BitSet getSelectItemsToInline() {
+	// 将select items 放置到一行中
+	private BitSet getSelectItemsToInline() { // 获取当前的QuerySpec
 		final QuerySpec querySpec = (QuerySpec) getQueryPartStack().getCurrent();
-		final List<SqlSelection> sqlSelections = querySpec.getSelectClause().getSqlSelections();
-		final BitSet bitSet = new BitSet( sqlSelections.size() );
-		for ( Expression groupByClauseExpression : querySpec.getGroupByClauseExpressions() ) {
-			final SqlSelectionExpression selectItemReference = getSelectItemReference( groupByClauseExpression );
+		final List<SqlSelection> sqlSelections = querySpec.getSelectClause().getSqlSelections(); // 获取items
+		final BitSet bitSet = new BitSet( sqlSelections.size() ); // new BitSet
+		for ( Expression groupByClauseExpression : querySpec.getGroupByClauseExpressions() ) { // 通过子句表达式分组
+			final SqlSelectionExpression selectItemReference = getSelectItemReference( groupByClauseExpression ); //
 			if ( selectItemReference != null ) {
 				bitSet.set( sqlSelections.indexOf( selectItemReference.getSelection() ) );
 			}
 		}
 		return bitSet;
 	}
-
+	// group by clause 中是否有select alias;  // 获取 SqlSelectionExpression ,如果有就是有
 	private boolean hasSelectAliasInGroupByClause() {
 		final QuerySpec querySpec = (QuerySpec) getQueryPartStack().getCurrent();
 		for ( Expression groupByClauseExpression : querySpec.getGroupByClauseExpressions() ) {
@@ -3188,14 +3198,14 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 		}
 		return false;
 	}
-
+	// 通过表达式选择ItemReference
 	protected final SqlSelectionExpression getSelectItemReference(Expression expression) {
 		final SqlTuple sqlTuple = SqlTupleContainer.getSqlTuple( expression );
 		if ( sqlTuple != null ) {
-			for ( Expression e : sqlTuple.getExpressions() ) {
+			for ( Expression e : sqlTuple.getExpressions() ) { // 获取所有的表达式
 				if ( e instanceof SqlSelectionExpression ) {
-					return (SqlSelectionExpression) e;
-				}
+					return (SqlSelectionExpression) e; // 返回
+				} // 否则
 				else if ( e instanceof SqmPathInterpretation<?> ) {
 					final Expression sqlExpression = ( (SqmPathInterpretation<?>) e ).getSqlExpression();
 					if ( sqlExpression instanceof SqlSelectionExpression ) {
@@ -3492,10 +3502,10 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 	public void visitSqlSelection(SqlSelection sqlSelection) {
 		visitSqlSelectExpression( sqlSelection.getExpression() );
 	}
-
+	// 查询 sqlSelectExpression
 	protected void visitSqlSelectExpression(Expression expression) {
 		final SqlTuple sqlTuple = SqlTupleContainer.getSqlTuple( expression );
-		if ( sqlTuple != null ) {
+		if ( sqlTuple != null ) { // SqlTuple
 			boolean isFirst = true;
 			for ( Expression e : sqlTuple.getExpressions() ) {
 				if ( isFirst ) {
@@ -3507,13 +3517,13 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 				renderSelectExpression( e );
 			}
 		}
-		else {
+		else { // 渲染select expression
 			renderSelectExpression( expression );
 		}
 	}
 
 	protected void renderSelectExpression(Expression expression) {
-		renderExpressionAsClauseItem( expression );
+		renderExpressionAsClauseItem( expression ); // 渲染表达式作为Clause item
 	}
 
 	protected void renderExpressionAsClauseItem(Expression expression) {
@@ -3625,13 +3635,13 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 		if ( fromClause == null || fromClause.getRoots().isEmpty() ) {
 			appendSql( getFromDualForSelectOnly() );
 		}
-		else {
+		else { //
 			appendSql( " from " );
 			try {
 				clauseStack.push( Clause.FROM );
 				String separator = NO_SEPARATOR;
 				for ( TableGroup root : fromClause.getRoots() ) {
-					// Skip virtual table group roots which we use for simple correlations
+					// Skip virtual table group roots which we use for simple correlations //跳过虚拟表组根,我们使用简单的相关性
 					if ( !( root instanceof VirtualTableGroup ) ) {
 						appendSql( separator );
 						renderRootTableGroup( root, null );
@@ -3644,21 +3654,21 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 			}
 		}
 	}
-
+	// 渲染根组织表Group
 	protected void renderRootTableGroup(TableGroup tableGroup, List<TableGroupJoin> tableGroupJoinCollector) {
 		final LockMode effectiveLockMode = getEffectiveLockMode( tableGroup.getSourceAlias() );
-		final boolean usesLockHint = renderPrimaryTableReference( tableGroup, effectiveLockMode );
-		if ( tableGroup.isLateral() && !getDialect().supportsLateral() ) {
-			addAdditionalWherePredicate( determineLateralEmulationPredicate( tableGroup ) );
+		final boolean usesLockHint = renderPrimaryTableReference( tableGroup, effectiveLockMode ); // 根据这个 方法返回的true / false 来决定是否使用lock 提示
+		if ( tableGroup.isLateral() && !getDialect().supportsLateral() ) { // 他本身是lateral ,但是语言本身不支持 ...
+			addAdditionalWherePredicate( determineLateralEmulationPredicate( tableGroup ) ); // 增加额外的where 条件
 		}
-
+		// 渲染 join
 		renderTableReferenceJoins( tableGroup );
-		processNestedTableGroupJoins( tableGroup, tableGroupJoinCollector );
+		processNestedTableGroupJoins( tableGroup, tableGroupJoinCollector ); // 处理内嵌表组的join
 		if ( tableGroupJoinCollector != null ) {
 			tableGroupJoinCollector.addAll( tableGroup.getTableGroupJoins() );
 		}
 		else {
-			processTableGroupJoins( tableGroup );
+			processTableGroupJoins( tableGroup ); // 处理表组连接
 		}
 		ModelPartContainer modelPart = tableGroup.getModelPart();
 		if ( modelPart instanceof AbstractEntityPersister ) {
@@ -3666,7 +3676,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 			for ( int i = 0; i < querySpaces.length; i++ ) {
 				registerAffectedTable( querySpaces[i] );
 			}
-		}
+		} // usesLockHint = false 并且
 		if ( !usesLockHint && tableGroup.getSourceAlias() != null && LockMode.READ.lessThan( effectiveLockMode ) ) {
 			if ( forUpdate == null ) {
 				forUpdate = new ForUpdateClause( effectiveLockMode );
@@ -3783,16 +3793,16 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 
 		return false;
 	}
-
+	// 读取 主表引用 ...(主表引用渲染)
 	protected boolean renderPrimaryTableReference(TableGroup tableGroup, LockMode lockMode) {
 		final TableReference tableReference = tableGroup.getPrimaryTableReference();
-		if ( tableReference instanceof NamedTableReference ) {
+		if ( tableReference instanceof NamedTableReference ) { // 如果是命名表
 			return renderNamedTableReference( (NamedTableReference) tableReference, lockMode );
 		}
-		final DerivedTableReference derivedTableReference = (DerivedTableReference) tableReference;
+		final DerivedTableReference derivedTableReference = (DerivedTableReference) tableReference; // 否则只能是衍生表了 ...
 		if ( derivedTableReference.isLateral() ) {
 			if ( getDialect().supportsLateral() ) {
-				appendSql( "lateral" );
+				appendSql( "lateral" ); //  是否支持  lateral
 			}
 			else if ( tableReference instanceof QueryPartTableReference ) {
 				final QueryPartTableReference queryPartTableReference = (QueryPartTableReference) tableReference;
@@ -3808,15 +3818,15 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 				return false;
 			}
 		}
-		tableReference.accept( this );
+		tableReference.accept( this ); // 就是正常的join 连接,猜测
 		return false;
 	}
-
+	// 渲染 命名表引用
 	protected boolean renderNamedTableReference(NamedTableReference tableReference, LockMode lockMode) {
 		appendSql( tableReference.getTableExpression() );
-		registerAffectedTable( tableReference );
-		final Clause currentClause = clauseStack.getCurrent();
-		if ( rendersTableReferenceAlias( currentClause ) ) {
+		registerAffectedTable( tableReference ); // 注册受影响的表
+		final Clause currentClause = clauseStack.getCurrent();// 获取当前子句
+		if ( rendersTableReferenceAlias( currentClause ) ) { // 是否需要渲染 引用别名
 			renderTableReferenceIdentificationVariable( tableReference );
 		}
 		return false;
@@ -3884,12 +3894,12 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 		renderTableReferenceIdentificationVariable( tableReference );
 	}
 
-	protected void renderDerivedTableReference(DerivedTableReference tableReference) {
-		final String identificationVariable = tableReference.getIdentificationVariable();
+	protected void renderDerivedTableReference(DerivedTableReference tableReference) { // 渲染衍生表 引用
+		final String identificationVariable = tableReference.getIdentificationVariable();  // 标识符变量..(应该是表别名)
 		if ( identificationVariable != null ) {
 			append( WHITESPACE );
-			append( tableReference.getIdentificationVariable() );
-			final List<String> columnNames = tableReference.getColumnNames();
+			append( tableReference.getIdentificationVariable() ); // ... 表名
+			final List<String> columnNames = tableReference.getColumnNames(); // 获取字段名
 			append( '(' );
 			append( columnNames.get( 0 ) );
 			for ( int i = 1; i < columnNames.size(); i++ ) {
@@ -3899,9 +3909,9 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 			append( ')' );
 		}
 	}
-
+	// 渲染 表引用标识变量,增加别名设置
 	protected final void renderTableReferenceIdentificationVariable(TableReference tableReference) {
-		final String identificationVariable = tableReference.getIdentificationVariable();
+		final String identificationVariable = tableReference.getIdentificationVariable(); // 例如表本来是   event,但是它简写表明e 并加上了_groupNumber => e1_0
 		if ( identificationVariable != null ) {
 			append( WHITESPACE );
 			append( tableReference.getIdentificationVariable() );
@@ -3911,7 +3921,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 	public static boolean rendersTableReferenceAlias(Clause clause) {
 		// todo (6.0) : For now we just skip the alias rendering in the delete and update clauses
 		//  We need some dialect support if we want to support joins in delete and update statements
-		switch ( clause ) {
+		switch ( clause ) { // 6.0 仅仅跳过别名渲染 在delete  / update 子句中, 我们仅需要方言支持(如果我们想要支持 在delete  以及 update statements中添加 join 连接,所以待做)
 			case DELETE:
 			case UPDATE:
 				return false;
@@ -3920,7 +3930,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 	}
 
 	protected void registerAffectedTable(NamedTableReference tableReference) {
-		registerAffectedTable( tableReference.getTableExpression() );
+		registerAffectedTable( tableReference.getTableExpression() ); // 注册受影响的表
 	}
 
 	protected void registerAffectedTable(String tableExpression) {
@@ -3954,11 +3964,11 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 	protected void processNestedTableGroupJoins(TableGroup source, List<TableGroupJoin> tableGroupJoinCollector) {
 		source.visitNestedTableGroupJoins( tableGroupJoin -> processTableGroupJoin( tableGroupJoin, tableGroupJoinCollector ) );
 	}
-
+	// 处理表组连接
 	protected void processTableGroupJoin(TableGroupJoin tableGroupJoin, List<TableGroupJoin> tableGroupJoinCollector) {
 		final TableGroup joinedGroup = tableGroupJoin.getJoinedGroup();
 		final TableGroup realTableGroup;
-		if ( joinedGroup instanceof LazyTableGroup ) {
+		if ( joinedGroup instanceof LazyTableGroup ) { // 懒加载的
 			realTableGroup = ( (LazyTableGroup) joinedGroup ).getUnderlyingTableGroup();
 		}
 		else {
@@ -4016,14 +4026,14 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 			renderTableGroup( tableGroupJoin.getJoinedGroup(), null, tableGroupJoinCollector );
 		}
 	}
-
+	// 检测 lateral 模拟条件
 	protected Predicate determineLateralEmulationPredicate(TableGroup tableGroup) {
-		if ( tableGroup.getPrimaryTableReference() instanceof QueryPartTableReference ) {
+		if ( tableGroup.getPrimaryTableReference() instanceof QueryPartTableReference ) { // 如果是QueryPartTableReference,才处理  ...
 			final QueryPartTableReference tableReference = (QueryPartTableReference) tableGroup.getPrimaryTableReference();
 			final List<String> columnNames = tableReference.getColumnNames();
 			final List<ColumnReference> columnReferences = new ArrayList<>( columnNames.size() );
 			final List<ColumnReference> subColumnReferences = new ArrayList<>( columnNames.size() );
-			final QueryPart queryPart = tableReference.getQueryPart();
+			final QueryPart queryPart = tableReference.getQueryPart(); // 主要的select中包含的columns
 			for ( String columnName : columnNames ) {
 				columnReferences.add(
 						new ColumnReference(
@@ -4042,7 +4052,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 			if ( ( columnReferences.size() == 1 || supportsRowValueConstructorSyntax() )
 					&& supportsDistinctFromPredicate() ) {
 				// Special case for limit 1 sub-queries to avoid double nested sub-query
-				// ... x(c) on x.c is not distinct from (... fetch first 1 rows only)
+				// ... x(c) on x.c is not distinct from (... fetch first 1 rows only), 这种 可以优化一下(限制一个子查询来避免双重内嵌子查询)
 				if ( queryPart.getFetchClauseType() == FetchClauseType.ROWS_ONLY
 						&& queryPart.getFetchClauseExpression() instanceof QueryLiteral<?>
 						&& Integer.valueOf( 1 )
@@ -4056,31 +4066,31 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 			}
 
 			// Render with exists intersect sub-query if possible as that is shorter and more efficient
-			// ... x(c) on exists(select x.c intersect ...)
+			// ... x(c) on exists(select x.c intersect ...) // 渲染 exists 交互子查询(它可能更简单 更高效)
 			if ( supportsIntersect() ) {
-				final QuerySpec lhsReferencesQuery = new QuerySpec( false );
+				final QuerySpec lhsReferencesQuery = new QuerySpec( false ); // 子查询
 				for ( ColumnReference columnReference : columnReferences ) {
 					lhsReferencesQuery.getSelectClause().addSqlSelection(
 							new SqlSelectionImpl(
 									1,
 									0,
-									columnReference
+									columnReference // 字段引用
 							)
 					);
 				}
-				final List<QueryPart> queryParts = new ArrayList<>( 2 );
-				queryParts.add( lhsReferencesQuery );
+				final List<QueryPart> queryParts = new ArrayList<>( 2 ); // 查询部分
+				queryParts.add( lhsReferencesQuery ); //
 				queryParts.add( queryPart );
-				return new ExistsPredicate(
+				return new ExistsPredicate( // 去交集
 						new QueryGroup( false, SetOperator.INTERSECT, queryParts ),
 						false,
 						getBooleanType()
 				);
 			}
 
-			// Double nested sub-query rendering if nothing else works
+			// Double nested sub-query rendering if nothing else works  // 双重内嵌子查询渲染 (如果无法优化,否则尝试避免这样 - 因为它不高效 并且  某些 DB不喜欢它 ..
 			// We try to avoid this as much as possible as it is not very efficient and some DBs don't like it
-			// when a correlation happens in a sub-query that is not a direct child
+			// when a correlation happens in a sub-query that is not a direct child // 当一个关联性发生在一个在子查询中它不是一个直接的孩子
 			// ... x(c) on exists(select 1 from (...) synth_(c) where x.c = synth_.c)
 			final QueryPartTableGroup subTableGroup = new QueryPartTableGroup(
 					tableGroup.getNavigablePath(),
@@ -4193,39 +4203,57 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 
 	@Override
 	public void visitColumnReference(ColumnReference columnReference) {
+
+		// 获取表别名
 		final String dmlTargetTableAlias = getDmlTargetTableAlias();
+		// 表名和字段的Qualifier 是否能够对应
 		if ( dmlTargetTableAlias != null && dmlTargetTableAlias.equals( columnReference.getQualifier() ) ) {
+			// 使用Dialect 决定如何处理 column 引用
+			// 指定是否应该使用表 别名   表表达式 或者 qualifier
 			// todo (6.0) : use the Dialect to determine how to handle column references
 			//		- specifically should they use the table-alias, the table-expression
 			//			or neither for its qualifier
 
+			// 获取表的表达式
 			final String tableExpression = getCurrentDmlStatement().getTargetTable().getTableExpression();
+
 			// Qualify the column reference with the table expression only in subqueries
+			//使用表表达式的column 引用应该存在于子查询中
+			// 是否为空 ,如果不为空,表示有 子查询
 			final boolean qualifyColumn = !queryPartStack.isEmpty();
-			if ( columnReference.isColumnExpressionFormula() ) {
+			if ( columnReference.isColumnExpressionFormula() ) { //  公式 ??
+				// 对于公式,我们使用别名替换qualifier
+				// 目前临时方式  直到我们为 表引用渲染了别名 ...
 				// For formulas, we have to replace the qualifier as the alias was already rendered into the formula
 				// This is fine for now as this is only temporary anyway until we render aliases for table references
 				final String replacement;
-				if ( qualifyColumn ) {
+				if ( qualifyColumn ) { // 子查询的公式表达式
 					replacement = "$1" + tableExpression + ".$3";
 				}
 				else {
 					replacement = "$1$3";
 				}
+				// 追加SQL
 				appendSql(
+						// 字段表达式
 						columnReference.getColumnExpression()
+								// 替换所有的,根据正则,以及替换方案
+								// \b  一个单词约束
 								.replaceAll( "(\\b)(" + dmlTargetTableAlias + "\\.)(\\b)", replacement )
 				);
 			}
 			else {
+				// 否则没有公式, 完全没必要替换,直接追加
 				if ( qualifyColumn ) {
 					appendSql( tableExpression );
 					appendSql( '.' );
 				}
+				// 然后 放入表达式
 				appendSql( columnReference.getColumnExpression() );
 			}
 		}
 		else {
+			// 不需要qualifier,直接追加
 			appendSql( columnReference.getExpressionText() );
 		}
 	}
@@ -4626,7 +4654,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 
 	@Override
 	public void visitQueryLiteral(QueryLiteral<?> queryLiteral) {
-		visitLiteral( queryLiteral );
+		visitLiteral( queryLiteral ); // 查询简单文本
 	}
 
 	@Override
@@ -5283,12 +5311,12 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 		// todo (6.0) : do we want to allow multi-valued parameters in a relational predicate?
 		//		yes means we'd have to support dynamically converting this predicate into
 		//		an IN predicate or an OR predicate
-		//
-		//		NOTE: JPA does not define support for multi-valued parameters here.
+		//		我们想要 一个关系型predicate 中存在多值参数, 这意味着我们可以支持动态的转换 in predicate 或者 一个 or predicate
+		//		NOTE: JPA does not define support for multi-valued parameters here.  JPA 不支持定义多值参数(在这)
 		//
 		// If we decide to support that ^^  we should validate that *both* sides of the
 		//		predicate are multi-valued parameters.  because...
-		//		well... its stupid :)
+		//		well... its stupid :) // 如果我们决定支持^ ^我们应该确认双方的谓词是多值参数。因为…嗯…它的愚蠢:
 
 		final SqlTuple lhsTuple;
 		final SqlTuple rhsTuple;
@@ -5418,7 +5446,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 						"Unsupported tuple comparison combination. LHS is neither a tuple nor a tuple subquery but RHS is a tuple: " + comparisonPredicate );
 			}
 		}
-		else {
+		else { // 渲染比较
 			renderComparison(
 					comparisonPredicate.getLeftHandExpression(),
 					comparisonPredicate.getOperator(),
@@ -5529,7 +5557,7 @@ public abstract class AbstractSqlAstTranslator<T extends JdbcOperation> implemen
 	}
 
 	protected String getFromDualForSelectOnly() {
-		return "";
+		return ""; // from dual 表示空表 (许多数据库都提供这样的概念)
 	}
 
 	protected enum LockStrategy {

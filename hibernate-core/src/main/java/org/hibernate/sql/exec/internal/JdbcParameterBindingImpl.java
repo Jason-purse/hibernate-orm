@@ -13,7 +13,7 @@ import org.hibernate.sql.exec.spi.JdbcParameterBinding;
  * @author Andrea Boriero
  */
 public class JdbcParameterBindingImpl implements JdbcParameterBinding {
-	private final JdbcMapping jdbcMapping;
+	private final JdbcMapping jdbcMapping; // 一个java  类型
 	private final Object bindValue;
 
 	public JdbcParameterBindingImpl(JdbcMapping jdbcMapping, Object bindValue) {

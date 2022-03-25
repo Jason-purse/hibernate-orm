@@ -18,11 +18,11 @@ import org.hibernate.sql.exec.spi.JdbcParameterBindings;
 
 /**
  * Standard implementation of JdbcParameterBindings
- *
+ *	JdbcParamerterBinding Map 标准实现
  * @author Steve Ebersole
  */
 public class JdbcParameterBindingsImpl implements JdbcParameterBindings {
-	private Map<JdbcParameter, JdbcParameterBinding> bindingMap;
+	private Map<JdbcParameter, JdbcParameterBinding> bindingMap; // 绑定Map
 
 	public JdbcParameterBindingsImpl(int expectedParameterCount) {
 		if ( expectedParameterCount > 0 ) {

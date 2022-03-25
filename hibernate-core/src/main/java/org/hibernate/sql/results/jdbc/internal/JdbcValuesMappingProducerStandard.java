@@ -24,7 +24,7 @@ import org.hibernate.sql.results.jdbc.spi.JdbcValuesMetadata;
  * scenarios *except* {@link NativeQuery} processing -
  * an important distinction as it means we do not have to perform any
  * {@link java.sql.ResultSetMetaData} resolutions.
- *
+ *	Hibernate 标准的 ResultSetMappingDescriptor 实现 - 用于Hibernate 自己创建映射.. 基本上这里描述了所有的场景 (除了 NativeQuery 处理 - 是一个重要的区别是 它意味着我们不需要执行任何ResultSetMetaData 解析)
  * @author Steve Ebersole
  */
 public class JdbcValuesMappingProducerStandard implements JdbcValuesMappingProducer {

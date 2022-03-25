@@ -103,7 +103,10 @@ public class DefaultPersistEventListener
 
 		final EntityEntry entityEntry = source.getPersistenceContextInternal().getEntry( entity );
 
+		//  获取这个实体在Hibernate 中的状态(跟缓存相关)
 		EntityState entityState = EntityState.getEntityState( entity, entityName, entityEntry, source, true );
+
+
 		if ( entityState == EntityState.DETACHED ) {
 			// JPA 2, in its version of a "foreign generated", allows the id attribute value
 			// to be manually set by the user, even though this manual value is irrelevant.

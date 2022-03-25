@@ -11,6 +11,7 @@ import java.util.function.Function;
 
 /**
  * Stack implementation exposing useful methods for Hibernate needs.
+ * Hibernate 需要的栈的实现(暴露了许多有用的方法)
  *
  * @param <T> The type of things stored in the stack
  *
@@ -49,6 +50,7 @@ public interface Stack<T> {
 
 	/**
 	 * Visit all elements in the stack, starting with the root and working "forward"
+	 * 查看所有 在 栈中的元素, 已root 开始 并向前工作
 	 */
 	void visitRootFirst(Consumer<T> action);
 

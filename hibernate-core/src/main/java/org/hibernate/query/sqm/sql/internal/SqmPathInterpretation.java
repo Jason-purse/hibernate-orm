@@ -14,7 +14,7 @@ import org.hibernate.sql.ast.tree.expression.Expression;
 /**
  * Interpretation of a {@link SqmPath} as part of the translation to SQL AST.  We need specialized handling
  * for path interpretations because it can (and likely) contains multiple SqlExpressions (entity to its columns, e.g.)
- *
+ *	将SqmPath 转换为SQL AST的一部分, 我们指定对路径的解析处理 - 因为它能够包含多个SQLExpressions(例如 entity的columns)
  * @see org.hibernate.query.sqm.sql.SqmToSqlAstConverter
  *
  * @author Steve Ebersole

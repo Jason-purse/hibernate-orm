@@ -138,7 +138,7 @@ public interface EntityEntry {
 	 * @throws IOException If a stream error occurs
 	 */
 	void serialize(ObjectOutputStream oos) throws IOException;
-
+	// 以下的方法 用来处理 额外状态约定,它们不被共享,通过普通的父类 避免  避免定位填充, /我们关闭重复填充效率
 	//the following methods are handling extraState contracts.
 	//they are not shared by a common superclass to avoid alignment padding
 	//we are trading off duplication for padding efficiency

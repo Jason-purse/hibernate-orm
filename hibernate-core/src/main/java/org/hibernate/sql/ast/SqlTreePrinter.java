@@ -30,7 +30,8 @@ import org.hibernate.sql.ast.tree.update.UpdateStatement;
 
 /**
  * Logs a debug representation of the SQL AST.
- *
+ * 抽象语法树的调试信息
+ *  目前,我们仅仅渲染  elements
  * NOTE : at the moment, we only render the from-elements
  *
  * @author Steve Ebersole

@@ -304,7 +304,7 @@ public interface Session extends SharedSessionContract, EntityManager {
 	 * Return the identifier value of the given entity associated with this session.
 	 * An exception is thrown if the given entity instance is transient or detached
 	 * in relation to this session.
-	 *
+	 * 返回一个和当前会话相联系的entity的identifier (如果给定的entity 是一个transient / detached ) 抛出异常
 	 * @param object a persistent instance associated with this session
 	 *
 	 * @return the identifier

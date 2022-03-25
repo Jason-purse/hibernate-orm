@@ -21,7 +21,7 @@ import org.hibernate.persister.entity.EntityPersister;
 
 /**
  * A base class for entity insert actions.
- *
+ *	一个实体插入动作的级别类
  * @author Gail Badner
  */
 public abstract class AbstractEntityInsertAction extends EntityAction {

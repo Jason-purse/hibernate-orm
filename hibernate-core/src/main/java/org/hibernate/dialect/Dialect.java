@@ -3136,7 +3136,7 @@ public abstract class Dialect implements ConversionContext {
 
 	/**
 	 * Does this dialect support the SQL lateral keyword or a proprietary alternative?
-	 *
+	 * 方言 是否支持 SQL lateral 关键字  或者一个相关的属性
 	 * @return {@code true} if the underlying database supports lateral,
 	 * {@code false} otherwise.  The default is {@code false}.
 	 */

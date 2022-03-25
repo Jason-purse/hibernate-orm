@@ -23,7 +23,7 @@ import org.hibernate.sql.ast.tree.expression.JdbcParameter;
  */
 public class AbstractJdbcOperation implements JdbcOperation {
 	protected final String sql;
-	protected final List<JdbcParameterBinder> parameterBinders;
+	protected final List<JdbcParameterBinder> parameterBinders; // 需要preparedStatement
 	protected final Set<String> affectedTableNames;  // 受影响的表名
 	protected final Set<FilterJdbcParameter> filterJdbcParameters; //  ??
 	protected final Map<JdbcParameter, JdbcParameterBinding> appliedParameters; // 应用的 参数

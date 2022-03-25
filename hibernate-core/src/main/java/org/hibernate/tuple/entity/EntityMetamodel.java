@@ -75,7 +75,7 @@ public class EntityMetamodel implements Serializable {
 	private final boolean versioned;  // 乐观锁??
 
 	private final int propertySpan;
-	private final int versionPropertyIndex;
+	private final int versionPropertyIndex; // 乐观锁index
 	private final NonIdentifierAttribute[] properties;
 	// temporary ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	private final String[] propertyNames;

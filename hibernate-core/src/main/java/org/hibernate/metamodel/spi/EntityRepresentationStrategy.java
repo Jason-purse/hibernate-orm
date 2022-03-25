@@ -15,7 +15,7 @@ import org.hibernate.type.descriptor.java.JavaType;
 /**
  * Specialization of {@link ManagedTypeRepresentationStrategy} for an entity type
  * adding the ability to generate an instantiator and a proxy factory
- *
+ *	属性访问策略规定 - 增加一种能力  - 能够生成实例化器  以及 代理工厂
  * @author Steve Ebersole
  */
 public interface EntityRepresentationStrategy extends ManagedTypeRepresentationStrategy {

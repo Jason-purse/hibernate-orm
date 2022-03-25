@@ -44,7 +44,7 @@ public class LockOptions implements Serializable {
 	 */
 	public static final int NO_WAIT = 0;
 
-	/**
+	/** 永远等待不超时
 	 * Indicates that there is no timeout for the acquisition.
 	 * @see #getTimeOut
 	 */
@@ -136,10 +136,10 @@ public class LockOptions implements Serializable {
 
 	/**
 	 * Get the {@link LockMode} explicitly specified for the given alias via
-	 * {@link #setAliasSpecificLockMode}
+	 * {@link #setAliasSpecificLockMode} 获取通过给定方法设置别名的LockMode
 	 * <p/>
 	 * Differs from {@link #getEffectiveLockMode} in that here we only return
-	 * explicitly specified alias-specific lock modes.
+	 * explicitly specified alias-specific lock modes.  不同于getEffectiveLockMode , 我们仅仅返回显示指定的特定于别名的lock modes;
 	 *
 	 * @param alias The alias for which to locate the explicit lock mode.
 	 *

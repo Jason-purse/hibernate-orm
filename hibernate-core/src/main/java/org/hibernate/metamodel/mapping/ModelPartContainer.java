@@ -8,7 +8,7 @@ package org.hibernate.metamodel.mapping;
 
 /**
  * Access to a group of ModelPart by name or for iteration
- *
+ *  通过名称 或者迭代访问一个ModelPart的分组
  * @author Steve Ebersole
  */
 public interface ModelPartContainer extends ModelPart, Queryable {

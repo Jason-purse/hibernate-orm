@@ -33,7 +33,7 @@ import org.hibernate.type.BasicTypeReference;
 
 /**
  * Access to all of the externalized JDBC parameter bindings
- *
+ * 访问所有外部的JDBC 参数绑定
  * @apiNote "Externalized" because some JDBC parameter values are
  * intrinsically part of the parameter itself and we do not need to
  * locate a JdbcParameterBinding.  E.g., consider a
@@ -41,7 +41,7 @@ import org.hibernate.type.BasicTypeReference;
  * which actually encapsulates the actually literal value inside
  * itself - to create the binder and actually perform the binding
  * is only dependent on the LiteralParameter
- *
+ * 外部化 是因为某些JDBC 参数值 是本就是参数的一部分  并且我们不需要获取一个JdbcParameterBinding  例如 LiteralAsParameter  这实际上封装了实际的文本值到它的内部, 为了创建binder 并实际执行这个binding 仅仅只需要依赖于LiteralParameter...
  * @author Steve Ebersole
  */
 public interface JdbcParameterBindings {
@@ -98,7 +98,7 @@ public interface JdbcParameterBindings {
 						jdbcParameters.get( selectionIndex ),
 						new JdbcParameterBindingImpl(
 								BindingTypeHelper.INSTANCE.resolveBindType(
-										jdbcValue,
+										jdbcValue, // 需要绑定的值
 										type,
 										session.getFactory().getTypeConfiguration()
 								),

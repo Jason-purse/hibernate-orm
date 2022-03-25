@@ -22,7 +22,7 @@ public interface SqlAppender extends Appendable {
 	char CLOSE_PARENTHESIS = ')';
 
 	char PARAM_MARKER = '?';
-
+	// null KEYWORD
 	String NULL_KEYWORD = "null";
 
 	/**

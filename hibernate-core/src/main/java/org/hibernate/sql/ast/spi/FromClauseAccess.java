@@ -16,6 +16,8 @@ import org.hibernate.sql.ast.tree.from.TableGroup;
  * Access to TableGroup indexing.  The indexing is defined in terms
  * of {@link NavigablePath}
  *
+ * 访问 TableGroup 索引, 这个 索引定义依照 NavigablePath
+ *
  * @author Steve Ebersole
  */
 public interface FromClauseAccess {

@@ -91,6 +91,7 @@ public interface SqlAstWalker {
 
 	void visitQueryGroup(QueryGroup queryGroup);
 
+	// 查看查询Spec
 	void visitQuerySpec(QuerySpec querySpec);
 
 	void visitSortSpecification(SortSpecification sortSpecification);
@@ -98,15 +99,18 @@ public interface SqlAstWalker {
 	void visitOffsetFetchClause(QueryPart querySpec);
 
 	void visitSelectClause(SelectClause selectClause);
-
+		// select item
 	void visitSqlSelection(SqlSelection sqlSelection);
 
+	// 查看  from clause
 	void visitFromClause(FromClause fromClause);
 
+	// 查看 table clause
 	void visitTableGroup(TableGroup tableGroup);
 
 	void visitTableGroupJoin(TableGroupJoin tableGroupJoin);
 
+	// 命名表引用
 	void visitNamedTableReference(NamedTableReference tableReference);
 
 	void visitValuesTableReference(ValuesTableReference tableReference);
@@ -117,6 +121,7 @@ public interface SqlAstWalker {
 
 	void visitTableReferenceJoin(TableReferenceJoin tableReferenceJoin);
 
+	// 查看 ColumnReference
 	void visitColumnReference(ColumnReference columnReference);
 
 	void visitExtractUnit(ExtractUnit extractUnit);
@@ -185,6 +190,7 @@ public interface SqlAstWalker {
 
 	void visitExistsPredicate(ExistsPredicate existsPredicate);
 
+	// where 条件
 	void visitJunction(Junction junction);
 
 	void visitLikePredicate(LikePredicate likePredicate);

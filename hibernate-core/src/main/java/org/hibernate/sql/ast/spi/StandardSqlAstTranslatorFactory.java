@@ -47,6 +47,6 @@ public class StandardSqlAstTranslatorFactory implements SqlAstTranslatorFactory 
 	}
 
 	protected <T extends JdbcOperation> SqlAstTranslator<T> buildTranslator(SessionFactoryImplementor sessionFactory, Statement statement) {
-		return new StandardSqlAstTranslator<>( sessionFactory, statement );
+		return new StandardSqlAstTranslator<>( sessionFactory, statement ); // 一般来说都会被覆盖
 	}
 }

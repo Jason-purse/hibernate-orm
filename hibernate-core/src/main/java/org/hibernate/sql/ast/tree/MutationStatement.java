@@ -13,6 +13,7 @@ import org.hibernate.sql.ast.tree.from.NamedTableReference;
 
 /**
  * Specialization of Statement for mutation (DML) statements
+ * 指定一个DML 语句的规范
  *
  * @author Steve Ebersole
  */

@@ -8,14 +8,14 @@ package org.hibernate.engine.spi;
 
 import org.hibernate.bytecode.enhance.spi.CollectionTracker;
 
-/**
+/** 合同一个实体报告说它追踪自己的污秽的状态,而不是需要Hibernate执行state-diff肮脏的计算。 p
  * Contract for an entity to report that it tracks the dirtiness of its own state,
  * as opposed to needing Hibernate to perform state-diff dirty calculations.
  * <p/>
  * Entity classes are free to implement this contract themselves.  This contract is
  * also introduced into the entity when using bytecode enhancement and requesting
  * that entities track their own dirtiness.
- *
+ * >实体类可以实现本合同本身。本合同也引入实体使用字节码增强时,要求实体跟踪自己的污秽。
  * @author <a href="mailto:stale.pedersen@jboss.org">Ståle W. Pedersen</a>
  */
 public interface SelfDirtinessTracker {

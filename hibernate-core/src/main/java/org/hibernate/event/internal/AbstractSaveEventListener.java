@@ -114,7 +114,7 @@ public abstract class AbstractSaveEventListener<C>
 		Object generatedId = persister.getIdentifierGenerator().generate( source, entity );
 		if ( generatedId == null ) {
 			throw new IdentifierGenerationException( "null id generated for: " + entity.getClass() );
-		}
+		} // 应该是已经保存好了 ..
 		else if ( generatedId == IdentifierGeneratorHelper.SHORT_CIRCUIT_INDICATOR ) {
 			return source.getIdentifier( entity );
 		}
@@ -171,9 +171,9 @@ public abstract class AbstractSaveEventListener<C>
 			key = source.generateEntityKey( id, persister );
 			final PersistenceContext persistenceContext = source.getPersistenceContextInternal();
 			Object old = persistenceContext.getEntity( key );
-			if ( old != null ) {
-				if ( persistenceContext.getEntry( old ).getStatus() == Status.DELETED ) {
-					source.forceFlush( persistenceContext.getEntry( old ) );
+			if ( old != null ) { // 如果以前存在
+				if ( persistenceContext.getEntry( old ).getStatus() == Status.DELETED ) { // 并且如果为删除
+					source.forceFlush( persistenceContext.getEntry( old ) ); // 刷新
 				}
 				else {
 					throw new NonUniqueObjectException( id, persister.getEntityName() );
@@ -239,7 +239,7 @@ public abstract class AbstractSaveEventListener<C>
 			boolean requiresImmediateIdAccess) {
 
 		Object id = key == null ? null : key.getIdentifier();
-
+		// 是否在事务中 ??
 		boolean inTrx = source.isTransactionInProgress();
 		boolean shouldDelayIdentityInserts = !inTrx && !requiresImmediateIdAccess;
 		final PersistenceContext persistenceContext = source.getPersistenceContextInternal();
@@ -261,17 +261,17 @@ public abstract class AbstractSaveEventListener<C>
 		);
 
 		cascadeBeforeSave( source, persister, entity, context );
-
+		// 获取需要插入的values
 		Object[] values = persister.getPropertyValuesToInsert( entity, getMergeMap( context ), source );
-		Type[] types = persister.getPropertyTypes();
-
+		Type[] types = persister.getPropertyTypes(); // 获取属性类型 ...
+		// 替代Values(如果有必要)
 		boolean substitute = substituteValuesIfNecessary( entity, id, values, persister, source );
-
-		if ( persister.hasCollections() ) {
+		// 是否为集合
+		if ( persister.hasCollections() ) {  // 保存前查看集合 ..
 			substitute = visitCollectionsBeforeSave( entity, id, values, types, source ) || substitute;
 		}
 
-		if ( substitute ) {
+		if ( substitute ) { // 替换 ...
 			persister.setValues( entity, values );
 		}
 
@@ -282,7 +282,7 @@ public abstract class AbstractSaveEventListener<C>
 				values,
 				source
 		);
-
+		// 增加插入动作到 queue
 		final AbstractEntityInsertAction insert = addInsertAction(
 				values,
 				id,
@@ -292,34 +292,34 @@ public abstract class AbstractSaveEventListener<C>
 				source,
 				shouldDelayIdentityInserts
 		);
-
+		// 在插入一个非空的transient 依赖之后 需要初始化id
 		// postpone initializing id in case the insert has non-nullable transient dependencies
-		// that are not resolved until cascadeAfterSave() is executed
+		// that are not resolved until cascadeAfterSave() is executed // 知道所有的级联 更新执行之后解析
 		cascadeAfterSave( source, persister, entity, context );
-		if ( useIdentityColumn && insert.isEarlyInsert() ) {
-			if ( !(insert instanceof EntityIdentityInsertAction) ) {
+		if ( useIdentityColumn && insert.isEarlyInsert() ) { // 异步插入的..
+			if ( !(insert instanceof EntityIdentityInsertAction) ) { // 仅当早期插入的,才需要插入之后获取 ..生成的id
 				throw new IllegalStateException(
 						"Insert should be using an identity column, but action is of unexpected type: " +
 								insert.getClass().getName()
 				);
-			}
+			} //
 			id = ((EntityIdentityInsertAction) insert).getGeneratedId();
-
+			// 处理原始id 保存后的通知 (设置一下)
 			insert.handleNaturalIdPostSaveNotifications( id );
 		}
-
+		// 否则根据这个EntityEntry(保存的EntityEntry 缓存)
 		EntityEntry newEntry = persistenceContext.getEntry( entity );
 
-		if ( newEntry != original ) {
+		if ( newEntry != original ) { // 如果两个不相等 ...
 			EntityEntryExtraState extraState = newEntry.getExtraState( EntityEntryExtraState.class );
-			if ( extraState == null ) {
-				newEntry.addExtraState( original.getExtraState( EntityEntryExtraState.class ) );
+			if ( extraState == null ) { // 如果为空
+				newEntry.addExtraState( original.getExtraState( EntityEntryExtraState.class ) ); // 增加一个额外的状态
 			}
 		}
 
 		return id;
 	}
-
+	// 增加Insert Action
 	private AbstractEntityInsertAction addInsertAction(
 			Object[] values,
 			Object id,
@@ -455,7 +455,7 @@ public abstract class AbstractSaveEventListener<C>
 
 	/**
 	 * Handles calls needed to perform post-save cascades.
-	 *
+	 *	执行保存后的级联调用
 	 * @param source The session from which the event originated.
 	 * @param persister The entity's persister instance.
 	 * @param entity The entity being saved.

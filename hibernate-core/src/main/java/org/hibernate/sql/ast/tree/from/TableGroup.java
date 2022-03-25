@@ -37,11 +37,11 @@ public interface TableGroup extends SqlAstNode, ColumnReferenceQualifier, SqmPat
 	String getGroupAlias();
 
 	ModelPartContainer getModelPart();
-
+	// 获取表别名
 	String getSourceAlias();
-
+	// 和这个组本身统计的连接表
 	List<TableGroupJoin> getTableGroupJoins();
-
+	// 内嵌的连接表组
 	List<TableGroupJoin> getNestedTableGroupJoins();
 	
 	boolean canUseInnerJoins();
@@ -109,6 +109,7 @@ public interface TableGroup extends SqlAstNode, ColumnReferenceQualifier, SqmPat
 
 	TableReference getPrimaryTableReference();
 
+	// 连接表
 	List<TableReferenceJoin> getTableReferenceJoins();
 
 	@Override

@@ -18,7 +18,7 @@ import org.hibernate.sql.ast.SqlAstWalker;
 
 /**
  * Represents a reference to a "named" table in a query's from clause.
- *
+ *	一个(在查询的 from 子句 中)命名的表的约定 -
  * @author Steve Ebersole
  */
 public class NamedTableReference extends AbstractTableReference {
@@ -35,7 +35,7 @@ public class NamedTableReference extends AbstractTableReference {
 		assert tableExpression != null;
 		this.tableExpression = tableExpression;
 	}
-
+	// 表表达式
 	public String getTableExpression() {
 		return prunedTableExpression == null ? tableExpression : prunedTableExpression;
 	}

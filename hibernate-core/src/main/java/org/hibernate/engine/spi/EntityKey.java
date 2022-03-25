@@ -20,9 +20,13 @@ import org.hibernate.pretty.MessageHelper;
  * Uniquely identifies of an entity instance in a particular Session by identifier.
  * Note that it's only safe to be used within the scope of a Session: it doesn't consider for example the tenantId
  * as part of the equality definition.
+ *
+ * 通过identifier 在一个 特殊的 会话中唯一标识一个entity 实例
  * <p/>
  * Information used to determine uniqueness consists of the entity-name and the identifier value (see {@link #equals}).
+ * 这个 信息包括 独一无二的entity  name /  identifier value
  * <p/>
+ * // 性能考虑,  在运行时 这个类存在大量的实例,  确保它足够小- 尽可能存储只需要的东西 。。
  * Performance considerations: lots of instances of this type are created at runtime. Make sure each one is as small as possible
  * by storing just the essential needed.
  *

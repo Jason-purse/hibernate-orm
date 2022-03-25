@@ -40,7 +40,7 @@ import org.hibernate.sql.exec.spi.JdbcOperation;
  * @author Christian Beikov
  */
 public class H2SqlAstTranslator<T extends JdbcOperation> extends AbstractSqlAstTranslator<T> {
-
+	// 作为数组渲染
 	private boolean renderAsArray;
 
 	public H2SqlAstTranslator(SessionFactoryImplementor sessionFactory, Statement statement) {
@@ -79,7 +79,7 @@ public class H2SqlAstTranslator<T extends JdbcOperation> extends AbstractSqlAstT
 				renderOffsetFetchClause( queryPart, true );
 			}
 			else {
-				// FETCH PERCENT and WITH TIES were introduced along with window functions
+				// FETCH PERCENT and WITH TIES were introduced along with window functions (fetch precent / with ties 在窗口函数中引入)
 				throw new IllegalArgumentException( "Can't emulate fetch clause type: " + queryPart.getFetchClauseType() );
 			}
 		}
@@ -130,7 +130,7 @@ public class H2SqlAstTranslator<T extends JdbcOperation> extends AbstractSqlAstT
 		final boolean renderAsArray = this.renderAsArray;
 		this.renderAsArray = false;
 		if ( renderAsArray ) {
-			append( OPEN_PARENTHESIS );
+			append( OPEN_PARENTHESIS ); // 作为数组, 追加 (
 		}
 		super.visitSqlSelections( selectClause );
 		if ( renderAsArray ) {
@@ -162,20 +162,20 @@ public class H2SqlAstTranslator<T extends JdbcOperation> extends AbstractSqlAstT
 		render( arithmeticExpression.getRightHandOperand(), SqlAstNodeRenderingMode.NO_PLAIN_PARAMETER );
 		appendSql( CLOSE_PARENTHESIS );
 	}
-
+	// 渲染主表引用
 	@Override
 	protected boolean renderPrimaryTableReference(TableGroup tableGroup, LockMode lockMode) {
 		final TableReference tableRef = tableGroup.getPrimaryTableReference();
-		// The H2 parser can't handle a sub-query as first element in a nested join
-		// i.e. `join ( (select ...) alias join ... )`, so we have to introduce a dummy table reference
-		if ( tableRef instanceof QueryPartTableReference || tableRef.getTableId().startsWith( "(select" ) ) {
-			final boolean realTableGroup = tableGroup.isRealTableGroup()
+		// The H2 parser can't handle a sub-query as first element in a nested join ,h2 解析器无法处理内嵌连接中的第一个子查询元素 ...
+		// i.e. `join ( (select ...) alias join ... )`, so we have to introduce a dummy table reference // 因此 我们需要引入一个临时表引用 ;
+		if ( tableRef instanceof QueryPartTableReference || tableRef.getTableId().startsWith( "(select" ) ) { // 如果是子查询 或者以(select 开始)
+			final boolean realTableGroup = tableGroup.isRealTableGroup() // 是真的表组 并且  连接 不为空? 或存在内嵌的表group 可以渲染 ??
 					&& ( CollectionHelper.isNotEmpty( tableGroup.getTableReferenceJoins() )
 					|| hasNestedTableGroupsToRender( tableGroup.getNestedTableGroupJoins() ) );
 			if ( realTableGroup ) {
 				appendSql( "dual cross join " );
 			}
-		}
+		} // 父亲处理 ...
 		return super.renderPrimaryTableReference( tableGroup, lockMode );
 
 	}

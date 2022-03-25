@@ -39,8 +39,9 @@ public class QuerySpec extends QueryPart implements SqlAstNode, PredicateContain
 
 	// where 子句限制
 	private Predicate whereClauseRestrictions;
-
+	// group by
 	private List<Expression> groupByClauseExpressions = Collections.emptyList();
+	// having
 	private Predicate havingClauseRestrictions;
 
 	public QuerySpec(boolean isRoot) {

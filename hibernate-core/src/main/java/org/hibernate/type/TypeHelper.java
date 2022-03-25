@@ -15,7 +15,7 @@ import org.hibernate.property.access.internal.PropertyAccessStrategyBackRefImpl;
 
 /**
  * Certain operations for working with arrays of property values.
- *
+ *	属性值数组上 的某些操作 进行工作
  * @author Steve Ebersole
  */
 @Internal

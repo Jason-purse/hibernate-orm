@@ -25,10 +25,10 @@ import org.hibernate.sql.results.spi.LoadContexts;
 /**表示 Hibernate 正在跟踪的“东西”的状态，包括（不详尽）：
  * Represents the state of "stuff" Hibernate is tracking, including (not exhaustive):
  * <ul>
- *     <li>entities</li>
- *     <li>collections</li>
- *     <li>snapshots</li>
- *     <li>proxies</li>
+ *     <li>entities</li> //  entities
+ *     <li>collections</li> 集合
+ *     <li>snapshots</li> 快照
+ *     <li>proxies</li> 代理
  * </ul>
  * <p/>
  * Often referred to as the "first level cache".

@@ -123,6 +123,7 @@ public class AbstractSqlAstWalker implements SqlAstWalker {
 
 	@Override
 	public void visitSelectClause(SelectClause selectClause) {
+		// 拿到所有 的SqlSelection
 		for ( SqlSelection sqlSelection : selectClause.getSqlSelections() ) {
 			sqlSelection.accept( this );
 		}
@@ -202,7 +203,9 @@ public class AbstractSqlAstWalker implements SqlAstWalker {
 
 	@Override
 	public void visitJunction(Junction junction) {
+		// 拿到每一个junction
 		for ( Predicate predicate : junction.getPredicates() ) {
+			// 然后
 			predicate.accept( this );
 		}
 	}
@@ -313,17 +316,23 @@ public class AbstractSqlAstWalker implements SqlAstWalker {
 
 	@Override
 	public void visitQuerySpec(QuerySpec querySpec) {
+		// 先拿到 select clause
 		querySpec.getSelectClause().accept( this );
+		// 然后拿到 from clause
 		querySpec.getFromClause().accept( this );
+		// 然后 where  clause
 		if ( querySpec.getWhereClauseRestrictions() != null ) {
 			querySpec.getWhereClauseRestrictions().accept( this );
 		}
+		// 然后 group by  clause
 		for ( Expression groupByClauseExpression : querySpec.getGroupByClauseExpressions() ) {
 			groupByClauseExpression.accept( this );
 		}
+		// 然后 having
 		if ( querySpec.getHavingClauseRestrictions() != null ) {
 			querySpec.getHavingClauseRestrictions().accept( this );
 		}
+		// 然后  offset
 		visitOffsetFetchClause( querySpec );
 	}
 
@@ -398,14 +407,17 @@ public class AbstractSqlAstWalker implements SqlAstWalker {
 
 	@Override
 	public void visitTableReferenceJoin(TableReferenceJoin tableReferenceJoin) {
+		// 连接表 获取连接表引用
 		tableReferenceJoin.getJoinedTableReference().accept( this );
-		if ( tableReferenceJoin.getPredicate() != null ) {
+		if ( tableReferenceJoin.getPredicate() != null ) { // 如果存在条件
+			// 就相当于是where 条件
 			tableReferenceJoin.getPredicate().accept( this );
 		}
 	}
 
 	@Override
 	public void visitFromClause(FromClause fromClause) {
+		// from clause 可能有多个 table ???
 		for ( TableGroup root : fromClause.getRoots() ) {
 			root.accept( this );
 		}
@@ -413,7 +425,9 @@ public class AbstractSqlAstWalker implements SqlAstWalker {
 
 	@Override
 	public void visitTableGroup(TableGroup tableGroup) {
+		// 表group   获取主表引用
 		tableGroup.getPrimaryTableReference().accept( this );
+		//  表连接 ??
 		for ( TableReferenceJoin tableReferenceJoin : tableGroup.getTableReferenceJoins() ) {
 			tableReferenceJoin.accept( this );
 		}

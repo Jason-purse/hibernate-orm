@@ -12,8 +12,9 @@ import org.hibernate.type.descriptor.java.JavaType;
 
 /**
  * Marker for all object types that can be part of a result mapping
- *
+ *	确保所有的对象类型 - 能够作为结果 映射的 一部分
  * Both {@link DomainResult} and {@link Fetch} are ResultSetMappingNode subtypes.
+ * DomainResult  / Fetch 都是ResultSetMappingNode 的子类型
  *
  * @author Steve Ebersole
  */

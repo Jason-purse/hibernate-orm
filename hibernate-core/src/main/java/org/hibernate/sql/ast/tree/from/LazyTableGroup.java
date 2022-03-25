@@ -24,8 +24,8 @@ import org.hibernate.sql.ast.spi.SqlAliasBase;
  * If it is not needed, we can safely skip rendering it. This is useful for ToOneAttributeMapping and EntityCollectionPart,
  * where we need a table group for the association, but aren't sure which columns are needed yet.
  * Deferring initialization enables getting away with fewer joins in case only foreign key columns are used.
- *
- * @author Christian Beikov
+ *  用于表group 的延迟创建  实际的表组 - 直到它真的需要创建... 如果它不是很需要,你可以安全的跳过渲染, 这是有用的(ToOneAttributeMapping 以及 EntityCollectionPart)
+ * @author Christian Beikov // 为了联系我们需要一个表,但是不知道需要哪些列。 延迟初始化使得有一种方式使用更少的join(仅仅在外键column 使用的情况下)...
  */
 public class LazyTableGroup extends DelegatingTableGroup {
 

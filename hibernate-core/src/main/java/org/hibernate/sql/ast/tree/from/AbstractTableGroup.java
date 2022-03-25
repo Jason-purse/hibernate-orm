@@ -28,8 +28,8 @@ public abstract class AbstractTableGroup extends AbstractColumnReferenceQualifie
 	private final String sourceAlias;
 	private final SqlAliasBase sqlAliasBase;
 
-	private List<TableGroupJoin> tableGroupJoins;
-	private List<TableGroupJoin> nestedTableGroupJoins;
+	private List<TableGroupJoin> tableGroupJoins; // 同级表组关联
+	private List<TableGroupJoin> nestedTableGroupJoins; // 内嵌表组Join
 
 	private final SessionFactoryImplementor sessionFactory;
 

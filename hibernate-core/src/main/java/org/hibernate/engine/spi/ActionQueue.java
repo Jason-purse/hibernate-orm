@@ -252,7 +252,7 @@ public class ActionQueue {
 	}
 
 	private void addInsertAction(AbstractEntityInsertAction insert) {
-		if ( insert.isEarlyInsert() ) {
+		if ( insert.isEarlyInsert() ) { //早期初始化  必须在发现非空transient entities之前插入 ..
 			// For early inserts, must execute inserts before finding non-nullable transient entities.
 			// TODO: find out why this is necessary
 			LOG.tracev( "Executing inserts before finding non-nullable transient entities for early insert: [{0}]", insert );

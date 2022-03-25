@@ -9,7 +9,7 @@ package org.hibernate.engine.spi;
 
 /**
  * Navigation methods for extra state objects attached to {@link EntityEntry}.
- *
+ *	从EntityEntry上抓取额外的状态对象的导航方法
  * @author <a href="mailto:emmanuel@hibernate.org">Emmanuel Bernard</a>
  */
 public interface EntityEntryExtraState {

@@ -17,7 +17,7 @@ import jakarta.persistence.LockModeType;
  * obtains exactly the right lock level automatically.
  * Some "advanced" users may wish to explicitly specify lock
  * levels.
- *
+ * 一个关系型数据库表的锁级别, 他并没有打算让用户去担心锁 - 因为Hibernate 通常包含了正确的锁级别 ..(自动), 有些高级用户希望显式的指定锁级别  ..
  * @author Gavin King
  *
  * @see Session#lock(Object, LockMode)

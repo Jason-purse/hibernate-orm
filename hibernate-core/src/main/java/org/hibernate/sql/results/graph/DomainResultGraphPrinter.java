@@ -56,9 +56,11 @@ public class DomainResultGraphPrinter {
 	}
 
 	private void visitDomainResults(List<DomainResult<?>> domainResults) {
+		// 遍历
 		for ( int i = 0; i < domainResults.size(); i++ ) {
 			final DomainResult<?> domainResult = domainResults.get( i );
 			// DomainResults should always be the base for a branch
+			// 对应每一个分支 它都应该是空的 ..
 			assert fetchParentStack.isEmpty();
 
 			final boolean lastInBranch = i + 1 == domainResults.size();
@@ -79,22 +81,22 @@ public class DomainResultGraphPrinter {
 
 	private void visitGraphNode(DomainResultGraphNode node, boolean lastInBranch, String nodeText) {
 		indentLine();
-
+		// 表示分支的 末尾
 		if ( lastInBranch ) {
 			buffer.append( " \\-" );
 		}
-		else {
+		else { // 表示开始
 			buffer.append( " +-" );
 		}
-
+		// 节点 内容
 		buffer.append( nodeText );
-		if ( node.getNavigablePath() != null ) {
+		if ( node.getNavigablePath() != null ) { // 如果有更深的路径
 			buffer.append( " [" )
 					.append( node.getNavigablePath().getFullPath() )
 					.append( "]" );
 		}
 		buffer.append( '\n' );
-
+		// 如果节点本身 就是一个父亲节点
 		if ( node instanceof FetchParent ) {
 			visitFetches( (FetchParent) node );
 		}
@@ -105,7 +107,7 @@ public class DomainResultGraphPrinter {
 	}
 
 	private void visitFetches(FetchParent fetchParent) {
-		fetchParentStack.push( fetchParent );
+		fetchParentStack.push( fetchParent ); // 将父亲放入 ...
 
 		try {
 //			final Fetch identifierFetch = fetchParent.getKeyFetch();
@@ -113,13 +115,13 @@ public class DomainResultGraphPrinter {
 //				final boolean lastInBranch = identifierFetch.getFetchedMapping() instanceof FetchParent;
 //				visitKeyGraphNode( identifierFetch, lastInBranch );
 //			}
-
+			// 获取fetch 数量
 			final int numberOfFetches = fetchParent.getFetches().size();
 
 			for ( int i = 0; i < numberOfFetches; i++ ) {
 				final Fetch fetch = fetchParent.getFetches().get( i );
 
-				final boolean lastInBranch = i + 1 == numberOfFetches;
+				final boolean lastInBranch = i + 1 == numberOfFetches; // 表示末尾
 				visitGraphNode( fetch, lastInBranch );
 			}
 		}
@@ -131,12 +133,12 @@ public class DomainResultGraphPrinter {
 	private void indentLine() {
 		fetchParentStack.visitRootFirst(
 				fetchParent -> {
-					final boolean hasSubFetches = ! fetchParent.getFetches().isEmpty();
+					final boolean hasSubFetches = ! fetchParent.getFetches().isEmpty(); // 如果有子Fetch
 					if ( hasSubFetches ) {
-						buffer.append( " | " );
+						buffer.append( " | " ); // 追加一个 |
 					}
 					else {
-						buffer.append( "   " );
+						buffer.append( "   " ); // 追加 " "
 					}
 				}
 		);

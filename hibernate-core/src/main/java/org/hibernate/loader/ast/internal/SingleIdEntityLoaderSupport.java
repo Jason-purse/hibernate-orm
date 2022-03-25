@@ -35,7 +35,7 @@ public abstract class SingleIdEntityLoaderSupport<T> implements SingleIdEntityLo
 		if ( databaseSnapshotExecutor == null ) {
 			databaseSnapshotExecutor = new DatabaseSnapshotExecutor( entityDescriptor, sessionFactory );
 		}
-
+		// 开始 加载快照数据
 		return databaseSnapshotExecutor.loadDatabaseSnapshot( id, session );
 	}
 }

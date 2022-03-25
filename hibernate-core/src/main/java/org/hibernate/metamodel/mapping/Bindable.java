@@ -17,7 +17,7 @@ import org.hibernate.sql.ast.Clause;
 /**
  * Contract for things at the domain mapping level that can be bound
  * into a JDBC {@link java.sql.PreparedStatement}.
- *
+ *	在领域 映射级别上  绑定到 java.sql.PreparedStatement的约定
  * @author Steve Ebersole
  */
 @Incubating

@@ -37,11 +37,17 @@ import org.hibernate.type.descriptor.ValueExtractor;
  * }
  * ```
  *
+ * Sql Selection 实现 ( 类似于上面展示的这样)
+ * // 解析Column
+ *
  * @author Steve Ebersole
  */
 public class SqlSelectionImpl implements SqlSelection, SqlExpressionAccess {
+
 	private final int jdbcPosition;
+
 	private final int valuesArrayPosition;
+	// 表达式
 	private final Expression sqlExpression;
 
 	public SqlSelectionImpl(int jdbcPosition, int valuesArrayPosition, Expression sqlExpression) {

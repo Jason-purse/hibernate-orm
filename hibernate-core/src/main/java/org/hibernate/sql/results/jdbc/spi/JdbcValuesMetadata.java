@@ -12,7 +12,7 @@ import org.hibernate.type.descriptor.java.JavaType;
 
 /**
  * Access to information about the underlying JDBC values
- * such as type, position, column name, etc
+ * such as type, position, column name, etc   访问底层JDBC 数据的信息,例如类型,position / column name
  */
 public interface JdbcValuesMetadata {
 	/**

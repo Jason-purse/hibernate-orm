@@ -67,7 +67,7 @@ public class BasicEntityIdentifierMappingImpl implements BasicEntityIdentifierMa
 	private final Long length;
 	private final Integer precision;
 	private final Integer scale;
-
+	// id  类型是一个基础类型 ...
 	private final BasicType<?> idType;
 
 	private final SessionFactoryImplementor sessionFactory;

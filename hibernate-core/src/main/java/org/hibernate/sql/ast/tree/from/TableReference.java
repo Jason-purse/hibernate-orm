@@ -17,14 +17,14 @@ import org.hibernate.sql.ast.tree.SqlAstNode;
 
 /**
  * Represents a reference to a table (derived or physical) in a query's from clause.
- *
+ *	代表一个引用 查询的from 子句中的一个table(衍生表  或者物理表)
  * @author Steve Ebersole
  */
 public interface TableReference extends SqlAstNode, ColumnReferenceQualifier {
-
+	// 获取标识变量
 	String getIdentificationVariable();
 
-	/**
+	/** 表引用的标识符 ,如果他不是一个命名table  reference 那么则为空
 	 * An identifier for the table reference. May be null if this is not a named table reference.
 	 */
 	String getTableId();

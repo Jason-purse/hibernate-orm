@@ -44,7 +44,7 @@ public final class IdentifierGeneratorHelper {
 		}
 	};
 
-	/**
+	/** // 应该在数据库插入之后  返回 ...
 	 * Marker object returned from {@link IdentifierGenerator#generate} to indicate that the entity's identifier will
 	 * be generated as part of the database insertion.
 	 */

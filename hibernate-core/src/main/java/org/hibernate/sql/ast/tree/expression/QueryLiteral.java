@@ -98,7 +98,7 @@ public class QueryLiteral<T> implements Literal, DomainResultProducer<T> {
 
 	@Override
 	public void accept(SqlAstWalker walker) {
-		walker.visitQueryLiteral( this );
+		walker.visitQueryLiteral( this ); // 查看QueryLiteral
 	}
 
 	@Override

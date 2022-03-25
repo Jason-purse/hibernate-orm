@@ -16,7 +16,7 @@ import org.hibernate.sql.ast.SqlAstWalker;
 import org.hibernate.sql.results.graph.DomainResult;
 import org.hibernate.sql.results.graph.DomainResultCreationState;
 
-/**
+/** 查询组
  * @author Christian Beikov
  */
 public class QueryGroup extends QueryPart {

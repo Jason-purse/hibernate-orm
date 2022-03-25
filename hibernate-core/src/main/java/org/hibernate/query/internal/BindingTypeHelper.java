@@ -23,7 +23,7 @@ import org.hibernate.type.spi.TypeConfiguration;
 
 import jakarta.persistence.TemporalType;
 
-/**
+/** 绑定类型帮助器
  * @author Steve Ebersole
  */
 public class BindingTypeHelper {
@@ -59,13 +59,13 @@ public class BindingTypeHelper {
 
 		return declaredParameterType;
 	}
-
+	//解析 Bind 类型
 	public JdbcMapping resolveBindType(
 			Object value,
 			JdbcMapping baseType,
 			TypeConfiguration typeConfiguration) {
 		if ( value == null || !( baseType.getJavaTypeDescriptor() instanceof TemporalJavaType<?> ) ) {
-			return baseType;
+			return baseType; // 不是时间类型, 不处理 ..
 		}
 
 		final Class<?> javaType = value.getClass();

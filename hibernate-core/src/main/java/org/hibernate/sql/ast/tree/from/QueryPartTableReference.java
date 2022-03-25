@@ -15,7 +15,7 @@ import org.hibernate.sql.ast.tree.select.QueryPart;
 
 /**
  * A table reference for a query part.
- *
+ *	一个查询部分的表引用
  * @author Christian Beikov
  */
 public class QueryPartTableReference extends DerivedTableReference {

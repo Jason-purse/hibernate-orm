@@ -183,11 +183,11 @@ class DatabaseSnapshotExecutor {
 		if ( log.isTraceEnabled() ) {
 			log.tracef( "Getting current persistent state for `%s#%s`", entityDescriptor.getEntityName(), id );
 		}
-
+		// 获取
 		final JdbcParameterBindings jdbcParameterBindings = new JdbcParameterBindingsImpl(
 				entityDescriptor.getIdentifierMapping().getJdbcTypeCount()
 		);
-
+		// 为每一个参数注册值
 		int offset = jdbcParameterBindings.registerParametersForEachJdbcValue(
 				id,
 				Clause.WHERE,

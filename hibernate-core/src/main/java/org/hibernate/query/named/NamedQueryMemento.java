@@ -19,7 +19,10 @@ import org.hibernate.query.spi.QueryParameterImplementor;
  * The runtime representation of named queries.  They are stored in and
  * available through the QueryEngine's {@link NamedObjectRepository}.
  *
+ * 标识运行时的一个命名查询 , 它们存储并可以通过QueryEngine的NamedObjectRepository 使用
+ *
  * This is the base contract for all specific types of named query mementos
+ * 这是所有特定类型的命名查询的基础契约纪念品
  *
  * @author Steve Ebersole
  */

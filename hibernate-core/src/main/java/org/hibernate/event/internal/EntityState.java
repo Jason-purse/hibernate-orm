@@ -56,6 +56,7 @@ public enum EntityState {
 		// the entity is not associated with the session, so
 		// try interceptor and unsaved-value
 
+		// 这里有一个机会抓取 快照信息
 		if ( ForeignKeys.isTransient( entityName, entity, assumedUnsaved, source ) ) {
 			if ( LOG.isTraceEnabled() ) {
 				LOG.tracev( "Transient instance of: {0}", EventUtil.getLoggableName( entityName, entity ) );

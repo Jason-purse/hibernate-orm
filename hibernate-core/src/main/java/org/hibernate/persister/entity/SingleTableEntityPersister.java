@@ -83,7 +83,7 @@ public class SingleTableEntityPersister extends AbstractEntityPersister {
 	private final boolean[] isNullableTable;
 	private final String[][] keyColumnNames;
 	private final boolean[] cascadeDeleteEnabled;
-
+	// 空间(多个名,代表了多个衍生的表..)
 	private final String[] spaces;
 
 	private final String[] subclassClosure;

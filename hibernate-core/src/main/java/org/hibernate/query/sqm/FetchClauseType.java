@@ -8,12 +8,12 @@ package org.hibernate.query.sqm;
 
 /**
  * The kind of fetch to use for the FETCH clause.
- *
+ *	FETCH 语句的fetch 种类
  * @author Christian Beikov
  */
 public enum FetchClauseType {
 	/**
-	 * Exact row count like for LIMIT clause or FETCH FIRST x ROWS ONLY.
+	 * Exact row count like for LIMIT clause or FETCH FIRST x ROWS ONLY.类似于 Fetch first * rows
 	 */
 	ROWS_ONLY,
 	/**

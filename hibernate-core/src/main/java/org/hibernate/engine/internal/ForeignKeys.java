@@ -22,7 +22,7 @@ import org.hibernate.type.Type;
 
 /**
  * Algorithms related to foreign key constraint transparency
- * 外键约束明朗的相关算法 ...
+ * 外键约束明透明的相关算法 ...
  *
  * @author Gavin King
  */

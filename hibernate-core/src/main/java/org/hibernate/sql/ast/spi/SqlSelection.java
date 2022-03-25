@@ -58,6 +58,7 @@ public interface SqlSelection extends SqlAstNode {
 	 */
 	JdbcMappingContainer getExpressionType();
 
+	// 解析入口
 	void accept(SqlAstWalker sqlAstWalker);
 
 	SqlSelection resolve(JdbcValuesMetadata jdbcResultsMetadata, SessionFactoryImplementor sessionFactory);

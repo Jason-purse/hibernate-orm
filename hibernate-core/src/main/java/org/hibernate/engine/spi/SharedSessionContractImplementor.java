@@ -40,21 +40,27 @@ import org.hibernate.type.spi.TypeConfiguration;
  * {@link org.hibernate.type.Type}, {@link EntityPersister} and
  * {@link org.hibernate.persister.collection.CollectionPersister} implementors
  *
+ * 定义了一个内部约定 - 在 Session 和 StatelessSession(被 Hibernate的 其他部分使用,例如 Type / EntityPersister,以及 CollectionPersister 实现器)
+ *
  * A Session, through this interface and SharedSessionContractImplementor, implements:<ul>
  *     <li>
+ *         实现了此接口 他需要实现 JDBCSessionOwner 驱动 jdbc session的行为   能够被用来构造JddbcCoordinator ,包含了JDBC 会话模型..
  *         {@link JdbcSessionOwner} to drive the behavior of a "JDBC session".
  *         Can therefor be used to construct a JdbcCoordinator, which (for now) models a "JDBC session"
  *     </li>
  *     <li>
  *         {@link Options}
+ *         Options 驱动 TransactionCoordinator 代理的创建
  *         to drive the creation of the {@link TransactionCoordinator} delegate.
  *         This allows it to be passed along to
  *         {@link org.hibernate.resource.transaction.spi.TransactionCoordinatorBuilder#buildTransactionCoordinator}
  *     </li>
  *     <li>
+ *         LobCreationContext 作为JDBC LOB 实例创建的上下文
  *         {@link LobCreationContext} to act as the context for JDBC LOB instance creation
  *     </li>
  *     <li>
+ *         // 需要从JDBC中绑定或者抓取值 作为Type  约定的 一部分的所有行为 ..
  *         {@link WrapperOptions} to fulfill the behavior needed while
  *         binding/extracting values to/from JDBC as part of the Type contracts
  *     </li>
