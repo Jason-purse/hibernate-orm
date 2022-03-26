@@ -79,6 +79,7 @@ public class ActionQueue {
 	// Object insertions, updates, and deletions have list semantics because
 	// they must happen in the right order so as to respect referential
 	// integrity
+	// insert / update / deletion 都有列表语义 - 因为它们必须有序的插入 - 因此我们关心引用完整性...
 	private ExecutableList<AbstractEntityInsertAction> insertions;
 	private ExecutableList<EntityDeleteAction> deletions;
 	private ExecutableList<EntityUpdateAction> updates;
@@ -278,9 +279,9 @@ public class ActionQueue {
 	private void addResolvedEntityInsertAction(AbstractEntityInsertAction insert) {
 		if ( insert.isEarlyInsert() ) {
 			LOG.trace( "Executing insertions before resolved early-insert" );
-			executeInserts();
+			executeInserts(); // 执行插入
 			LOG.debug( "Executing identity-insert immediately" );
-			execute( insert );
+			execute( insert ); // 执行insert
 		}
 		else {
 			LOG.trace( "Adding resolved non-early insert action." );
@@ -458,12 +459,12 @@ public class ActionQueue {
 
 	/**
 	 * Perform all currently queued entity-insertion actions.
-	 *
+	 * 执行当前入队的entity 插入动作
 	 * @throws HibernateException error executing queued insertion actions.
 	 */
 	public void executeInserts() throws HibernateException {
-		if ( insertions != null && !insertions.isEmpty() ) {
-			executeActions( insertions );
+		if ( insertions != null && !insertions.isEmpty() ) { //
+			executeActions( insertions ); // 执行动作
 		}
 	}
 
@@ -606,18 +607,24 @@ public class ActionQueue {
 		// todo : consider ways to improve the double iteration of Executables here:
 		//		1) we explicitly iterate list here to perform Executable#execute()
 		//		2) ExecutableList#getQuerySpaces also iterates the Executables to collect query spaces.
+		// 考虑优化Executable的两次迭代:
+		// 1. 我们显式的迭代列表 - 通过Executable#execute
+		// 2. 通过ExecutableList#getQuerySpaces 迭代Executables 去收集查询spaces;
 		try {
 			for ( E e : list ) {
 				try {
 					e.execute();
 				}
 				finally {
+					// 如果事务完成前处理程序存在
 					if ( e.getBeforeTransactionCompletionProcess() != null ) {
 						if ( beforeTransactionProcesses == null ) {
+							// 设置
 							beforeTransactionProcesses = new BeforeTransactionCompletionProcessQueue( session );
 						}
 						beforeTransactionProcesses.register( e.getBeforeTransactionCompletionProcess() );
 					}
+					// 事务完成之后处理
 					if ( e.getAfterTransactionCompletionProcess() != null ) {
 						if ( afterTransactionProcesses == null ) {
 							afterTransactionProcesses = new AfterTransactionCompletionProcessQueue( session );
@@ -629,6 +636,8 @@ public class ActionQueue {
 		}
 		finally {
 			if ( session.getFactory().getSessionFactoryOptions().isQueryCacheEnabled() ) {
+				// 严格的说,仅仅只有列表的子集会处理(如果发生了RuntimeException)
+				// 我仍然让所有的space 失效, 我不认为这是一个大的处理, 运行时异常是意想不到的
 				// Strictly speaking, only a subset of the list may have been processed if a RuntimeException occurs.
 				// We still invalidate all spaces. I don't see this as a big deal - after all, RuntimeExceptions are
 				// unexpected.
@@ -637,8 +646,8 @@ public class ActionQueue {
 			}
 		}
 
-		list.clear();
-		session.getJdbcCoordinator().executeBatch();
+		list.clear(); // 清理掉 ...
+		session.getJdbcCoordinator().executeBatch(); // 拿到事件协调器  批量执行
 	}
 
 	private static String[] convertTimestampSpaces(Set<String> spaces) {
@@ -659,7 +668,7 @@ public class ActionQueue {
 
 	/**
 	 * This method is now called once per execution of an ExecutableList or once for execution of an Execution.
-	 *
+	 *	ExecutableList中每一个执行  都会掉一次 - 或者Execution 的execution 调用一次
 	 * @param spaces The spaces to invalidate
 	 */
 	private void invalidateSpaces(String... spaces) {
@@ -671,6 +680,7 @@ public class ActionQueue {
 				afterTransactionProcesses.addSpaceToInvalidate( space );
 			}
 			// Performance win: If we are processing an ExecutableList, this will only be called once
+			// 如果我们处理ExecutableList,我们仅仅只需要调用一次 ..
 			session.getFactory().getCache().getTimestampsCache().preInvalidate( spaces, session );
 		}
 	}
@@ -935,6 +945,7 @@ public class ActionQueue {
 		protected SessionImplementor session;
 		// Concurrency handling required when transaction completion process is dynamically registered
 		// inside event listener (HHH-7478).
+		// 并发处理 - 当completion 处理程序是动态注册到 事件监听器中(HHH-7478)
 		protected Queue<T> processes = new ConcurrentLinkedQueue<>();
 
 		private AbstractTransactionCompletionProcessQueue(SessionImplementor session) {
@@ -955,6 +966,7 @@ public class ActionQueue {
 
 	/**
 	 * Encapsulates behavior needed for before transaction processing
+	 * 在事务处理完成之间  - 需要封装行为 ...
 	 */
 	private static class BeforeTransactionCompletionProcessQueue extends AbstractTransactionCompletionProcessQueue<BeforeTransactionCompletionProcess> {
 		private BeforeTransactionCompletionProcessQueue(SessionImplementor session) {
@@ -964,7 +976,7 @@ public class ActionQueue {
 		public void beforeTransactionCompletion() {
 			while ( !processes.isEmpty() ) {
 				try {
-					processes.poll().doBeforeTransactionCompletion( session );
+					processes.poll().doBeforeTransactionCompletion( session ); // 拉取一个 执行 ...
 				}
 				catch (HibernateException he) {
 					throw he;

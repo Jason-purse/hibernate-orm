@@ -52,6 +52,7 @@ public interface Batch {
 
 	/**
 	 * Execute this batch.
+	 * 执行 这个batch
 	 */
 	void execute();
 

@@ -73,7 +73,7 @@ public class ListResultsConsumer<R> implements ResultsConsumer<List<R>, R> {
 			boolean uniqueRows = false;
 
 			if ( uniqueSemantic != UniqueSemantic.NONE ) {
-				final Class<R> resultJavaType = rowReader.getResultJavaType();
+				final Class<R> resultJavaType = rowReader.getResultJavaType(); // 获取Java类型
 				if ( resultJavaType != null && !resultJavaType.isArray() ) {
 					final EntityPersister entityDescriptor = session.getFactory()
 							.getRuntimeMetamodels()

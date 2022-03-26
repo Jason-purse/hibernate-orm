@@ -242,7 +242,7 @@ public class ConcreteSqmSelectQueryPlan<R> implements SelectQueryPlan<R> {
 
 	@Override
 	public List<R> performList(DomainQueryExecutionContext executionContext) {
-		if ( executionContext.getQueryOptions().getEffectiveLimit().getMaxRowsJpa() == 0 ) {
+		if ( executionContext.getQueryOptions().getEffectiveLimit().getMaxRowsJpa() == 0 ) { //
 			return Collections.emptyList();
 		}
 		return withCacheableSqmInterpretation( executionContext, null, listInterpreter );
@@ -258,7 +258,7 @@ public class ConcreteSqmSelectQueryPlan<R> implements SelectQueryPlan<R> {
 
 	private <T, X> T withCacheableSqmInterpretation(DomainQueryExecutionContext executionContext, X context, SqmInterpreter<T, X> interpreter) {
 		// NOTE : VERY IMPORTANT - intentional double-lock checking
-		//		The other option would be to leverage `java.util.concurrent.locks.ReadWriteLock`
+		//		The other option would be to leverage `java.util.concurrent.locks.ReadWriteLock` // 其他选项能够  利用ReadWriteLock
 		//		to protect access.  However, synchronized is much simpler here.  We will verify
 		// 		during throughput testing whether this is an issue and consider changes then
 

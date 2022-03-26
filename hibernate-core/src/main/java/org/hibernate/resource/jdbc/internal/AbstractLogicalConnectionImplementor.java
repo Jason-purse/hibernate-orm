@@ -129,7 +129,7 @@ public abstract class AbstractLogicalConnectionImplementor implements LogicalCon
 
 		afterCompletion();
 	}
-
+	// 判断是否为自动提交
 	protected static boolean determineInitialAutoCommitMode(Connection providedConnection) {
 		try {
 			return providedConnection.getAutoCommit();

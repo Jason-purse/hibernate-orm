@@ -8,7 +8,7 @@ package org.hibernate.sql.results.jdbc.spi;
 
 /**
  * Essentially processing options only for entity loading
- *
+ *  用于entity 加载的最终处理选择
  * @author Steve Ebersole
  */
 public interface JdbcValuesSourceProcessingOptions {

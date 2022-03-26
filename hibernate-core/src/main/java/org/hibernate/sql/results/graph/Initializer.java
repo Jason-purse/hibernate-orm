@@ -16,7 +16,7 @@ import org.hibernate.sql.exec.spi.ExecutionContext;
  * Defines a multi-step process for initializing entity, collection and
  * composite state.  Each step is performed on each initializer
  * before starting the next step.
- *
+ *	定义一个初始化entity , 集合 , 组合状态 的多步处理 ,每一步在下一步开始之前在initializer 上执行
  * @author Steve Ebersole
  */
 @Incubating

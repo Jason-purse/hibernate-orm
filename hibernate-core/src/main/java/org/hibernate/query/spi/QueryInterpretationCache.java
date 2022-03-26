@@ -15,7 +15,7 @@ import org.hibernate.query.sqm.tree.SqmStatement;
 
 /**
  * Cache for various parts of translating or interpreting queries.
- *
+ *  缓存各种翻译的部分 或者解析查询
  * @see org.hibernate.cfg.AvailableSettings#QUERY_PLAN_CACHE_MAX_SIZE
  *
  * @author Steve Ebersole
@@ -34,7 +34,7 @@ public interface QueryInterpretationCache {
 
 	int getNumberOfCachedHqlInterpretations();
 	int getNumberOfCachedQueryPlans();
-
+	// 解析Hql 解释
 	HqlInterpretation resolveHqlInterpretation(String queryString, Function<String, SqmStatement<?>> creator);
 
 	<R> SelectQueryPlan<R> resolveSelectQueryPlan(Key key, Supplier<SelectQueryPlan<R>> creator);

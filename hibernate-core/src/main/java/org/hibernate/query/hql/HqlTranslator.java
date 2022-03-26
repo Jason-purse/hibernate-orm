@@ -13,7 +13,7 @@ import org.hibernate.query.sqm.tree.SqmStatement;
 
 /**
  * Main entry point into building semantic queries.
- *
+ *`构建语义查询的主要入口
  * @see SessionFactoryImplementor#getQueryEngine()
  * @see QueryEngine#getHqlTranslator()
  *

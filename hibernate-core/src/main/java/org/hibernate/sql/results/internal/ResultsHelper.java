@@ -46,7 +46,7 @@ import org.hibernate.sql.results.spi.RowReader;
 import org.hibernate.sql.results.spi.RowTransformer;
 import org.hibernate.stat.spi.StatisticsImplementor;
 
-/**
+/** 结果集帮助器  创建RowReader
  * @author Steve Ebersole
  */
 public class ResultsHelper {

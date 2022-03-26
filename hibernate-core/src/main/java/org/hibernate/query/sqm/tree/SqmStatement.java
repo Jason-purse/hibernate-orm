@@ -19,7 +19,7 @@ import org.hibernate.query.sqm.tree.expression.SqmParameter;
 
 /**
  * The basic SQM statement contract for top-level statements
- *
+ *	一个顶级的语句的基本SQM 语句..
  * @author Steve Ebersole
  */
 public interface SqmStatement<T> extends SqmQuery<T>, JpaQueryableCriteria<T>, SqmVisitableNode {

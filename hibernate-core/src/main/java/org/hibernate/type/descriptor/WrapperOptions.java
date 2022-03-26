@@ -16,7 +16,7 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
 /**
  * Gives binding (nullSafeSet) and extracting (nullSafeGet) code access to options.
- *
+ * 获取binging 并从options 中抓取 code
  * @author Steve Ebersole
  */
 public interface WrapperOptions {

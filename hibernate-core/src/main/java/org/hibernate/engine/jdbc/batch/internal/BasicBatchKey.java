@@ -22,13 +22,13 @@ public class BasicBatchKey implements BatchKey {
 	/**
 	 * Constructs a BasicBatchKey
 	 *
-	 * @param comparison A string used to compare batch keys.
-	 * @param expectation The expectation for the batch
+	 * @param comparison A string used to compare batch keys.  // 用来比较batch key的字符串
+	 * @param expectation The expectation for the batch  // 这个 batch的期待...
 	 */
 	public BasicBatchKey(String comparison, Expectation expectation) {
 		this.comparison = comparison;
-		this.statementCount = 1;
-		this.expectation = expectation;
+		this.statementCount = 1; // 语句个数为 1
+		this.expectation = expectation; // 期待
 	}
 
 	@Override

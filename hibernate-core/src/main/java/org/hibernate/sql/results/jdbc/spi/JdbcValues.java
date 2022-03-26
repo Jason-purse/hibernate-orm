@@ -13,7 +13,7 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
  * {@link RowProcessingState#getJdbcValue} whether they come from
  * query cache or ResultSet.  Implementations also manage any cache puts
  * if required.
- *
+ * 访问查询结果 JDBC values(通过RowProcessingState#getJdbcValue) 无论它来自缓存还是Result, 实现也可以管理缓存插入(如果必要的话)
  * @author Steve Ebersole
  */
 public interface JdbcValues {
@@ -22,7 +22,7 @@ public interface JdbcValues {
 	/**
 	 * Advances the "cursor position" and returns a boolean indicating whether
 	 * there is a row available to read via {@link #getCurrentRowValuesArray()}.
-	 *
+	 * 高级游标位置 并返回一个boolean 指示这里是否还有row(通过getCurrentRowValuesArray())
 	 * @return {@code true} if there are results
 	 */
 	boolean next(RowProcessingState rowProcessingState);

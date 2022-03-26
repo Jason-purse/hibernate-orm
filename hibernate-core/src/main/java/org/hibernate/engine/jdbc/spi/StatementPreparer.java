@@ -13,7 +13,7 @@ import org.hibernate.ScrollMode;
 
 /**
  * Contracting for preparing SQL statements
- *
+ * 编译SQL 语句的约定
  * @author Steve Ebersole
  * @author Brett Meyer
  */
@@ -36,9 +36,9 @@ public interface StatementPreparer {
 
 	/**
 	 * Prepare a statement.
-	 *
+	 * 筹备一个statement
 	 * @param sql The SQL the statement to be prepared
-	 * @param isCallable Whether to prepare as a callable statement.
+	 * @param isCallable Whether to prepare as a callable statement. // 编译为一个callable 语句
 	 *
 	 * @return the prepared statement
 	 */

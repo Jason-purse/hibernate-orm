@@ -12,18 +12,18 @@ import org.hibernate.HibernateException;
 
 /**
  * Defines an expected DML operation outcome.
- *
+ * 定义一个期待的DML 操作输出 ...
  * @author Steve Ebersole
  */
 public interface Expectation {
 	/**
 	 * Perform verification of the outcome of the RDBMS operation based on
 	 * the type of expectation defined.
-	 *
-	 * @param rowCount The RDBMS reported "number of rows affected".
-	 * @param statement The statement representing the operation
-	 * @param batchPosition The position in the batch (if batching)
-	 * @param statementSQL The SQL backing the prepared statement, for logging purposes
+	 * 基于定义的期待的类型 执行RDMS 操作的输出验证 ...
+	 * @param rowCount The RDBMS reported "number of rows affected". // rdbms 输出的多少条被影响了 。。
+	 * @param statement The statement representing the operation // 这个操作的语句 ..
+	 * @param batchPosition The position in the batch (if batching) // 在batch中的位置(如果在batch中)
+	 * @param statementSQL The SQL backing the prepared statement, for logging purposes // 预编译语句背后的SQL, 为了日志纪录 ..
 	 * @throws SQLException Exception from the JDBC driver
 	 * @throws HibernateException Problem processing the outcome.
 	 */
@@ -31,7 +31,7 @@ public interface Expectation {
 
 	/**
 	 * Perform any special statement preparation.
-	 *
+	 *	 执行任何指定的语句 准备
 	 * @param statement The statement to be prepared
 	 * @return The number of bind positions consumed (if any)
 	 * @throws SQLException Exception from the JDBC driver

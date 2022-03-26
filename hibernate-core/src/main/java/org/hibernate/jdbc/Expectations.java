@@ -36,7 +36,7 @@ public class Expectations {
 	// Base Expectation impls ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	public static class BasicExpectation implements Expectation {
-		private final int expectedRowCount;
+		private final int expectedRowCount; // 期待的expectation
 
 		protected BasicExpectation(int expectedRowCount) {
 			this.expectedRowCount = expectedRowCount;
@@ -44,11 +44,11 @@ public class Expectations {
 				throw new IllegalArgumentException( "Expected row count must be greater than zero" );
 			}
 		}
-
+		// 基本的期待实现 验证输出
 		public final void verifyOutcome(int rowCount, PreparedStatement statement, int batchPosition, String statementSQL) {
 			rowCount = determineRowCount( rowCount, statement );
 			if ( batchPosition < 0 ) {
-				checkNonBatched( rowCount, statementSQL );
+				checkNonBatched( rowCount, statementSQL ); // 非batch
 			}
 			else {
 				checkBatched( rowCount, batchPosition, statementSQL );
@@ -63,6 +63,7 @@ public class Expectations {
 				throw new BatchFailedException( "Batch update failed: " + batchPosition );
 			}
 			else {
+				// 期待的rowCount > rowCount
 				if ( expectedRowCount > rowCount ) {
 					throw new StaleStateException(
 							"Batch update returned unexpected row count from update ["
@@ -105,7 +106,7 @@ public class Expectations {
 			return reportedRowCount;
 		}
 	}
-
+	// 基本的参数期待 ...
 	public static class BasicParamExpectation extends BasicExpectation {
 		private final int parameterPosition;
 
@@ -116,7 +117,7 @@ public class Expectations {
 
 		@Override
 		public int prepare(PreparedStatement statement) throws SQLException, HibernateException {
-			toCallableStatement( statement ).registerOutParameter( parameterPosition, Types.NUMERIC );
+			toCallableStatement( statement ).registerOutParameter( parameterPosition, Types.NUMERIC ); // 注册输出参数(为Numberic)
 			return 1;
 		}
 
@@ -125,9 +126,11 @@ public class Expectations {
 			return false;
 		}
 
+		// 检测RowCount
 		@Override
 		protected int determineRowCount(int reportedRowCount, PreparedStatement statement) {
 			try {
+				// 必须是 CallableStatement 才需要获取 Int
 				return toCallableStatement( statement ).getInt( parameterPosition );
 			}
 			catch (SQLException sqle) {
@@ -135,7 +138,7 @@ public class Expectations {
 				throw new GenericJDBCException( "could not extract row counts from CallableStatement", sqle );
 			}
 		}
-
+		// 判断是不是CallableStatement...
 		private CallableStatement toCallableStatement(PreparedStatement statement) {
 			if ( !CallableStatement.class.isInstance( statement ) ) {
 				throw new HibernateException(

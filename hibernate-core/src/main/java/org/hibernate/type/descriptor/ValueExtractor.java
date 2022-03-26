@@ -13,13 +13,13 @@ import java.sql.SQLException;
 /**
  * Contract for extracting value via JDBC from {@link ResultSet} or as output
  * param from {@link CallableStatement}.
- *
+ *	从JDBC中抓取数据  或者从CallableStatement 中抓取
  * @author Steve Ebersole
  */
 public interface ValueExtractor<X> {
 	/**
 	 * Extract value from result set
-	 *
+	 *  从result set 中抓取值..
 	 * @throws SQLException Indicates a JDBC error occurred.
 	 */
 	X extract(ResultSet rs, int paramIndex, WrapperOptions options) throws SQLException;

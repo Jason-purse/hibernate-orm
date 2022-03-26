@@ -21,7 +21,7 @@ import org.hibernate.resource.transaction.spi.TransactionCoordinatorOwner;
 
 /**
  * Coordinates JDBC-related activities.
- *
+ *	协调JDBC 相关的活动 ...
  * @author Steve Ebersole
  * @author Brett Meyer
  */
@@ -44,6 +44,7 @@ public interface JdbcCoordinator extends Serializable, TransactionCoordinatorOwn
 	Batch getBatch(BatchKey key);
 
 	/**
+	 * 执行当前管理的batch(Executable）
 	 * Execute the currently managed batch (if any)
 	 */
 	void executeBatch();

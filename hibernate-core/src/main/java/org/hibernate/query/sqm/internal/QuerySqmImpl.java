@@ -111,7 +111,7 @@ import static org.hibernate.query.sqm.internal.SqmUtil.isSelect;
 
 /**
  * {@link Query} implementation based on an SQM
- *
+ * 基于SQM 的Query 实现 ...
  * @author Steve Ebersole
  */
 public class QuerySqmImpl<R>
@@ -179,7 +179,7 @@ public class QuerySqmImpl<R>
 		applyOptions( memento );
 	}
 
-	/**
+	/** HQL 查询的使用形式
 	 * Form used for HQL queries
 	 */
 	@SuppressWarnings("unchecked")

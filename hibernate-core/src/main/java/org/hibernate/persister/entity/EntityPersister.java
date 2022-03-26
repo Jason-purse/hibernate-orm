@@ -647,7 +647,7 @@ public interface EntityPersister
 	@Deprecated
 	boolean hasCache();
 	/**
-	 * Get the cache (optional operation)
+	 * Get the cache (optional operation)  获取缓存
 	 */
 	EntityDataAccess getCacheAccessStrategy();
 	/**

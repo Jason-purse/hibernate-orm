@@ -32,7 +32,7 @@ import org.hibernate.sql.exec.spi.JdbcParameterBinder;
 import org.hibernate.sql.exec.spi.JdbcParameterBindings;
 import org.hibernate.sql.exec.spi.JdbcSelect;
 
-/**
+/** 延迟结果集访问
  * @author Steve Ebersole
  */
 public class DeferredResultSetAccess extends AbstractResultSetAccess {
@@ -160,7 +160,7 @@ public class DeferredResultSetAccess extends AbstractResultSetAccess {
 	public boolean usesFollowOnLocking() {
 		return usesFollowOnLocking;
 	}
-
+ 	// 执行查询
 	private void executeQuery() {
 		final LogicalConnectionImplementor logicalConnection = getPersistenceContext().getJdbcCoordinator().getLogicalConnection();
 		final QueryOptions queryOptions = executionContext.getQueryOptions();
@@ -168,7 +168,7 @@ public class DeferredResultSetAccess extends AbstractResultSetAccess {
 		try {
 			LOG.tracef( "Executing query to retrieve ResultSet : %s", finalSql );
 			// prepare the query
-			preparedStatement = statementCreator.apply( finalSql );
+			preparedStatement = statementCreator.apply( finalSql ); // 创建
 
 			// set options
 			if ( queryOptions != null ) {
@@ -184,7 +184,7 @@ public class DeferredResultSetAccess extends AbstractResultSetAccess {
 			// 		todo : validate that all query parameters were bound?
 			int paramBindingPosition = 1;
 			paramBindingPosition += limitHandler.bindLimitParametersAtStartOfQuery( limit, preparedStatement, paramBindingPosition );
-			for ( JdbcParameterBinder parameterBinder : jdbcSelect.getParameterBinders() ) {
+			for ( JdbcParameterBinder parameterBinder : jdbcSelect.getParameterBinders() ) { // 获取所有的参数绑定器
 				parameterBinder.bindParameterValue(
 						preparedStatement,
 						paramBindingPosition++,
@@ -192,7 +192,7 @@ public class DeferredResultSetAccess extends AbstractResultSetAccess {
 						executionContext
 				);
 			}
-
+			// 参数绑定 位置..
 			paramBindingPosition += limitHandler.bindLimitParametersAtEndOfQuery( limit, preparedStatement, paramBindingPosition );
 
 			if ( !jdbcSelect.usesLimitParameters() && limit != null && limit.getMaxRows() != null ) {
@@ -214,7 +214,7 @@ public class DeferredResultSetAccess extends AbstractResultSetAccess {
 			}
 			try {
 				eventListenerManager.jdbcExecuteStatementStart();
-				resultSet = wrapResultSet( preparedStatement.executeQuery() );
+				resultSet = wrapResultSet( preparedStatement.executeQuery() ); // 包装结果
 			}
 			finally {
 				eventListenerManager.jdbcExecuteStatementEnd();

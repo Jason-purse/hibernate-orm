@@ -10,6 +10,7 @@ import org.hibernate.orm.custom.test.base.model.Event;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+import java.util.List;
 
 public class BaseTests {
     @Test
@@ -55,6 +56,10 @@ public class BaseTests {
             session.persist( new Event( "Our very first event!", new Date() ) );
             session.persist( new Event( "A follow up event", new Date() ) );
             session.getTransaction().commit();
+            List<Event> result = session.createQuery( "from Event", Event.class ).getResultList();
+            for ( Event event : result ) {
+                System.out.println( "Event (" + event.getDate() + ") : " + event.getTitle() );
+            }
             session.close();
         }
         catch (Exception e) {

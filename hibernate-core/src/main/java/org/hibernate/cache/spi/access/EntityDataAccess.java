@@ -30,13 +30,13 @@ import org.hibernate.persister.entity.EntityPersister;
 public interface EntityDataAccess extends CachedDomainDataAccess {
 	/**
 	 * To create instances of keys for this region, Hibernate will invoke this method
-	 * exclusively so that generated implementations can generate optimised keys.
+	 * exclusively so that generated implementations can generate optimised keys.   为本地区创建实例的密钥,Hibernate将调用这个方法只,这样生成的实现可以生成优化键。
 	 * @param id the primary identifier of the entity
 	 * @param rootEntityDescriptor Hierarchy for which a key is being generated
 	 * @param factory a reference to the current SessionFactory
 	 * @param tenantIdentifier the tenant id, or null if multi-tenancy is not being used.
 	 * @return a key which can be used to identify this entity on this same region
-	 *
+	 * 一个entity 的访问 明明是已经知道 了entity 体系和工厂,为什么还需要传递 ...
 	 * todo (6.0) : the access for an entity knows the entity hierarchy and the factory.  why pass them in?
 	 */
 	Object generateCacheKey(

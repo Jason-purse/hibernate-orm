@@ -28,7 +28,7 @@ import org.hibernate.sql.results.jdbc.spi.RowProcessingState;
 
 /**
  * JdbcValuesSource implementation for a JDBC ResultSet as the source
- *
+ *	JDBC ResultSet 作为资源的JdbcValuesSource 实现
  * @author Steve Ebersole
  */
 public class JdbcValuesResultSetImpl extends AbstractJdbcValues {
@@ -54,7 +54,7 @@ public class JdbcValuesResultSetImpl extends AbstractJdbcValues {
 		this.executionContext = executionContext;
 
 		this.sqlSelections = valuesMapping.getSqlSelections().toArray( new SqlSelection[0] );
-		this.currentRowJdbcValues = new Object[ valuesMapping.getRowSize() ];
+		this.currentRowJdbcValues = new Object[ valuesMapping.getRowSize() ]; // getRowSize 标识 一行有多少个columns
 	}
 
 	private static QueryCachePutManager resolveQueryCachePutManager(
@@ -276,7 +276,7 @@ public class JdbcValuesResultSetImpl extends AbstractJdbcValues {
 			return false;
 		}
 
-		readCurrentRowValues();
+		readCurrentRowValues(); // 读取当前行数据
 		return true;
 	}
 

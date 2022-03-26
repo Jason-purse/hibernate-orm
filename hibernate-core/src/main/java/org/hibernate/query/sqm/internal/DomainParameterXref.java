@@ -27,7 +27,7 @@ import org.hibernate.query.sqm.tree.expression.SqmPositionalParameter;
 
 /**
  * Maintains a cross-reference between SqmParameter and QueryParameter references.
- *
+ * 维护一个交叉引用 (SqmParameter 和 QueryParameter 引用)
  * @author Steve Ebersole
  */
 public class DomainParameterXref {

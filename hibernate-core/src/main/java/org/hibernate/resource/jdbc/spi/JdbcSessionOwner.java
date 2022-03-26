@@ -13,10 +13,11 @@ import org.hibernate.resource.transaction.spi.TransactionCoordinator;
  * Contract for something that controls a JdbcSessionContext.  The name comes from the
  * design idea of a JdbcSession which encapsulates this information, which we will hopefully
  * get back to later.
+ * 控制一个JdbcSessionContext的某些事情的约定 - 这个名字来源于JdbcSession 设计的想法 - 它封装了这些信息, 我们希望在后面某个时刻访问这些信息 ...
  *
  * The term "JDBC session" is taken from the SQL specification which calls a connection
  * and its associated transaction context a "session".
- *
+ *	JDBC 会话来源于SQL 规范 - 他会调用一个连接 以及  它与会话相关的事务上下文
  * @author Steve Ebersole
  */
 public interface JdbcSessionOwner {
@@ -60,7 +61,7 @@ public interface JdbcSessionOwner {
 
 	void flushBeforeTransactionCompletion();
 
-	/**
+	/** JDBC层面上的batch 数量大小
 	 * Get the Session-level JDBC batch size.
 	 * @return Session-level JDBC batch size
 	 *

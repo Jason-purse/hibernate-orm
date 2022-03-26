@@ -45,7 +45,7 @@ class StatementPreparerImpl implements StatementPreparer {
 	protected final SessionFactoryOptions settings() {
 		return jdbcCoordinator.sessionFactory().getSessionFactoryOptions();
 	}
-
+	// 获取物理连接
 	protected final Connection connection() {
 		return logicalConnection().getPhysicalConnection();
 	}
@@ -77,15 +77,17 @@ class StatementPreparerImpl implements StatementPreparer {
 
 	@Override
 	public PreparedStatement prepareStatement(String sql, final boolean isCallable) {
-		jdbcCoordinator.executeBatch();
-		return buildPreparedStatementPreparationTemplate( sql, isCallable ).prepareStatement();
+		jdbcCoordinator.executeBatch(); // 执行batch
+		return buildPreparedStatementPreparationTemplate( sql, isCallable ).prepareStatement();  // 执行完毕 之后
 	}
-
+	// 构建preparedStatement的预编译模板
 	private StatementPreparationTemplate buildPreparedStatementPreparationTemplate(String sql, final boolean isCallable) {
 		return new StatementPreparationTemplate( sql ) {
+			// 如果callable
 			@Override
 			protected PreparedStatement doPrepare() throws SQLException {
 				return isCallable
+						// 获取连接
 						? connection().prepareCall( sql )
 						: connection().prepareStatement( sql );
 			}
@@ -156,8 +158,9 @@ class StatementPreparerImpl implements StatementPreparer {
 
 	private abstract class StatementPreparationTemplate {
 		protected final String sql;
-
+		// 进入的SQL
 		protected StatementPreparationTemplate(String incomingSql) {
+			//
 			final String inspectedSql = jdbcCoordinator.getJdbcSessionOwner()
 					.getJdbcSessionContext()
 					.getStatementInspector()
@@ -165,6 +168,7 @@ class StatementPreparerImpl implements StatementPreparer {
 			this.sql = inspectedSql == null ? incomingSql : inspectedSql;
 		}
 
+		// 准备语句
 		public PreparedStatement prepareStatement() {
 			try {
 				jdbcServices.getSqlStatementLogger().logStatement( sql );
@@ -172,13 +176,15 @@ class StatementPreparerImpl implements StatementPreparer {
 				final PreparedStatement preparedStatement;
 				final JdbcObserver observer = jdbcCoordinator.getJdbcSessionOwner().getJdbcSessionContext().getObserver();
 				try {
+					// 观察者
 					observer.jdbcPrepareStatementStart();
-					preparedStatement = doPrepare();
+					preparedStatement = doPrepare(); // 进行prepared
 					setStatementTimeout( preparedStatement );
 				}
 				finally {
 					observer.jdbcPrepareStatementEnd();
 				}
+				// 后置处理
 				postProcess( preparedStatement );
 				return preparedStatement;
 			}
@@ -189,14 +195,17 @@ class StatementPreparerImpl implements StatementPreparer {
 
 		protected abstract PreparedStatement doPrepare() throws SQLException;
 
+		// 后置处理
 		public void postProcess(PreparedStatement preparedStatement) throws SQLException {
+			//
 			jdbcCoordinator.getLogicalConnection().getResourceRegistry().register( preparedStatement, true );
 //			logicalConnection().notifyObserversStatementPrepared();
 		}
-
+		// 设置statement Timeout
 		private void setStatementTimeout(PreparedStatement preparedStatement) throws SQLException {
+			// jdbc 协调器
 			final int remainingTransactionTimeOutPeriod = jdbcCoordinator.determineRemainingTransactionTimeOutPeriod();
-			if ( remainingTransactionTimeOutPeriod > 0 ) {
+			if ( remainingTransactionTimeOutPeriod > 0 ) {  // 剩余的事务超时时间段 ..
 				preparedStatement.setQueryTimeout( remainingTransactionTimeOutPeriod );
 			}
 		}

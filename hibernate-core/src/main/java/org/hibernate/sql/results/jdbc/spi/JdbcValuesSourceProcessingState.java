@@ -25,7 +25,7 @@ import org.hibernate.sql.exec.spi.ExecutionContext;
  * set of rows from a JdbcValuesSource.  Holds in-flight state
  * and provides access to environmental information needed to perform the
  * processing.
- *
+ * 提供一个上下文  - 为了处理来自JdbcValuesSource中的完整行集合 , 持有一个动态状态 并提供访问环境信息(需要执行处理的)
  * @author Steve Ebersole
  */
 public interface JdbcValuesSourceProcessingState {

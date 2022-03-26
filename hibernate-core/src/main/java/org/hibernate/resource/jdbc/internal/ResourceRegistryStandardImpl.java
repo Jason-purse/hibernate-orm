@@ -26,6 +26,9 @@ import org.hibernate.resource.jdbc.spi.JdbcObserver;
  * Helps to track statements and resultsets which need being closed.
  * This class is not threadsafe.
  *
+ * 帮助跟踪语句 以及需要被关闭的结果集 ..
+ * // 这个类并不是线程安全的 ...
+ *
  * Note regarding performance: we had evidence that allocating Iterators
  * to implement the cleanup on each element recursively was the dominant
  * resource cost, so we decided using "forEach" and lambdas in this case.
@@ -33,6 +36,8 @@ import org.hibernate.resource.jdbc.spi.JdbcObserver;
  * Iterators on HashMap and ArrayList, but not on HashSet (at least on JDK8 and 11).
  * Therefore some types which should ideally be modelled as a Set have
  * been implemented using HashMap.
+ *
+ * 注意相关性能:  我们
  *
  * @author Steve Ebersole
  * @author Sanne Grinovero
@@ -47,6 +52,9 @@ public final class ResourceRegistryStandardImpl implements ResourceRegistry {
 	//Used instead of Collections.EMPTY_SET to avoid polymorphic calls on xref;
 	//Also, uses an HashMap as it were an HashSet, as technically we just need the Set semantics
 	//but in this case the overhead of HashSet is not negligible.
+
+	// 被用来代替Collections.EMPTY_SET 去避免在xref上的 动态(polymorphic) 调用
+	// 同时,使用一个散列映射是一个散列集,在技术上我们只需要一组语义,但在这种情况下散列集的开销不是可以忽略不计。
 	private static final HashMap<ResultSet,Object> EMPTY = new HashMap<>( 1, 0.2f );
 
 	private final JdbcObserver jdbcObserver;
@@ -87,7 +95,7 @@ public final class ResourceRegistryStandardImpl implements ResourceRegistry {
 			throw new HibernateException( "JDBC Statement already registered" );
 		}
 
-		if ( cancelable ) {
+		if ( cancelable ) { // 如果可以取消, 设置最近查询为 这个语句
 			lastQuery = statement;
 		}
 	}

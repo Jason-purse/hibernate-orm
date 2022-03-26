@@ -29,7 +29,7 @@ public interface RowReader<R> {
 	 */
 	Class<R> getResultJavaType();
 
-	/**
+	/** 结果集的Java类型
 	 *  The JavaTypes of the result
 	 */
 	List<JavaType> getResultJavaTypes();

@@ -11,7 +11,7 @@ import java.sql.Connection;
 /**
  * Models the logical notion of a JDBC Connection.  We may release/re-acquire physical JDBC connections under the
  * covers, but this logically represents the overall access to the JDBC Connection.
- *
+ *JDBC 连接的 逻辑概念模型, 我们也许在这个之下释放或者重新获取物理JDBC连接 .. 但是这个 逻辑覆盖了访问JDBC连接的全部 ..
  * @author Steve Ebersole
  */
 public interface LogicalConnection {

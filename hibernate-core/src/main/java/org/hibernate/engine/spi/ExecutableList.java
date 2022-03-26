@@ -25,10 +25,10 @@ import org.hibernate.internal.util.collections.CollectionHelper;
  * A list of {@link Executable executeble actions}. Responsible for
  * {@linkplain #sort() sorting} the executables, and calculating the
  * affected {@linkplain #getQuerySpaces() query spaces}.
- *
+ *	一个Executable 动作的列表,  负责对executable 进行排序 , 并且计算  受影响的查询空间 ...
  * @author Steve Ebersole
  * @author Anton Marsden
- *
+ *	描述 Executable 实现的  交叉类型
  * @param <E> Intersection type describing {@link Executable} implementations
  */
 public class ExecutableList<E extends Executable & Comparable<? super E> & Serializable>
@@ -117,7 +117,7 @@ public class ExecutableList<E extends Executable & Comparable<? super E> & Seria
 
 	/**
 	 * Lazily constructs the querySpaces affected by the actions in the list.
-	 *
+	 * 懒惰的构建 由此列表中的action 影响的querySpaces;
 	 * @return the querySpaces affected by the actions in this list
 	 */
 	public Set<Serializable> getQuerySpaces() {

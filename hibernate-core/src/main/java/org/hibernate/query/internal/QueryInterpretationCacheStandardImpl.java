@@ -38,7 +38,7 @@ public class QueryInterpretationCacheStandardImpl implements QueryInterpretation
 	 * the cache of the actual plans...
 	 */
 	private final BoundedConcurrentHashMap<Key, QueryPlan> queryPlanCache;
-
+	// Hql解析 ... 映射
 	private final BoundedConcurrentHashMap<String, HqlInterpretation> hqlInterpretationCache;
 	private final BoundedConcurrentHashMap<String, ParameterInterpretation> nativeQueryParamCache;
 	private final Supplier<StatisticsImplementor> statisticsSupplier;

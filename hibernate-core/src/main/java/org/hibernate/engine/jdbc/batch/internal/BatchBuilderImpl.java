@@ -13,7 +13,7 @@ import org.hibernate.engine.jdbc.spi.JdbcCoordinator;
 
 /**
  * A builder for {@link Batch} instances.
- *
+ *	Batch 实例的构建者  ..
  * @author Steve Ebersole
  */
 public class BatchBuilderImpl implements BatchBuilder {
@@ -45,6 +45,7 @@ public class BatchBuilderImpl implements BatchBuilder {
 
 	@Override
 	public Batch buildBatch(BatchKey key, JdbcCoordinator jdbcCoordinator) {
+		//
 		return SharedBatchBuildingCode.buildBatch( jdbcBatchSize, key, jdbcCoordinator );
 	}
 

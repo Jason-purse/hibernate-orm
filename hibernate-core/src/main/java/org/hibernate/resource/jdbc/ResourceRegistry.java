@@ -14,7 +14,7 @@ import java.sql.Statement;
 
 /**
  * A registry for tracking JDBC resources
- *
+ *	跟踪JDBC 资源的一个注册机
  * @author Steve Ebersole
  */
 public interface ResourceRegistry {
@@ -29,7 +29,7 @@ public interface ResourceRegistry {
 
 	/**
 	 * Register a JDBC statement.
-	 *
+	 *	注册一个JDBC 语句, 是否能够被取消, 换句话说,  我们应该注册它 - 为了作为后续cancelLastQuery 调用的目标  .....
 	 * @param statement The statement to register.
 	 * @param cancelable Is the statement being registered capable of being cancelled?  In other words,
 	 * should we register it to be the target of subsequent {@link #cancelLastQuery()} calls?

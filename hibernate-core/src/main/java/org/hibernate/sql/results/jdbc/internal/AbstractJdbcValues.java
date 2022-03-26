@@ -26,7 +26,7 @@ public abstract class AbstractJdbcValues implements JdbcValues {
 
 	@Override
 	public final boolean next(RowProcessingState rowProcessingState) {
-		final boolean hadRow = processNext( rowProcessingState );
+		final boolean hadRow = processNext( rowProcessingState ); //
 		if ( hadRow ) {
 			queryCachePutManager.registerJdbcRow( getCurrentRowValuesArray() );
 		}

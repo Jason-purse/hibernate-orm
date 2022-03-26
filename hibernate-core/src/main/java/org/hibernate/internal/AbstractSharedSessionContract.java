@@ -104,17 +104,17 @@ import static java.lang.Boolean.TRUE;
  * Base class for SharedSessionContract/SharedSessionContractImplementor
  * implementations.  Intended for Session and StatelessSession implementations
  * <P/>
- * NOTE: This implementation defines access to a number of instance state values
+ * NOTE: This implementation defines access to a number of instance state values // 这个实现定义访问大量的实例状态值..
  * in a manner that is not exactly concurrent-access safe.  However, a Session/EntityManager
  * is never intended to be used concurrently; therefore the condition is not expected
  * and so a more synchronized/concurrency-safe is not defined to be as negligent
  * (performance-wise) as possible.  Some of these methods include:<ul>
- *     <li>{@link #getEventListenerManager()}</li>
- *     <li>{@link #getJdbcConnectionAccess()}</li>
- *     <li>{@link #getJdbcServices()}</li>
- *     <li>{@link #getTransaction()} (and therefore related methods such as {@link #beginTransaction()}, etc)</li>
+ *     <li>{@link #getEventListenerManager()}</li> // 事件监听器管理器
+ *     <li>{@link #getJdbcConnectionAccess()}</li> // jdbc连接访问
+ *     <li>{@link #getJdbcServices()}</li> // jdbc 服务
+ *     <li>{@link #getTransaction()} (and therefore related methods such as {@link #beginTransaction()}, etc)</li> // 获取事务(用来开启事务 或者结束事务)
  * </ul>
- *
+ * 这种方式  并不完全并发访问安全 .. 然而 一个Session  / EntityManager 绝不打算并发使用... 因此这个条件是不必要的  并且 更多同步 / 并发安全 (影响性能)的属性没有定义...
  * @author Steve Ebersole
  */
 public abstract class AbstractSharedSessionContract implements SharedSessionContractImplementor {
@@ -718,8 +718,8 @@ public abstract class AbstractSharedSessionContract implements SharedSessionCont
 	@Override
 	public <T> QueryImplementor<T> createQuery(String queryString, Class<T> resultClass) {
 		checkOpen();
-		pulseTransactionCoordinator();
-		delayedAfterCompletion();
+		pulseTransactionCoordinator(); // 脉冲 事务协调器
+		delayedAfterCompletion(); // 完成之后延时 ??
 
 		try {
 			final QueryEngine queryEngine = getFactory().getQueryEngine();

@@ -180,7 +180,7 @@ public interface SharedSessionContractImplementor
 
 	/**
 	 * Prepare for the execution of a {@link Query} or
-	 * {@link org.hibernate.procedure.ProcedureCall}
+	 * {@link org.hibernate.procedure.ProcedureCall}  一个查询的预备 / 或者ProcedureCCall的prepared
 	 */
 	void prepareForQueryExecution(boolean requiresTxn);
 

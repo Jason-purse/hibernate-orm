@@ -85,7 +85,7 @@ public class RowProcessingStateStandardImpl implements RowProcessingState {
 		return rowReader;
 	}
 
-	public boolean next() {
+	public boolean next() { // 行处理状态,通过jdbcValues获取
 		return jdbcValues.next( this );
 	}
 

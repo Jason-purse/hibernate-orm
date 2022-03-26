@@ -9,12 +9,13 @@ package org.hibernate.engine.jdbc.batch.spi;
 
 /**
  * An observer contract for batch events.
- *
+ * batch 事件 的监听器
  * @author Steve Ebersole
  */
 public interface BatchObserver {
 	/**
 	 * Indicates explicit execution of the batch via a call to {@link Batch#execute()}.
+	 * 通过Batch#execute  指示一个batch 的显式执行 ..
 	 */
 	void batchExplicitlyExecuted();
 

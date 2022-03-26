@@ -18,7 +18,7 @@ import org.hibernate.type.spi.TypeConfiguration;
 /**
  * More-or-less a parameter-object intended for use in determining the SQL/JDBC type recommended
  * by the JDBC spec (explicitly or implicitly) for a given Java type.
- *
+ * 更多或者少的一个参数对象  打算使用(通过Jdbc spec (显示/隐式)给给定Java类型 决定SQL / JDBC 类型 ....
  * @see BasicJavaType#getRecommendedJdbcType
  *
  * @author Steve Ebersole

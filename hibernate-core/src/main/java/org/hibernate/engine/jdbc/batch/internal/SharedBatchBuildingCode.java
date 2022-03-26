@@ -12,6 +12,8 @@ import org.hibernate.engine.jdbc.spi.JdbcCoordinator;
 
 /**
  * Common code across BatchBuilder service implementors
+ *
+ * 公用的跨越多个BatchBuilder 服务实现者的 代码
  */
 final class SharedBatchBuildingCode {
 
@@ -22,7 +24,7 @@ final class SharedBatchBuildingCode {
 				defaultJdbcBatchSize :
 				sessionJdbcBatchSize;
 		return jdbcBatchSizeToUse > 1
-				? new BatchingBatch( key, jdbcCoordinator, jdbcBatchSizeToUse )
+				? new BatchingBatch( key, jdbcCoordinator, jdbcBatchSizeToUse ) // Batch 大于 1, 设置
 				: new NonBatchingBatch( key, jdbcCoordinator );
 	}
 }

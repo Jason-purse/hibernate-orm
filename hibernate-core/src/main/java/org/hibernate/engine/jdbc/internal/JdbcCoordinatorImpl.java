@@ -52,20 +52,27 @@ import org.hibernate.resource.transaction.backend.jdbc.spi.JdbcResourceTransacti
  */
 public class JdbcCoordinatorImpl implements JdbcCoordinator {
 	private static final CoreMessageLogger LOG = CoreLogging.messageLogger( JdbcCoordinatorImpl.class );
-
+	// 本地底层的连接实现
 	private transient final LogicalConnectionImplementor logicalConnection;
+	// 会话拥有者
 	private transient final JdbcSessionOwner owner;
 
+	// jdbc 服务
 	private transient final JdbcServices jdbcServices;
 
+	// 批量处理语句
 	private transient Batch currentBatch;
 
+	// 事务全局超时
 	private transient long transactionTimeOutInstant = -1;
 
+	//上次的查询
 	private Statement lastQuery;
+	// 是否为用户提供的连接
 	private final boolean isUserSuppliedConnection;
 
 	/**
+	 * 为true(手动)绕过积极释放处理..
 	 * If true, manually (and temporarily) circumvent aggressive release processing.
 	 */
 	private boolean releasesEnabled = true;
@@ -84,10 +91,11 @@ public class JdbcCoordinatorImpl implements JdbcCoordinator {
 		final ResourceRegistry resourceRegistry = new ResourceRegistryStandardImpl(
 				owner.getJdbcSessionContext().getObserver()
 		);
-		if ( isUserSuppliedConnection ) {
+		if ( isUserSuppliedConnection ) { // 用户提供的连接
 			this.logicalConnection = new LogicalConnectionProvidedImpl( userSuppliedConnection, resourceRegistry );
 		}
 		else {
+			// 非用户提供的连接
 			this.logicalConnection = new LogicalConnectionManagedImpl(
 					owner.getJdbcConnectionAccess(),
 					owner.getJdbcSessionContext(),
@@ -121,6 +129,7 @@ public class JdbcCoordinatorImpl implements JdbcCoordinator {
 	}
 
 	protected BatchBuilder batchBuilder() {
+		// 通过服务注册机 获取服务(BatchBuilder)
 		return sessionFactory().getServiceRegistry().getService( BatchBuilder.class );
 	}
 
@@ -189,9 +198,11 @@ public class JdbcCoordinatorImpl implements JdbcCoordinator {
 
 	@Override
 	public void executeBatch() {
-		if ( currentBatch != null ) {
+		if ( currentBatch != null ) { // 当前batch 不为空 ??
+			// 执行
 			currentBatch.execute();
 			// needed?
+			// 释放
 			currentBatch.release();
 		}
 	}
@@ -233,11 +244,13 @@ public class JdbcCoordinatorImpl implements JdbcCoordinator {
 		getJdbcSessionOwner().flushBeforeTransactionCompletion();
 	}
 
+	// 解析事务超时周期
 	@Override
 	public int determineRemainingTransactionTimeOutPeriod() {
 		if ( transactionTimeOutInstant < 0 ) {
 			return -1;
 		}
+		//
 		final int secondsRemaining = (int) ((transactionTimeOutInstant - System.currentTimeMillis()) / 1000);
 		if ( secondsRemaining <= 0 ) {
 			throw new TransactionException( "transaction timeout expired" );

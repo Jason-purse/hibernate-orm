@@ -67,7 +67,7 @@ import org.hibernate.stat.spi.StatisticsImplementor;
 import org.hibernate.type.BasicType;
 import org.hibernate.type.descriptor.java.JavaType;
 
-/**
+/** JDBC 查询执行器
  * @author Steve Ebersole
  */
 public class JdbcSelectExecutorStandardImpl implements JdbcSelectExecutor {
@@ -375,7 +375,7 @@ public class JdbcSelectExecutorStandardImpl implements JdbcSelectExecutor {
 			stats = false;
 		}
 
-		/*
+		/* 高效的处理选项 (仅仅被用来 entity loading)
 		 * Processing options effectively are only used for entity loading.  Here we don't need these values.
 		 */
 		final JdbcValuesSourceProcessingOptions processingOptions = new JdbcValuesSourceProcessingOptions() {
@@ -425,7 +425,7 @@ public class JdbcSelectExecutorStandardImpl implements JdbcSelectExecutor {
 				rowReader,
 				jdbcValues
 		);
-
+		// 开始处理 .. resultSet
 		final T result = resultsConsumer.consume(
 				jdbcValues,
 				executionContext.getSession(),
@@ -551,7 +551,7 @@ public class JdbcSelectExecutorStandardImpl implements JdbcSelectExecutor {
 				jdbcValuesMapping = mappingProducer.resolve( capturingMetadata, factory );
 				metadataForCache = capturingMetadata.resolveMetadataForCache();
 			}
-
+			// jdbc 结果
 			return new JdbcValuesResultSetImpl(
 					resultSetAccess,
 					queryResultsCacheKey,

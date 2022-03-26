@@ -34,13 +34,14 @@ public abstract class AbstractBatchImpl implements Batch {
 			CoreMessageLogger.class,
 			AbstractBatchImpl.class.getName()
 	);
-
+	// batch Key
 	private final BatchKey key;
 	private final JdbcCoordinator jdbcCoordinator;
 
 	private final SqlStatementLogger sqlStatementLogger;
 	private final SqlExceptionHelper sqlExceptionHelper;
 
+	// statement list
 	private final LinkedHashMap<String, PreparedStatement> statements = new LinkedHashMap<>();
 	private final LinkedHashSet<BatchObserver> observers = new LinkedHashSet<>();
 
@@ -69,7 +70,9 @@ public abstract class AbstractBatchImpl implements Batch {
 
 	/**
 	 * Perform batch execution..
+	 * 执行batch 执行 ...
 	 * <p/>
+	 *  由execute 实现调用,但是  能够从其他依赖于这个实现调用
 	 * This is called from the explicit {@linkplain #execute() execution}, but may also be called from elsewhere
 	 * depending on the exact implementation.
 	 */
@@ -104,7 +107,7 @@ public abstract class AbstractBatchImpl implements Batch {
 
 	/**
 	 * Access to the batch's map of statements (keyed by SQL statement string).
-	 *
+	 * 访问batch的语句map(通过sql statement string 作为Key纪录)
 	 * @return This batch's statements.
 	 */
 	protected LinkedHashMap<String,PreparedStatement> getStatements() {
@@ -128,8 +131,8 @@ public abstract class AbstractBatchImpl implements Batch {
 		}
 		PreparedStatement statement = statements.get( sql );
 		if ( statement == null ) {
-			statement = buildBatchStatement( sql, callable );
-			statements.put( sql, statement );
+			statement = buildBatchStatement( sql, callable ); //  构建一个statement
+			statements.put( sql, statement ); // 一个sql 对应了 一个statement
 		}
 		else {
 			LOG.debug( "Reusing batch statement" );
@@ -137,15 +140,16 @@ public abstract class AbstractBatchImpl implements Batch {
 		}
 		return statement;
 	}
-
+	// 构建Batch Statement 完毕
 	private PreparedStatement buildBatchStatement(String sql, boolean callable) {
 		return jdbcCoordinator.getStatementPreparer().prepareStatement( sql, callable );
 	}
 
 	@Override
 	public final void execute() {
+		// batch 自己执行
 		notifyObserversExplicitExecution();
-		if ( getStatements().isEmpty() ) {
+		if ( getStatements().isEmpty() ) { //
 			return;
 		}
 
@@ -191,10 +195,11 @@ public abstract class AbstractBatchImpl implements Batch {
 
 	/**
 	 * Convenience method to notify registered observers of an explicit execution of this batch.
+	 * 这个batch 的注册的观察者的显式执行  ...的方便方法 ...
 	 */
 	protected final void notifyObserversExplicitExecution() {
 		for ( BatchObserver observer : observers ) {
-			observer.batchExplicitlyExecuted();
+			observer.batchExplicitlyExecuted(); //
 		}
 	}
 

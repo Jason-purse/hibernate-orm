@@ -24,7 +24,7 @@ import org.hibernate.sql.results.jdbc.spi.JdbcValuesSourceProcessingState;
  * The state is defined by {@link JdbcValuesSourceProcessingState} which
  * encapsulates the data to be processed by the load whether the data comes from
  * a ResultSet or second-level cache hit.
- *
+ * 维护了一个相关执行加载操作的处理状态的栈, 这个状态通过JdbcValuesSourceProcessingState 封装 一个一个加载于ResultSet / 二级缓存提示的数据
  * @author Steve Ebersole
  */
 public class LoadContexts {

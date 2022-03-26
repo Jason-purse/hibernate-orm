@@ -82,17 +82,17 @@ public interface ResultSetAccess extends JdbcValuesMetadata {
 			final ResultSetMetaData metaData = getResultSet().getMetaData();
 			final String columnTypeName = metaData.getColumnTypeName( position );
 			final int columnType = metaData.getColumnType( position );
-			final int scale = metaData.getScale( position );
-			final int precision = metaData.getPrecision( position );
-			final int displaySize = metaData.getColumnDisplaySize( position );
-			final Dialect dialect = jdbcServices.getDialect();
+			final int scale = metaData.getScale( position ); // 小数点位数
+			final int precision = metaData.getPrecision( position ); // 精度
+			final int displaySize = metaData.getColumnDisplaySize( position ); // 显示长度
+			final Dialect dialect = jdbcServices.getDialect(); // 方言
 			final int length = dialect.resolveSqlTypeLength(
 					columnTypeName,
 					columnType,
 					precision,
 					scale,
 					displaySize
-			);
+			); // 获取JDBCType
 			final JdbcType resolvedJdbcType = dialect
 					.resolveSqlTypeDescriptor(
 							columnTypeName,
@@ -104,7 +104,7 @@ public interface ResultSetAccess extends JdbcValuesMetadata {
 			final JavaType<J> javaType;
 			final JdbcType jdbcType;
 			// If there is an explicit JavaType, then prefer its recommended JDBC type
-			if ( explicitJavaType != null ) {
+			if ( explicitJavaType != null ) { // 显示设定Java类型
 				javaType = explicitJavaType;
 				jdbcType = explicitJavaType.getRecommendedJdbcType(
 						new JdbcTypeIndicators() {
@@ -136,13 +136,13 @@ public interface ResultSetAccess extends JdbcValuesMetadata {
 				);
 			}
 			else {
-				jdbcType = resolvedJdbcType;
+				jdbcType = resolvedJdbcType; // 推荐映射
 				javaType = jdbcType.getJdbcRecommendedJavaTypeMapping(
 						length,
 						scale,
 						typeConfiguration
 				);
-			}
+			}  // 从基础类型中 获取它 ...
 			return typeConfiguration.getBasicTypeRegistry().resolve( javaType, jdbcType );
 		}
 		catch (SQLException e) {

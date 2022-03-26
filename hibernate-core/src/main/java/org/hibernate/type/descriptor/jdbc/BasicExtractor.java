@@ -64,7 +64,7 @@ public abstract class BasicExtractor<J> implements ValueExtractor<J>, Serializab
 	}
 
 	/**
-	 * Perform the extraction.
+	 * Perform the extraction.  执行此抓取
 	 * <p/>
 	 * Called from {@link #extract}.  Null checking of the value (as well as consulting {@link ResultSet#wasNull}) is
 	 * done there.

@@ -78,7 +78,8 @@ public interface CacheImplementor extends Service, Cache, Serializable {
 	/**
 	 * Find the cache data access strategy for Hibernate's timestamps cache.
 	 * Will return {@code null} if Hibernate is not configured for query result caching
-	 *
+	 *	发现缓存数据访问策略的 Hibernate的时间戳缓存 ...
+	 *如果返回null, 标识没有为query result caching 配置缓存...
 	 * @since 5.3
 	 */
 	TimestampsCache getTimestampsCache();

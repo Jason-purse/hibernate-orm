@@ -34,7 +34,7 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 /**
  * Standard implementation of SemanticQueryInterpreter
- *
+ *	语义查询解析器的标准实现
  * @author Steve Ebersole
  */
 public class StandardHqlTranslator implements HqlTranslator {

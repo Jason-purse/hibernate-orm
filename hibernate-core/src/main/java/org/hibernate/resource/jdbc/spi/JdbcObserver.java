@@ -20,13 +20,13 @@ public interface JdbcObserver {
 
 	void jdbcConnectionReleaseStart();
 	void jdbcConnectionReleaseEnd();
-
+	// jdbc 准备 .. 回调
 	void jdbcPrepareStatementStart();
 	void jdbcPrepareStatementEnd();
 
 	void jdbcExecuteStatementStart();
 	void jdbcExecuteStatementEnd();
-
+		// batch 执行
 	void jdbcExecuteBatchStart();
 	void jdbcExecuteBatchEnd();
 
